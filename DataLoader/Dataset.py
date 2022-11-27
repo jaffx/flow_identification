@@ -7,12 +7,8 @@ import xyq.x_printer as printer
 
 
 class flowData:
-    file_path = ""
-    data = []
-    r_ptr = 0
-    label = None
-
     def __init__(self, data, label, file_path):
+        self.r_ptr = 0
         self.data = data
         self.label = label
         self.file_path = file_path
@@ -62,15 +58,16 @@ def readWMSFile(dataset_path, cls_name, filename) -> flowData:
         return None
 
 
-class flowDataset:
-    datas = []
-    path = ""
-    classes = []
-    length = 0
-    step = 0
-    name = ""
+DATASET_READ_FINISHED = None
 
-    def __init__(self, path, length, step, name=""):
+
+class flowDataset:
+
+    def __init__(self, path, length, step, name="Nameless"):
+        self.datas = []
+        self.path = path
+        self.classes = []
+
         self.step = step
         self.length = length
         self.loadDataset(path)
@@ -134,7 +131,7 @@ class flowDataset:
             printer.xprint_red(f"\r {fail_count}/{total_files} files load Failed! Please check it!")
         else:
             printer.xprint_green(
-                f"\r【{total_files} Finished】｜Load {dataset_path} timeout: {int((time.time() - time0) * 1000)}ms")
+                f"\r【{total_files} Finished】｜Load {dataset_path} running time: {int((time.time() - time0) * 1000)}ms")
         random.shuffle(self.datas)
 
     def Init(self):
@@ -151,23 +148,22 @@ class flowDataset:
     def getData(self, batch_size):
         readables = [i for i in range(len(self.datas)) if self.datas[i].isReadableForLength(self.length)]
         if readables:
-            ret = []
-            for i in range(len(readables)):
+            datas, labels, paths = [], [], []
+            for i in range(min(len(readables), batch_size)):
                 idx = random.choice(readables)
                 readables.remove(idx)
-                idx_data = self.datas[idx].getSample(length=self.length, step=self.step)
-                ret.append(idx_data)
-            return ret
+                data, label, path = self.datas[idx].getSample(length=self.length, step=self.step)
+                datas.append([data])
+                labels.append(label)
+                paths.append(path)
+            return datas, labels, paths
         else:
             self.Init()
-            return None
+            return DATASET_READ_FINISHED
 
-
-train_set = flowDataset(path="../../FlowDataset/Datas2/val", length=128 * 128, step=128 * 64, name="Val Set")
-train_set.getDatasetInfo()
-dprate = 0
-while train_set.getReadable():
-    data = train_set.getData(8)
-    dprate = train_set.getDataProcessRate()
-    print(f"\rDataset Read Process: {int(dprate * 100)}%", end='')
-printer.xprint_green(f"\r{train_set.name} process finished! Data processed rate {int(dprate * 100)}%!")
+    def getDPRate(self):
+        '''
+        获取数据处理率(DPRate)
+        :return:
+        '''
+        return sum([d.r_ptr for d in self.datas]) / len(self)

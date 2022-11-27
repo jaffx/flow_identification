@@ -1,18 +1,34 @@
+import datetime
 import time
 import xyq.x_printer as printer
 
 
-def showTimeMs(func):
+def showRuningTime(func):
     def getTimeMsInner(*args, **kwargs):
         time0 = time.time()
         func(*args, **kwargs)
-        printer.xprint(f"Function<{func.__name__}{args}{kwargs}>running time: {int((time.time() - time0) * 1000)}ms")
+        runtime = int((time.time() - time0) * 1000)
+        if runtime < 1:
+            runtime = f"{runtime}ms"
+        else:
+            runtime = f"{runtime / 1000}s"
+        printer.xprint(f"Function<{func.__name__}{args}{kwargs}>running time:{runtime}")
 
     return getTimeMsInner
 
 
-@showTimeMs
-def test(x,y,z):
-    time.sleep(2)
+def getTimeNow():
+    return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-test(2,2,z = 2)
+
+def secsToStr(secs: int):
+    assert isinstance(secs, int), "secs must be an integer!"
+    second = secs % 60
+    secs //= 60
+    minute = secs % 60
+    secs //= 60
+    hour = secs % 24
+    secs //= 60
+    day = secs
+
+    return f"{day}days {hour:02}:{minute:02}:{second:02}"
