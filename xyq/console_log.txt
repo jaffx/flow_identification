@@ -1,0 +1,1 @@
+Function<test(2, 2){'z': 2}>running time: 2000ms

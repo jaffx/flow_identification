@@ -1,0 +1,13 @@
+【32 Finished】｜Load /Users/lyn/codes/python/Flow_Identification/DataLoader/../../FlowDataset/Datas2/val timeout: 2833ms
+Dataset Path:	/Users/lyn/codes/python/Flow_Identification/DataLoader/../../FlowDataset/Datas2/val
+Class num:	4
+Step:8192 	 Sample_length 16384
+------*data_amount*-------
+label	|	data amount
+3		|	 4049k
+1		|	 4499k
+2		|	 3149k
+4		|	 2699k
+total	|	14399k
+------*-----------*-------
+Val Set process finished! Data processed rate 96%!

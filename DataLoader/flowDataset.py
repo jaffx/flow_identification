@@ -1,8 +1,9 @@
 import time
 import os
 import copy
-
+import random
 import torch.cuda
+import xyq.x_printer as printer
 
 
 class flowData:
@@ -28,9 +29,12 @@ class flowData:
         end = self.r_ptr + length
         if end >= len(self.data):
             r_ptr = 0
-        ret = copy.deepcopy(self.data[self.r_ptr:end])
+        data = copy.deepcopy(self.data[self.r_ptr:end])
         self.r_ptr += step
-        return ret
+        return data, self.label, self.file_path
+
+    def Init(self):
+        self.r_ptr = 0
 
     def isReadableForLength(self, length):
         return self.r_ptr + length < len(self.data)
@@ -50,11 +54,11 @@ def readWMSFile(dataset_path, cls_name, filename) -> flowData:
 
         with open(file_path) as fp:
             content = fp.readlines()[2:]
-            # print(f"成功加载文件【{file_path}】,行数{len(content)}")
-            data = [float(line[9:]) for line in content]
+            data = [float(line[11:]) for line in content]
         return flowData(data, int(cls_name), file_path)
     except Exception as e:
-        print(f"{file_path} 加载错误，原因 {e}")
+        printer.xprint_red(f"{file_path} 加载错误，原因 {e}")
+
         return None
 
 
@@ -62,8 +66,20 @@ class flowDataset:
     datas = []
     path = ""
     classes = []
+    length = 0
+    step = 0
+    name = ""
 
-    def getDatasetInfo(self) -> list:
+    def __init__(self, path, length, step, name=""):
+        self.step = step
+        self.length = length
+        self.loadDataset(path)
+        self.name = name if name else path
+
+    def __len__(self):
+        return sum([len(d) for d in self.datas])
+
+    def getDatasetInfo(self, show=True) -> list:
         """
         获得当前数据集的文本格式信息
         :return: str组成的list
@@ -71,6 +87,7 @@ class flowDataset:
         infos = []
         infos.append(f"Dataset Path:\t{self.path}")
         infos.append(f"Class num:\t{len(self.classes)}")
+        infos.append(f"Step:{self.step} \t Sample_length {self.length}")
         cls_ndata = {}
         totals = 0
         for fd in self.datas:
@@ -83,11 +100,19 @@ class flowDataset:
             infos.append(f"{cls}\t\t|\t {int(cls_ndata[cls] / 1000)}k")
         infos.append(f"total\t|\t{int(totals / 1000)}k")
         infos.append("------*-----------*-------")
+        if show:
+            for info in infos:
+                printer.xprint(info)
         return infos
 
     def loadDataset(self, dataset_path):
-        assert os.path.exists(
-            os.path.join(os.getcwd(), dataset_path)), f"The dataset path \"{dataset_path}\" not exist!"
+        '''
+        从dataset_path加载数据集
+        :param dataset_path:
+        :return:
+        '''
+        dataset_path = os.path.join(os.getcwd(), dataset_path)
+        assert os.path.exists(dataset_path), f"The dataset path \"{dataset_path}\" not exist!"
         time0 = time.time()
         self.path = dataset_path
         class_paths = os.listdir(dataset_path)
@@ -105,15 +130,44 @@ class flowDataset:
                 self.datas.append(fdata)
                 print(f"\rLoad dataset: 【{suc_count}/{total_files}】| Loading->{file}", end='')
                 suc_count += 1
-
         if fail_count:
-            print(
-                f"\r\033[31mLoad dataset: {fail_count}/{total_files} files load Failed! Please check it!\033[0m"
-                f"\033[0m")
+            printer.xprint_red(f"\r {fail_count}/{total_files} files load Failed! Please check it!")
         else:
-            print(
-                f"\r\033[32mLoad dataset: 【{total_files} Finished】｜Load {dataset_path} timeout: {int((time.time() - time0) * 1000)}ms"
-                f"\033[0m")
+            printer.xprint_green(
+                f"\r【{total_files} Finished】｜Load {dataset_path} timeout: {int((time.time() - time0) * 1000)}ms")
+        random.shuffle(self.datas)
+
+    def Init(self):
+        for d in self.datas:
+            d.Init()
+
+    def getReadable(self):
+        return len([i for i in range(len(self.datas)) if self.datas[i].isReadableForLength(self.length)]) > 0
+
+    def getDataProcessRate(self):
+        read = sum([d.r_ptr for d in self.datas])
+        return read / len(self)
+
+    def getData(self, batch_size):
+        readables = [i for i in range(len(self.datas)) if self.datas[i].isReadableForLength(self.length)]
+        if readables:
+            ret = []
+            for i in range(len(readables)):
+                idx = random.choice(readables)
+                readables.remove(idx)
+                idx_data = self.datas[idx].getSample(length=self.length, step=self.step)
+                ret.append(idx_data)
+            return ret
+        else:
+            self.Init()
+            return None
 
 
-print(torch.cuda.is_available())
+train_set = flowDataset(path="../../FlowDataset/Datas2/val", length=128 * 128, step=128 * 64, name="Val Set")
+train_set.getDatasetInfo()
+dprate = 0
+while train_set.getReadable():
+    data = train_set.getData(8)
+    dprate = train_set.getDataProcessRate()
+    print(f"\rDataset Read Process: {int(dprate * 100)}%", end='')
+printer.xprint_green(f"\r{train_set.name} process finished! Data processed rate {int(dprate * 100)}%!")
