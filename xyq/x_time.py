@@ -17,8 +17,12 @@ def showRuningTime(func):
     return getTimeMsInner
 
 
-def getTimeNow():
+def getDateTime():
     return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+
+def getDateTimeForPath():
+    return datetime.datetime.now().strftime('%Y-%m-%d %H.%M.%S')
 
 
 def secsToStr(secs: int):
@@ -27,8 +31,6 @@ def secsToStr(secs: int):
     secs //= 60
     minute = secs % 60
     secs //= 60
-    hour = secs % 24
-    secs //= 60
-    day = secs
+    hour = secs
 
-    return f"{day}days {hour:02}:{minute:02}:{second:02}"
+    return f"{hour:02}:{minute:02}:{second:02}"
