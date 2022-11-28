@@ -86,17 +86,22 @@ class flowDataset:
         infos.append(f"Class num:\t{len(self.classes)}")
         infos.append(f"Step:{self.step} \t Sample_length {self.length}")
         cls_ndata = {}
-        totals = 0
+        cls_nfile = {}
+        ndata_totals = 0
+        nfile_totals = 0
         for fd in self.datas:
             cls_ndata.setdefault(fd.label, 0)
+            cls_nfile.setdefault(fd.label, 0)
             cls_ndata[fd.label] += len(fd)
-            totals += len(fd)
-        infos.append("------*data_amount*-------")
-        infos.append("label\t|\tdata amount")
+            cls_nfile[fd.label] += 1
+            ndata_totals += len(fd)
+            nfile_totals += 1
+        infos.append("--------*Dataset Infos*---------")
+        infos.append("label\t|\tAmount\t|\tFile")
         for cls in cls_ndata:
-            infos.append(f"{cls}\t\t|\t {int(cls_ndata[cls] / 1000)}k")
-        infos.append(f"total\t|\t{int(totals / 1000)}k")
-        infos.append("------*-----------*-------")
+            infos.append(f"{cls}\t\t|\t {int(cls_ndata[cls] / 1000)}k\t|\t{cls_nfile[cls]}")
+        infos.append(f"total\t|\t{int(ndata_totals / 1000)}k\t|\t{nfile_totals}")
+        infos.append("*-------*-----------*---------*")
         if show:
             for info in infos:
                 printer.xprint(info)

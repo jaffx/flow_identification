@@ -94,7 +94,7 @@ def HilbertBuild(list, n):
 
 def HilbertBuild2(list, hil, n):
     width = 2 ** n
-    result = [[[0, 0, 0] for j in range(width)] for i in range(width)]
+    result = [[[] for j in range(width)] for i in range(width)]
     for i in range(len(hil[0])):
         x, y = int(hil[0][i].x), int(hil[0][i].y)
         result[x][y] = list[i]
