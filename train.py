@@ -55,7 +55,8 @@ def main():
     os.makedirs(log_path)
     weight_path = os.path.join(log_path, f'{task_name}.pth')
     info_fp_path = os.path.join(log_path, 'info')
-    iter_fp_path = os.path.join(log_path, 'iter')
+    train_iter_fp_path = os.path.join(log_path, 'train_iter')
+    val_iter_fp_path = os.path.join(log_path, 'val_iter')
     epoch_fp_path = os.path.join(log_path, 'epoch')
     console_log_file = os.path.join(log_path, 'console_log')
     printer.TARGET_FILES = console_log_file
@@ -85,6 +86,14 @@ def main():
                        f"{'Val Loss':8}\t{'Val Batch':8}\t{'VNSample':8}\t{'Val NAcc':8}\t{'Val ACC':8}\n"
                        )
         epoch_fp.close()
+    with open(train_iter_fp_path, 'a+') as titer_fp:
+        titer_fp.write(
+            f"{'Method':>6}\t{'epoch':>6}\t{'batch':>6}\t{'NSample':>6}\t{'AccNum':>6}\t{'ACC':>6}\t{'Loss':>6}\t{'AVGLoss':>6}\t{'Predict Label':32}\t{'Truth Label':32}\n")
+        titer_fp.close()
+    with open(val_iter_fp_path, 'a+') as viter_fp:
+        viter_fp.write(
+            f"{'Method':>6}\t{'epoch':>6}\t{'batch':>6}\t{'NSample':>6}\t{'AccNum':>6}\t{'ACC':>6}\t{'Loss':>6}\t{'AVGLoss':>6}\t{'Predict Label':32}\t{'Truth Label':32}\n")
+        viter_fp.close()
     for epoch in range(epoch_num):
         # Epoch初始化
         train_batch_num, val_batch_num = 0, 0
@@ -97,13 +106,6 @@ def main():
         # 训练初始化
         net.train()
         train_loader.Init()
-        # printer.xprint("Epoch {} train start at {}".format(epoch, xtime.getDateTime()))
-        with open(iter_fp_path, 'a+') as iter_fp:
-            iter_fp.write(f"Epoch{epoch}\n")
-
-            iter_fp.write(
-                f"{'Method':>6}\t{'epoch':>6} {'batch':>6}\t{'NSample':>6}\t{'AccNum':>6}\t{'ACC':>6}\t{'Loss':>6}\t{'AVGLoss':>6}\t{'Predict Label':32}\t{'Truth Label':32}\n")
-            iter_fp.close()
         # 开始训练
         while train_loader.getReadable():
             # 读取数据
@@ -135,10 +137,10 @@ def main():
             train_acc_num += acc_num
 
             # 训练数据记录
-            with open(iter_fp_path, 'a+') as iter_fp:
-                iter_fp.write(
-                    f"{'T':>6}\t{epoch:>6} {train_batch_num:>6}\t{sample_num:>6}\t{acc_num:>6}\t{batch_acc:>6.04}\t{batch_loss:>6.03}\t{sample_loss:>6.03}\t{str(predict_label)}\t{str(label)}\n")
-                iter_fp.close()
+            with open(train_iter_fp_path, 'a+') as titer_fp:
+                titer_fp.write(
+                    f"{'T':>6}\t{epoch:>6}\t{train_batch_num:>6}\t{sample_num:>6}\t{acc_num:>6}\t{batch_acc:>6.04}\t{batch_loss:>6.03}\t{sample_loss:>6.03}\t{str(predict_label)}\t{str(label)}\n")
+                titer_fp.close()
         # 训练收尾
         train_loader.getData()
         train_end_time = time.time()
@@ -148,10 +150,6 @@ def main():
         net.eval()
         val_set.Init()
         # printer.xprint("Epoch{} val start at {}".format(epoch, xtime.getDateTime()))
-        with open(iter_fp_path, 'a+') as iter_fp:
-            iter_fp.write(f"Epoch{epoch}\n")
-            iter_fp.write(
-                f"{'Method':>6}\t{'epoch':>6} {'batch':>6}\t{'NSample':>6}\t{'AccNum':>6}\t{'ACC':>6.4}\t{'Loss':>6.3}\t{'AVGLoss':>6.3}\t{'Predict Label':32}\t{'Truth Label':32}\n")
         # 开始测试
         while val_loader.getReadable():
             data, label, path = val_loader.getData()
@@ -178,10 +176,10 @@ def main():
             val_acc_num += acc_num
 
             # 测试数据记录
-            with open(iter_fp_path, 'a+') as iter_fp:
-                iter_fp.write(
-                    f"{'V':>6}\t{epoch:>6} {val_sample_num:>6}\t{sample_num:>6}\t{acc_num:>6}\t{batch_acc:>6.4}\t{batch_loss:>6.3}\t{sample_loss:>6.3}\t{str(predict_label)}\t{str(label)}\n")
-                iter_fp.close()
+            with open(val_iter_fp_path, 'a+') as viter_fp:
+                viter_fp.write(
+                    f"{'V':>6}\t{epoch:>6}\t{val_sample_num:>6}\t{sample_num:>6}\t{acc_num:>6}\t{batch_acc:>6.4}\t{batch_loss:>6.3}\t{sample_loss:>6.3}\t{str(predict_label)}\t{str(label)}\n")
+                viter_fp.close()
 
         # 测试收尾
         val_loader.getData()
@@ -202,7 +200,7 @@ def main():
             line_sign = '*'
         # 数据保存
         printer.xprint_cyan(
-            f"{line_sign}Epoch {epoch} \t Train ACC:{train_acc * 100:.2f}% \t Val ACC:{val_acc * 100:.2f}% \t Train Loss{train_avg_loss:.2f} Val Loss{val_avg_loss:.2f}"
+            f"{line_sign}Epoch {epoch} \t Train ACC:{train_acc * 100:.2f}% \t Val ACC:{val_acc * 100:.2f}% \t Train Loss{train_avg_loss:.2f}\tVal Loss{val_avg_loss:.2f}"
         )
         with open(epoch_fp_path, 'a+') as epoch_fp:
             epoch_fp.write(f"{line_sign}{epoch:>5d}\t{train_running_time:>10}\t{val_running_time:10}\t"
