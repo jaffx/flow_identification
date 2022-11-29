@@ -88,11 +88,11 @@ def main():
         epoch_fp.close()
     with open(train_iter_fp_path, 'a+') as titer_fp:
         titer_fp.write(
-            f"{'Method':>6}\t{'epoch':>6}\t{'batch':>6}\t{'NSample':>6}\t{'AccNum':>6}\t{'ACC':>6}\t{'Loss':>6}\t{'AVGLoss':>6}\t{'Predict Label':32}\t{'Truth Label':32}\n")
+            f"{'Method':>6}\t{'epoch':>6}\t{'batch':>6}\t{'NSample':>6}\t{'AccNum':>6}\t{'ACC':>6}\t{'Loss':>6}\t{'AVGLoss':>6}\n")
         titer_fp.close()
     with open(val_iter_fp_path, 'a+') as viter_fp:
         viter_fp.write(
-            f"{'Method':>6}\t{'epoch':>6}\t{'batch':>6}\t{'NSample':>6}\t{'AccNum':>6}\t{'ACC':>6}\t{'Loss':>6}\t{'AVGLoss':>6}\t{'Predict Label':32}\t{'Truth Label':32}\n")
+            f"{'Method':>6}\t{'epoch':>6}\t{'batch':>6}\t{'NSample':>6}\t{'AccNum':>6}\t{'ACC':>6}\t{'Loss':>6}\t{'AVGLoss':>6}\n")
         viter_fp.close()
     for epoch in range(epoch_num):
         # Epoch初始化
@@ -136,10 +136,12 @@ def main():
             train_batch_num += 1
             train_acc_num += acc_num
 
+
+
             # 训练数据记录
             with open(train_iter_fp_path, 'a+') as titer_fp:
                 titer_fp.write(
-                    f"{'T':>6}\t{epoch:>6}\t{train_batch_num:>6}\t{sample_num:>6}\t{acc_num:>6}\t{batch_acc:>6.04}\t{batch_loss:>6.03}\t{sample_loss:>6.03}\t{str(predict_label)}\t{str(label)}\n")
+                    f"{'T':>6}\t{epoch:>6}\t{train_batch_num:>6}\t{sample_num:>6}\t{acc_num:>6}\t{batch_acc:>6.04}\t{batch_loss:>6.03}\t{sample_loss:>6.03}\n")
                 titer_fp.close()
         # 训练收尾
         train_loader.getData()
@@ -178,7 +180,7 @@ def main():
             # 测试数据记录
             with open(val_iter_fp_path, 'a+') as viter_fp:
                 viter_fp.write(
-                    f"{'V':>6}\t{epoch:>6}\t{val_batch_num:>6}\t{sample_num:>6}\t{acc_num:>6}\t{batch_acc:>6.4}\t{batch_loss:>6.3}\t{sample_loss:>6.3}\t{str(predict_label)}\t{str(label)}\n")
+                    f"{'V':>6}\t{epoch:>6}\t{val_batch_num:>6}\t{sample_num:>6}\t{acc_num:>6}\t{batch_acc:>6.4}\t{batch_loss:>6.3}\t{sample_loss:>6.3}\n")
                 viter_fp.close()
 
         # 测试收尾
