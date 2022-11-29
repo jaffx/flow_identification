@@ -23,10 +23,10 @@ def main():
     # 自定义训练参数
     data_length = 128 * 128
     sampling_step = 128 * 64
-    batch_size = 8
-    epoch_num = 100
-    train_set_path, train_set_name = "../FlowDataset/Datas2/train", "TrainSet"
-    val_set_path, val_set_name = "../FlowDataset/Datas2/val", "ValSet"
+    batch_size = 32
+    epoch_num = 50
+    train_set_path, train_set_name = "../Dataset/train", "TrainSet"
+    val_set_path, val_set_name = "../Dataset/val", "ValSet"
     learn_rate = 0.0001
 
     # 导入训练数据
@@ -178,7 +178,7 @@ def main():
             # 测试数据记录
             with open(val_iter_fp_path, 'a+') as viter_fp:
                 viter_fp.write(
-                    f"{'V':>6}\t{epoch:>6}\t{val_sample_num:>6}\t{sample_num:>6}\t{acc_num:>6}\t{batch_acc:>6.4}\t{batch_loss:>6.3}\t{sample_loss:>6.3}\t{str(predict_label)}\t{str(label)}\n")
+                    f"{'V':>6}\t{epoch:>6}\t{val_batch_num:>6}\t{sample_num:>6}\t{acc_num:>6}\t{batch_acc:>6.4}\t{batch_loss:>6.3}\t{sample_loss:>6.3}\t{str(predict_label)}\t{str(label)}\n")
                 viter_fp.close()
 
         # 测试收尾
