@@ -14,8 +14,9 @@ class VGG(nn.Module):
     def __init__(self, features, num_classes=4, init_weights=False):
         super(VGG, self).__init__()
         self.features = features
+        self.adp_pool = nn.AdaptiveAvgPool2d((1, 1))
         self.classifier = nn.Sequential(
-            nn.Linear(512*2*4, 4096),#根据输入图像大小修改这里
+            nn.Linear(512, 4096),
             nn.ReLU(True),
             nn.Dropout(p=0.5),
             nn.Linear(4096, 4096),
@@ -30,6 +31,7 @@ class VGG(nn.Module):
         # N x 3 x 224 x 224
         x = self.features(x)
         # N x 512 x 7 x 7
+        x = self.adp_pool(x)
         x = torch.flatten(x, start_dim=1)
         # N x 512*7*7
         x = self.classifier(x)
@@ -50,7 +52,7 @@ class VGG(nn.Module):
 
 def make_features(cfg: list):
     layers = []
-    in_channels = 3
+    in_channels = 1
     for v in cfg:
         if v == "M":
             layers += [nn.MaxPool2d(kernel_size=2, stride=2)]

@@ -10,6 +10,8 @@ from xyq import x_time as xtime
 from xyq import x_printer as printer
 from xyq import x_formatter as formatter
 from model.model_v2 import MobileNetV2
+from model.Resmodel import resnet18
+from model.vgg import vgg
 from DataLoader.Dataset import flowDataset
 from DataLoader.DataLoader import flowDataLoader
 from DataLoader.transforms import toTensor, flowHilbertTransform
@@ -24,7 +26,7 @@ def main():
     data_length = 128 * 128
     sampling_step = 128 * 64
     batch_size = 32
-    epoch_num = 50
+    epoch_num = 30
     train_set_path, train_set_name = "../Dataset/train", "TrainSet"
     val_set_path, val_set_name = "../Dataset/val", "ValSet"
     learn_rate = 0.0001
@@ -39,7 +41,7 @@ def main():
     val_loader = flowDataLoader(dataset=val_set, batch_size=batch_size, transform=transform, showInfo=True)
 
     # 定义模型
-    net = MobileNetV2(4)
+    net = vgg()
     net.to(device)
     loss_function = nn.CrossEntropyLoss()
     params = [p for p in net.parameters() if p.requires_grad]

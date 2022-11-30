@@ -58,9 +58,9 @@ class Bottleneck1d(nn.Module):
                                kernel_size=3, stride=stride, bias=False, padding=1)
         self.bn2 = nn.BatchNorm1d(width)
         # -----------------------------------------
-        self.conv3 = nn.Conv1d(in_channels=width, out_channels=out_channel*self.expansion,
+        self.conv3 = nn.Conv1d(in_channels=width, out_channels=out_channel * self.expansion,
                                kernel_size=1, stride=1, bias=False)  # unsqueeze channels
-        self.bn3 = nn.BatchNorm1d(out_channel*self.expansion)
+        self.bn3 = nn.BatchNorm1d(out_channel * self.expansion)
         self.relu = nn.ReLU(inplace=True)
         self.downsample = downsample
 
@@ -188,10 +188,10 @@ def resnext1d50_32x4d(num_classes=1000, include_top=True):
     groups = 32
     width_per_group = 4
     return ResNet1d(Bottleneck1d, [3, 4, 6, 3],
-                  num_classes=num_classes,
-                  include_top=include_top,
-                  groups=groups,
-                  width_per_group=width_per_group)
+                    num_classes=num_classes,
+                    include_top=include_top,
+                    groups=groups,
+                    width_per_group=width_per_group)
 
 
 def resnext1d101_32x8d(num_classes=1000, include_top=True):
@@ -199,7 +199,7 @@ def resnext1d101_32x8d(num_classes=1000, include_top=True):
     groups = 32
     width_per_group = 8
     return ResNet1d(Bottleneck1d, [3, 4, 23, 3],
-                  num_classes=num_classes,
-                  include_top=include_top,
-                  groups=groups,
-                  width_per_group=width_per_group)
+                    num_classes=num_classes,
+                    include_top=include_top,
+                    groups=groups,
+                    width_per_group=width_per_group)
