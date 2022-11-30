@@ -41,7 +41,7 @@ def main():
     val_loader = flowDataLoader(dataset=val_set, batch_size=batch_size, transform=transform, showInfo=True)
 
     # 定义模型
-    net = vgg()
+    net = resnet18(4)
     net.to(device)
     loss_function = nn.CrossEntropyLoss()
     params = [p for p in net.parameters() if p.requires_grad]
@@ -63,7 +63,7 @@ def main():
     console_log_file = os.path.join(log_path, 'console_log')
     printer.TARGET_FILES = console_log_file
     
-    print(f"Model:{model_name} BatchSize: {batch_size} DataLength:{data_length} Step:{sampling_step}")
+    print(f"Model:{model_name} BatchSize: {batch_size} DataLength:{data_length} Step:{sampling_step} Model Parameters {formatter.intFormatter(model_param_amount, unit='m', keep_float=3)}")
 
     # 记录模型数据
     with open(info_fp_path, 'a+') as info_fp:
