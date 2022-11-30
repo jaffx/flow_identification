@@ -26,7 +26,7 @@ def main():
     data_length = 128 * 128
     sampling_step = 128 * 64
     batch_size = 32
-    epoch_num = 30
+    epoch_num = 50
     train_set_path, train_set_name = "../Dataset/train", "TrainSet"
     val_set_path, val_set_name = "../Dataset/val", "ValSet"
     learn_rate = 0.0001
@@ -62,6 +62,8 @@ def main():
     epoch_fp_path = os.path.join(log_path, 'epoch')
     console_log_file = os.path.join(log_path, 'console_log')
     printer.TARGET_FILES = console_log_file
+    
+    print(f"Model:{model_name} BatchSize: {batch_size} DataLength:{data_length} Step:{sampling_step}")
 
     # 记录模型数据
     with open(info_fp_path, 'a+') as info_fp:
