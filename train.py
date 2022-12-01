@@ -14,7 +14,7 @@ from model.Resmodel import resnet18
 from model.vgg import vgg
 from DataLoader.Dataset import flowDataset
 from DataLoader.DataLoader import flowDataLoader
-from DataLoader.transforms import toTensor, flowHilbertTransform
+from DataLoader.transforms import toTensor, flowHilbertTransform, spaciousFolder
 
 
 def main():
@@ -36,12 +36,12 @@ def main():
     train_set_info = train_set.getDatasetInfo()
     val_set = flowDataset(path=val_set_path, length=data_length, step=sampling_step, name=val_set_name)
     val_set_info = val_set.getDatasetInfo()
-    transform = flowHilbertTransform(7)
+    transform = spaciousFolder(128, 128)
     train_loader = flowDataLoader(dataset=train_set, batch_size=batch_size, transform=transform, showInfo=True)
     val_loader = flowDataLoader(dataset=val_set, batch_size=batch_size, transform=transform, showInfo=True)
 
     # 定义模型
-    net = resnet18(4)
+    net = MobileNetV2(4)
     net.to(device)
     loss_function = nn.CrossEntropyLoss()
     params = [p for p in net.parameters() if p.requires_grad]
@@ -62,8 +62,9 @@ def main():
     epoch_fp_path = os.path.join(log_path, 'epoch')
     console_log_file = os.path.join(log_path, 'console_log')
     printer.TARGET_FILES = console_log_file
-    
-    print(f"Model:{model_name} BatchSize: {batch_size} DataLength:{data_length} Step:{sampling_step} Model Parameters {formatter.intFormatter(model_param_amount, unit='m', keep_float=3)}")
+
+    print(
+        f"Model:{model_name} BatchSize: {batch_size} DataLength:{data_length} Step:{sampling_step} Model Parameters {formatter.intFormatter(model_param_amount, unit='m', keep_float=3)}")
 
     # 记录模型数据
     with open(info_fp_path, 'a+') as info_fp:
@@ -139,8 +140,6 @@ def main():
             train_total_loss += batch_loss
             train_batch_num += 1
             train_acc_num += acc_num
-
-
 
             # 训练数据记录
             with open(train_iter_fp_path, 'a+') as titer_fp:
