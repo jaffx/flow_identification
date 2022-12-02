@@ -14,7 +14,7 @@ from model.Resmodel import resnet18
 from model.vgg import vgg
 from DataLoader.Dataset import flowDataset
 from DataLoader.DataLoader import flowDataLoader
-from DataLoader.transforms import toTensor, flowHilbertTransform, spaciousFolder
+from DataLoader.transforms import toTensor, flowHilbertTransform, spaciousFolder, FFT_Transform
 
 
 def main():
@@ -36,7 +36,7 @@ def main():
     train_set_info = train_set.getDatasetInfo()
     val_set = flowDataset(path=val_set_path, length=data_length, step=sampling_step, name=val_set_name)
     val_set_info = val_set.getDatasetInfo()
-    transform = spaciousFolder(128, 128)
+    transform = FFT_Transform(128, 128)
     train_loader = flowDataLoader(dataset=train_set, batch_size=batch_size, transform=transform, showInfo=True)
     val_loader = flowDataLoader(dataset=val_set, batch_size=batch_size, transform=transform, showInfo=True)
 
@@ -117,6 +117,7 @@ def main():
 
             data, label, path = train_loader.getData()
             data = data.to(device)
+            print(data.shape)
             label = torch.tensor(label, dtype=torch.long).to(device)
             # 正向传播
             predict_y = net(data)
@@ -159,6 +160,7 @@ def main():
         while val_loader.getReadable():
             data, label, path = val_loader.getData()
             data = data.to(device)
+            print(data.shape)
             label = torch.tensor(label, dtype=torch.long).to(device)
             # 正向传播
             predict_y = net(data)
