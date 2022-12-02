@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import os
+import yaml
 from xyq import x_time as xtime
 from xyq import x_printer as printer
 from xyq import x_formatter as formatter
@@ -33,9 +34,9 @@ def main():
 
     # 导入训练数据
     train_set = flowDataset(path=train_set_path, length=data_length, step=sampling_step, name=train_set_name)
-    train_set_info = train_set.getDatasetInfo()
+    train_set.getDatasetInfo()
     val_set = flowDataset(path=val_set_path, length=data_length, step=sampling_step, name=val_set_name)
-    val_set_info = val_set.getDatasetInfo()
+    val_set.getDatasetInfo()
     transform = FFT_Transform(128, 128)
     train_loader = flowDataLoader(dataset=train_set, batch_size=batch_size, transform=transform, showInfo=True)
     val_loader = flowDataLoader(dataset=val_set, batch_size=batch_size, transform=transform, showInfo=True)
@@ -56,7 +57,7 @@ def main():
     log_path = os.path.join(os.getcwd(), 'logs', 'train', task_name)
     os.makedirs(log_path)
     weight_path = os.path.join(log_path, f'{task_name}.pth')
-    info_fp_path = os.path.join(log_path, 'info')
+    info_fp_path = os.path.join(log_path, 'info.yaml')
     train_iter_fp_path = os.path.join(log_path, 'train_iter')
     val_iter_fp_path = os.path.join(log_path, 'val_iter')
     epoch_fp_path = os.path.join(log_path, 'epoch')
@@ -66,22 +67,43 @@ def main():
     print(
         f"Model:{model_name} BatchSize: {batch_size} DataLength:{data_length} Step:{sampling_step} Model Parameters {formatter.intFormatter(model_param_amount, unit='m', keep_float=3)}")
 
+    # 通过yaml文件记录模型数据
+    task_info = {}
+    task_info["Task_Name"] = "Model_training"
+    task_info["Data_Source"] = "WMS"
+    task_info["Task_Time"] = date_time
+
+    task_info["Model_Name"] = model_name
+    task_info["Model_Parameter_Amount"] = formatter.intFormatter(model_param_amount, 'm', 3)
+
+    task_info["Data_Length"] = data_length
+    task_info["Sampling_Step"] = sampling_step
+
+    task_info["Batch_Size"] = batch_size
+    task_info["Learn_Rate"] = learn_rate
+    task_info["Optimizer"] = optimizer.__class__.__name__
+    task_info["Loss_Function"] = loss_function.__class__.__name__
+
+    task_info["Train_Set_Info"] = train_set.getDatasetInfoDict()
+    task_info["Val_Set_Info"] = train_set.getDatasetInfoDict()
+
+    yaml.dump(task_info, open(info_fp_path, "w"))
     # 记录模型数据
-    with open(info_fp_path, 'a+') as info_fp:
-        info_fp.write(f"# TASK_TIME: {date_time}\n")
-        info_fp.write(f"# Train Set Info\n")
-        for line in train_set_info:
-            info_fp.write('\t' + line + '\n')
-        info_fp.write(f"# Val Set Info\n")
-        for line in val_set_info:
-            info_fp.write('\t' + line + '\n')
-        info_fp.write(f"# Transform: {transform.__class__.__name__}\n")
-        info_fp.write(f"# Data Length: {data_length} \t Sampling Step:{sampling_step}\n")
-        info_fp.write(f"# Epoch Num: {epoch_num} \t Batch Size: {batch_size}\n")
-        info_fp.write(
-            f"# Model Name:{model_name} \t Model Parameters Amount:{formatter.intFormatter(model_param_amount, unit='m', keep_float=3)} \n")
-        info_fp.write(f"# Optimizer:{optimizer.__class__.__name__} \t Learn Rate: {learn_rate}\n")
-        info_fp.close()
+    # with open(info_fp_path, 'a+') as info_fp:
+    #     info_fp.write(f"# TASK_TIME: {date_time}\n")
+    #     info_fp.write(f"# Train Set Info\n")
+    #     for line in train_set_info:
+    #         info_fp.write('\t' + line + '\n')
+    #     info_fp.write(f"# Val Set Info\n")
+    #     for line in val_set_info:
+    #         info_fp.write('\t' + line + '\n')
+    #     info_fp.write(f"# Transform: {transform.__class__.__name__}\n")
+    #     info_fp.write(f"# Data Length: {data_length} \t Sampling Step:{sampling_step}\n")
+    #     info_fp.write(f"# Epoch Num: {epoch_num} \t Batch Size: {batch_size}\n")
+    #     info_fp.write(
+    #         f"# Model Name:{model_name} \t Model Parameters Amount:{formatter.intFormatter(model_param_amount, unit='m', keep_float=3)} \n")
+    #     info_fp.write(f"# Optimizer:{optimizer.__class__.__name__} \t Learn Rate: {learn_rate}\n")
+    #     info_fp.close()
 
     # 开始训练
     best_acc = 0

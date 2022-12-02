@@ -2,11 +2,15 @@ import time
 import os
 import copy
 import random
-import torch.cuda
 import xyq.x_printer as printer
+import xyq.x_formatter as formatter
 
 
 class flowData:
+    """
+    保存一条流型数据
+    """
+
     def __init__(self, data, label, file_path):
         self.r_ptr = 0
         self.data = data
@@ -75,6 +79,28 @@ class flowDataset:
 
     def __len__(self):
         return sum([len(d) for d in self.datas])
+
+    def getDatasetInfoDict(self):
+        dataset_info = {}
+        dataset_info["Dataset_Path"] = self.path
+        dataset_info["Class_Num"] = len(self.classes)
+        dataset_info["Step"] = self.step
+        dataset_info["Sample_Length"] = self.length
+        cls_info = {}
+        ndata_totals = 0
+        nfile_totals = 0
+        for fd in self.datas:
+            cls_info.setdefault(fd.label, {"Data_Amount": 0, "File_Amount": 0})
+            cls_info[fd.label]["Data_Amount"] += len(fd)
+            cls_info[fd.label]["File_Amount"] += 1
+            ndata_totals += len(fd)
+            nfile_totals += 1
+        cls_info["Total"] = {"Data_Amount": ndata_totals, "File_Amount": nfile_totals}
+        for cls in cls_info:
+            cls_info[cls]["Data_Amount"] = formatter.intFormatter(cls_info[cls]["Data_Amount"], keep_float=1)
+            cls_info[cls]["File_Amount"] = cls_info[cls]["File_Amount"]
+        dataset_info["Class_Info"] = cls_info
+        return dataset_info
 
     def getDatasetInfo(self, show=True) -> list:
         """

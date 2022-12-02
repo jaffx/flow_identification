@@ -4,16 +4,16 @@ import logging
 
 TARGET_FILES = 'console_log.txt'
 
-
+WRITE_CONSOLE_INFO = False
 def write_message(func):
     def write_inner(*args, **kwargs):
         func(*args, **kwargs)
-
-        with open(TARGET_FILES, 'a+') as fp:
-            for msg in args:
-                fp.write(msg)
-            fp.write('\n')
-            fp.close()
+        if WRITE_CONSOLE_INFO:
+            with open(TARGET_FILES, 'a+') as fp:
+                for msg in args:
+                    fp.write(msg)
+                fp.write('\n')
+                fp.close()
 
     return write_inner
 
