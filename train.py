@@ -43,7 +43,7 @@ def main():
 
     # 定义模型
     net = MobileNetV2(4)
-    net.to(device)
+    net = net.to(device)
     loss_function = nn.CrossEntropyLoss()
     params = [p for p in net.parameters() if p.requires_grad]
     optimizer = optim.Adam(params, lr=learn_rate)
@@ -65,7 +65,7 @@ def main():
     printer.TARGET_FILES = console_log_file
 
     print(
-        f"Model:{model_name} BatchSize: {batch_size} DataLength:{data_length} Step:{sampling_step} Model Parameters {formatter.intFormatter(model_param_amount, unit='m', keep_float=3)}")
+        f"Model:{model_name} BatchSize: {batch_size} DataLength:{data_length} Step:{sampling_step} Model Parameters {formatter.xNumFormat(model_param_amount, unit='m', keep_float=3)}")
 
     # 通过yaml文件记录模型数据
     task_info = {}
@@ -74,7 +74,7 @@ def main():
     task_info["Task_Time"] = date_time
 
     task_info["Model_Name"] = model_name
-    task_info["Model_Parameter_Amount"] = formatter.intFormatter(model_param_amount, 'm', 3)
+    task_info["Model_Parameter_Amount"] = formatter.xNumFormat(model_param_amount, 'm', 3)
 
     task_info["Data_Length"] = data_length
     task_info["Sampling_Step"] = sampling_step

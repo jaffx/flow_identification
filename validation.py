@@ -4,28 +4,33 @@ import os
 import yaml
 
 import xyq.x_time as xtime
+import xyq.x_printer as printer
+import xyq.x_formatter as formatter
 from model.model_v2 import MobileNetV2
+from model.Resmodel import resnet18
+from model.vgg import vgg
 from DataLoader.transforms import *
 from DataLoader.Dataset import flowDataset
 from DataLoader.DataLoader import flowDataLoader
 
-# 设置权重文件地址
-weight_path = "logs/train_result_path/2022-12-01 15.59.38 [MobileNetV2]/2022-12-01 15.59.38 [MobileNetV2].pth"
-
-# 设置数据集及相关参数
+# 设置参数
+weight_path = "logs/train_result_path/2022-11-30 10.39.26 [VGG]/2022-11-30 10.39.26 [VGG].pth"
+transform = flowHilbertTransform(7)
+net = vgg()
 data_length = 128 * 128
 sampling_step = 128 * 64
-batch_size = 1
+batch_size = 8
 val_set_path = "../Dataset/val"
-transform = flowHilbertTransform(7)
+
+# 加载数据集
 val_dataset = flowDataset(path=val_set_path, length=data_length, step=sampling_step, name="Validation Set")
 val_loader = flowDataLoader(dataset=val_dataset, batch_size=batch_size, transform=transform, showInfo=True)
 
 # 加载模型
 device = torch.device(("cuda:0" if torch.cuda.is_available() else "cpu"))
 print("Using device {}".format(device))
-net = MobileNetV2(4)
-# net.load_state_dict(torch.load(weight_path, map_location=device))
+net = net.to(device)
+net.load_state_dict(torch.load(weight_path, map_location=device))
 loss_function = torch.nn.CrossEntropyLoss()
 
 # 数据保存相关内容
@@ -34,6 +39,8 @@ task_name = f"[{model_name}]{xtime.getDateTimeForPath()}"
 log_path = os.path.join(os.getcwd(), "logs", "val", task_name)
 info_path = os.path.join(log_path, "info.yaml")
 iter_path = os.path.join(log_path, "iter")
+result_path = os.path.join(log_path, "result.yaml")
+model_param_amount = formatter.xNumFormat(sum([p.nelement() for p in net.parameters()]), unit="m", keep_float=2)
 os.makedirs(log_path)
 
 task_info = {
@@ -43,26 +50,62 @@ task_info = {
     "Sampling_Step": sampling_step,
     "Loss_Function": loss_function.__class__.__name__,
     "Transform": transform.__class__.__name__,
-    "Model_Parameters_Amount": sum([p.nelement() for p in net.parameters()]),
+    "Model_Parameters_Amount": model_param_amount,
     "Batch_Size": batch_size,
     "Val_Set_Info": val_dataset.getDatasetInfoDict(),
 }
 
+confusion_matrix = [[0, 0, 0, 0] for i in range(4)]
+
+task_message = \
+    f"""
+    Start validation task!
+    Model Name:{model_name}
+    Data Length: {data_length}\tSampling Step: {sampling_step}
+    Network Name: {model_name}\tTransform:{transform.__class__.__name__}
+    Batch Size: {batch_size}\tModel_Parameters_Amount: {model_param_amount}
+    """
+printer.xprint_cyan(task_message)
+
 
 def main():
     # 准备工作
-    print("Begin Validation Task!")
-    start_time = time.time()
+    print("Begin Validation Process!")
 
-    with open(info_path, "w") as fp:
-        yaml.dump(task_info, fp)
-
+    with open(info_path, "w") as info_fp:
+        yaml.dump(task_info, info_fp)
+    with open(iter_path, "w") as iter_fp:
+        iter_fp.write(f"{'No':>6}\t{'Label':>8}\t{'Predict':>8}\t'Path'\n")
     with torch.no_grad():
+        acc = 0
+        count = 0
         while val_loader.getReadable():
             data, label, path = val_loader.getData()
-            # data = data.to(device)
-            # label = torch.Tensor(label).to(device)
+            data = data.to(device)
+            label = torch.Tensor(label).to(device)
             predict_y = net(data)
+            predict_label = torch.argmax(predict_y, dim=1)
+            for i in range(len(predict_label)):
+                prl, tl = int(predict_label[i]), int(label[i])
+                if prl == tl:
+                    acc += 1
+                count += 1
+                with open(iter_path, "a+") as iter_fp:
+                    iter_fp.write(f"{count:>6}\t{tl:>8}\t{prl:>8}\t{path[i].split('/')[-1]}\n")
+                confusion_matrix[prl][tl] += 1
+        normal_confusion_matrix = [[round(col / sum(line), 2) for col in line] for line in confusion_matrix]
+
+        result_info = {
+            "Sample_Amount": count,
+            "Accurate_Amount": acc,
+            "Accuracy": formatter.xNumFormat(acc / count, unit='%', keep_float=2),
+            "Confusion_Matrix": confusion_matrix,
+            "Normalized_Matrix": normal_confusion_matrix
+        }
+        with open(result_path, 'w') as result_fp:
+            yaml.dump(result_info, result_fp)
+        # val_loader.getData()
+        print(f"Accuracy:{formatter.xNumFormat(acc / count, unit='%', keep_float=2)}")
 
 
 if __name__ == "__main__":
