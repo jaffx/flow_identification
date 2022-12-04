@@ -97,7 +97,7 @@ class flowDataset:
             nfile_totals += 1
         cls_info["Total"] = {"Data_Amount": ndata_totals, "File_Amount": nfile_totals}
         for cls in cls_info:
-            cls_info[cls]["Data_Amount"] = formatter.intFormatter(cls_info[cls]["Data_Amount"], keep_float=1)
+            cls_info[cls]["Data_Amount"] = formatter.xNumFormat(cls_info[cls]["Data_Amount"], keep_float=1)
             cls_info[cls]["File_Amount"] = cls_info[cls]["File_Amount"]
         dataset_info["Class_Info"] = cls_info
         return dataset_info
@@ -163,7 +163,7 @@ class flowDataset:
         else:
             printer.xprint_green(
                 f"\r【{total_files} Finished】｜Load {dataset_path} running time: {int((time.time() - time0) * 1000)}ms")
-        random.shuffle(self.datas)
+        # random.shuffle(self.datas)
 
     def Init(self):
         for d in self.datas:
