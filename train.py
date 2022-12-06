@@ -13,6 +13,7 @@ from xyq import x_formatter as formatter
 from model.model_v2 import MobileNetV2
 from model.Resmodel import resnet18
 from model.vgg import vgg
+from model.AlexNet import AlexNet
 from DataLoader.Dataset import flowDataset
 from DataLoader.DataLoader import flowDataLoader
 from DataLoader.transforms import toTensor, flowHilbertTransform, spaciousFolder, FFT_Transform
@@ -37,12 +38,12 @@ def main():
     train_set.getDatasetInfo()
     val_set = flowDataset(path=val_set_path, length=data_length, step=sampling_step, name=val_set_name)
     val_set.getDatasetInfo()
-    transform = FFT_Transform(128, 128)
+    transform = flowHilbertTransform(7)
     train_loader = flowDataLoader(dataset=train_set, batch_size=batch_size, transform=transform, showInfo=True)
     val_loader = flowDataLoader(dataset=val_set, batch_size=batch_size, transform=transform, showInfo=True)
 
     # 定义模型
-    net = MobileNetV2(4)
+    net = AlexNet(4)
     net = net.to(device)
     loss_function = nn.CrossEntropyLoss()
     params = [p for p in net.parameters() if p.requires_grad]
