@@ -25,8 +25,8 @@ def main():
     print("using {} device.".format(device))
 
     # 自定义训练参数
-    data_length = 128 * 128
-    sampling_step = 128 * 64
+    data_length = 64 * 64
+    sampling_step = 32 * 64
     batch_size = 32
     epoch_num = 50
     train_set_path, train_set_name = "../Dataset/train", "TrainSet"
@@ -38,12 +38,12 @@ def main():
     train_set.getDatasetInfo()
     val_set = flowDataset(path=val_set_path, length=data_length, step=sampling_step, name=val_set_name)
     val_set.getDatasetInfo()
-    transform = flowHilbertTransform(7)
+    transform = flowHilbertTransform(6)
     train_loader = flowDataLoader(dataset=train_set, batch_size=batch_size, transform=transform, showInfo=True)
     val_loader = flowDataLoader(dataset=val_set, batch_size=batch_size, transform=transform, showInfo=True)
 
     # 定义模型
-    net = AlexNet(4)
+    net = MobileNetV2(4)
     net = net.to(device)
     loss_function = nn.CrossEntropyLoss()
     params = [p for p in net.parameters() if p.requires_grad]
@@ -140,7 +140,6 @@ def main():
 
             data, label, path = train_loader.getData()
             data = data.to(device)
-            print(data.shape)
             label = torch.tensor(label, dtype=torch.long).to(device)
             # 正向传播
             predict_y = net(data)
@@ -183,7 +182,6 @@ def main():
         while val_loader.getReadable():
             data, label, path = val_loader.getData()
             data = data.to(device)
-            print(data.shape)
             label = torch.tensor(label, dtype=torch.long).to(device)
             # 正向传播
             predict_y = net(data)
