@@ -168,7 +168,7 @@ class ResNet1d(nn.Module):
         return x
 
 
-def resnet1d34(num_classes=1000, include_top=True):
+def resnet1d34(num_classes=4, include_top=True):
     # https://download.pytorch.org/models/resnet34-333f7ec4.pth
     return ResNet1d(BasicBlock1d, [3, 4, 6, 3], num_classes=num_classes, include_top=include_top)
 

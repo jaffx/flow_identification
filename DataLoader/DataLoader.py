@@ -20,16 +20,20 @@ class flowDataLoader():
         self.batch_size = batch_size
         self.transform = transform
         self.showInfo = showInfo
+        self.last_inter_time = 0
 
     def getData(self):
         rets = self.dataset.getData(self.batch_size)
         if rets == DATASET_READ_FINISHED:
             if self.showInfo:
                 printer.xprint_green(
-                    f"\r\033[32mFINISH! Dataset name:【{self.dataset.name}】\tDPR:{int(self.dprate * 100)}%\tBatch_count:{self.batch_count}\tSample_count:{self.sample_count}\033[0m", end='\r')
+                    f"\r\033[32mFINISH! Dataset name:【{self.dataset.name}】\tDPR:{int(self.dprate * 100)}%\tBatch_count:{self.batch_count}\tSample_count:{self.sample_count}\033[0m",
+                    end='\r')
             return DATASET_READ_FINISHED
         else:
             inter_time = time.time() - self.last_read_time if self.last_read_time != 0 else 0
+            inter_time = (0.5 * self.last_inter_time + 0.5 * inter_time) if self.last_inter_time else inter_time
+            self.last_inter_time = inter_time
             self.batch_count += 1
             self.sample_count += len(rets[0])
             self.dprate = self.dataset.getDPRate()
@@ -45,6 +49,8 @@ class flowDataLoader():
 
     def getReadable(self):
         return self.dataset.getReadable()
+
+
 
     def Init(self):
         self.dprate = 0

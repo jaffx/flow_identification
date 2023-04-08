@@ -43,7 +43,7 @@ class flowData:
 def readWMSFile(dataset_path, cls_name, filename) -> flowData:
     """
     从文件中加载WMS数据，适用于.epst文件
-    .epst文件前两为表头和单位，每行前9各字符为时间
+    .epst文件前两为表头和单位，每行前9个字符为时间
     :param dataset_path: 数据集地址
     :param cls_name: 类名
     :param filename: 文件名
@@ -58,7 +58,6 @@ def readWMSFile(dataset_path, cls_name, filename) -> flowData:
         return flowData(data, int(cls_name), file_path)
     except Exception as e:
         printer.xprint_red(f"{file_path} 加载错误，原因 {e}")
-
         return None
 
 
@@ -107,10 +106,11 @@ class flowDataset:
         获得当前数据集的文本格式信息
         :return: str组成的list
         """
-        infos = []
-        infos.append(f"Dataset Path:\t{self.path}")
-        infos.append(f"Class num:\t{len(self.classes)}")
-        infos.append(f"Step:{self.step} \t Sample_length {self.length}")
+        infos = [
+            f"Dataset Path:\t{self.path}",
+            f"Class num:\t{len(self.classes)}",
+            f"Step:{self.step} \t Sample_length {self.length}"
+        ]
         cls_ndata = {}
         cls_nfile = {}
         ndata_totals = 0
@@ -134,11 +134,11 @@ class flowDataset:
         return infos
 
     def loadDataset(self, dataset_path):
-        '''
+        """
         从dataset_path加载数据集
         :param dataset_path:
         :return:
-        '''
+        """
         dataset_path = os.path.join(os.getcwd(), dataset_path)
         assert os.path.exists(dataset_path), f"The dataset path \"{dataset_path}\" not exist!"
         time0 = time.time()
@@ -177,6 +177,7 @@ class flowDataset:
         return read / len(self)
 
     def getData(self, batch_size):
+        # 获取可以继续读取的flowData下标
         readables = [i for i in range(len(self.datas)) if self.datas[i].isReadableForLength(self.length)]
         if readables:
             datas, labels, paths = [], [], []
@@ -193,8 +194,8 @@ class flowDataset:
             return DATASET_READ_FINISHED
 
     def getDPRate(self):
-        '''
+        """
         获取数据处理率(DPRate)
         :return:
-        '''
+        """
         return sum([d.r_ptr for d in self.datas]) / len(self)

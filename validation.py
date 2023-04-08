@@ -7,19 +7,19 @@ import xyq.x_time as xtime
 import xyq.x_printer as printer
 import xyq.x_formatter as formatter
 from model.model_v2 import MobileNetV2
-from model.Resmodel import resnet18
+from model.Resmodel import resnet34
 from model.vgg import vgg
 from DataLoader.transforms import *
 from DataLoader.Dataset import flowDataset
 from DataLoader.DataLoader import flowDataLoader
 
 # 设置参数
-weight_path = "logs/train_result_path/2022-11-30 10.39.26 [VGG]/2022-11-30 10.39.26 [VGG].pth"
+weight_path = "logs/train_result_path/2022-11-30 15.21.28 [ResNet]/2022-11-30 15.21.28 [ResNet].pth"
 transform = flowHilbertTransform(7)
-net = vgg()
-data_length = 128 * 128
-sampling_step = 128 * 64
-batch_size = 8
+net = resnet34(4)
+data_length = 16384
+sampling_step = 8192
+batch_size = 16  # 这里要设置成和训练一样，要不然会影响精度！！！
 val_set_path = "../Dataset/val"
 
 # 加载数据集

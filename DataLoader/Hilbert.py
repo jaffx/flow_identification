@@ -61,17 +61,7 @@ def getpoints(h, w):
     return np.array([[point(i, j) for j in range(w)] for i in range(h)])
 
 
-# def showHilBert(hil, resolution):
-#     _, l = hil.shape
-#     k = int(resolution / sqrt(l))
-#     X = [hil[0, i].x * k + 8 for i in range(l)]
-#     Y = [hil[0, i].y * k + 8 for i in range(l)]
-#     im = np.zeros((resolution + 16, resolution + 16, 3))
-#     imshow(im)
-#     plot(X, Y, 'r')
-#     # plot(X, Y)
-#     title("show HilBert")
-#     show()
+
 
 def HilbertFlatten(img, n):
     hil = getHilbert(n)

@@ -13,6 +13,7 @@ from xyq import x_formatter as formatter
 from model.model_v2 import MobileNetV2
 from model.Resmodel import resnet18
 from model.vgg import vgg
+from model.Res1D import resnet1d34
 from model.AlexNet import AlexNet
 from DataLoader.Dataset import flowDataset
 from DataLoader.DataLoader import flowDataLoader
@@ -38,12 +39,14 @@ def main():
     train_set.getDatasetInfo()
     val_set = flowDataset(path=val_set_path, length=data_length, step=sampling_step, name=val_set_name)
     val_set.getDatasetInfo()
-    transform = flowHilbertTransform(6)
+    transform = toTensor()
     train_loader = flowDataLoader(dataset=train_set, batch_size=batch_size, transform=transform, showInfo=True)
     val_loader = flowDataLoader(dataset=val_set, batch_size=batch_size, transform=transform, showInfo=True)
 
     # 定义模型
-    net = MobileNetV2(4)
+
+    net = resnet1d34()
+
     net = net.to(device)
     loss_function = nn.CrossEntropyLoss()
     params = [p for p in net.parameters() if p.requires_grad]
@@ -57,7 +60,9 @@ def main():
     task_name = f"{date_time_path} [{model_name}]"
     log_path = os.path.join(os.getcwd(), 'logs', 'train', task_name)
     os.makedirs(log_path)
+    # 权重保存路径 logs/train/<文件名>.pth
     weight_path = os.path.join(log_path, f'{task_name}.pth')
+    # 任务信息保存路径
     info_fp_path = os.path.join(log_path, 'info.yaml')
     train_iter_fp_path = os.path.join(log_path, 'train_iter')
     val_iter_fp_path = os.path.join(log_path, 'val_iter')
@@ -170,7 +175,7 @@ def main():
                     f"{'T':>6}\t{epoch:>6}\t{train_batch_num:>6}\t{sample_num:>6}\t{acc_num:>6}\t{batch_acc:>6.04}\t{batch_loss:>6.03}\t{sample_loss:>6.03}\n")
                 titer_fp.close()
         # 训练收尾
-        train_loader.getData()
+        train_loader.getData()  # 输出一下结束内容
         train_end_time = time.time()
 
         # 测试过程
@@ -210,7 +215,7 @@ def main():
                 viter_fp.close()
 
         # 测试收尾
-        val_loader.getData()
+        val_loader.getData()  # 输出一下dataloader一轮结束后的信息
         val_end_time = time.time()
         # Epoch数据统计
         train_acc = train_acc_num / train_sample_num if train_sample_num else 0
@@ -219,7 +224,7 @@ def main():
         val_avg_loss = val_total_loss / val_sample_num if val_sample_num else 0
         train_running_time = xtime.secsToStr(int(train_end_time - train_start_time))
         val_running_time = xtime.secsToStr(int(val_end_time - train_end_time))
-        line_sign = ' '
+        line_sign = ' '  # epoch结果中的行首标志，最优为*
 
         # 权重保存
         if best_acc < val_acc:
