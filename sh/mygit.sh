@@ -1,6 +1,6 @@
 #! /bin/bash
 
-add_list="Analysis analyzer DataLoader model script sh xyq README.md requirements.txt train.py validation.py"
+add_list="Analysis  tools model script sh README.md requirements.txt train.py validation.py"
 process_command=$1
 
 if [[ $process_command == "add" ]]

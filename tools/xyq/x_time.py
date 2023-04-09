@@ -1,6 +1,6 @@
 import datetime
 import time
-import xyq.x_printer as printer
+import tools.xyq.x_printer as printer
 
 
 def showRuningTime(func):

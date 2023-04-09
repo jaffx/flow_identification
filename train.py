@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-import os
 import time
 
 import torch
@@ -7,22 +6,16 @@ import torch.nn as nn
 import torch.optim as optim
 import os
 import yaml
-from xyq import x_time as xtime
-from xyq import x_printer as printer
-from xyq import x_formatter as formatter
-from model.model_v2 import MobileNetV2
-from model.Resmodel import resnet18
-from model.vgg import vgg
+from tools.xyq import x_printer as printer, x_formatter as formatter, x_time as xtime
 from model.Res1D import resnet1d34
-from model.AlexNet import AlexNet
-from DataLoader.Dataset import flowDataset
-from DataLoader.DataLoader import flowDataLoader
-from DataLoader.transforms import toTensor, flowHilbertTransform, spaciousFolder, FFT_Transform
+from tools.Dataset.Dataset import flowDataset
+from tools.DataLoader.DataLoader import flowDataLoader
+from tools.transforms.Basic import toTensor
 
 
 def main():
     # 定义训练设备
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("using {} device.".format(device))
 
     # 自定义训练参数

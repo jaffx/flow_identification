@@ -3,19 +3,17 @@ import os
 
 import yaml
 
-import xyq.x_time as xtime
-import xyq.x_printer as printer
-import xyq.x_formatter as formatter
-from model.model_v2 import MobileNetV2
+import tools.xyq.x_time as xtime
+import tools.xyq.x_printer as printer
+import tools.xyq.x_formatter as formatter
 from model.Resmodel import resnet34
-from model.vgg import vgg
-from DataLoader.transforms import *
-from DataLoader.Dataset import flowDataset
-from DataLoader.DataLoader import flowDataLoader
+from tools.Dataset.Dataset import flowDataset
+from tools.DataLoader.DataLoader import flowDataLoader
+from tools.transforms import Transforms2D as trans2d
 
 # 设置参数
 weight_path = "logs/train_result_path/2022-11-30 15.21.28 [ResNet]/2022-11-30 15.21.28 [ResNet].pth"
-transform = flowHilbertTransform(7)
+transform = trans2d.flowHilbertTransform(7)
 net = resnet34(4)
 data_length = 16384
 sampling_step = 8192
