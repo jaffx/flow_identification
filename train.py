@@ -10,7 +10,8 @@ from tools.xyq import x_printer as printer, x_formatter as formatter, x_time as 
 from model.Res1D import resnet1d34
 from tools.Dataset.Dataset import flowDataset
 from tools.DataLoader.DataLoader import flowDataLoader
-from tools.transforms.Basic import toTensor
+from tools.transforms.BaseTrans import *
+from tools.transforms.DataAugmentation import *
 
 
 def main():
@@ -32,9 +33,12 @@ def main():
     train_set.getDatasetInfo()
     val_set = flowDataset(path=val_set_path, length=data_length, step=sampling_step, name=val_set_name)
     val_set.getDatasetInfo()
-    transform = toTensor()
-    train_loader = flowDataLoader(dataset=train_set, batch_size=batch_size, transform=transform, showInfo=True)
-    val_loader = flowDataLoader(dataset=val_set, batch_size=batch_size, transform=transform, showInfo=True)
+    train_transform = transfrom_set([
+        toTensor()
+    ])
+    val_transform = toTensor()
+    train_loader = flowDataLoader(dataset=train_set, batch_size=batch_size, transform=train_transform, showInfo=True)
+    val_loader = flowDataLoader(dataset=val_set, batch_size=batch_size, transform=val_transform, showInfo=True)
 
     # 定义模型
 
@@ -74,10 +78,10 @@ def main():
 
     task_info["Model_Name"] = model_name
     task_info["Model_Parameter_Amount"] = formatter.xNumFormat(model_param_amount, 'm', 3)
-
     task_info["Data_Length"] = data_length
     task_info["Sampling_Step"] = sampling_step
-
+    task_info["Train_Transform"] = train_transform.str()
+    task_info["Val_Transform"] = val_transform.str()
     task_info["Batch_Size"] = batch_size
     task_info["Learn_Rate"] = learn_rate
     task_info["Optimizer"] = optimizer.__class__.__name__

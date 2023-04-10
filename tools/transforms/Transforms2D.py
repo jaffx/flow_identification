@@ -1,6 +1,6 @@
 from Hilbert import *
 import torch
-from Basic import *
+from BaseTrans import *
 
 
 class flowHilbertTransform():

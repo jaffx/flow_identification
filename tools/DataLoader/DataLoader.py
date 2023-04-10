@@ -1,11 +1,12 @@
 import time
 
-from DataLoader.Dataset import flowDataset, DATASET_READ_FINISHED
+from tools.Dataset.Dataset import flowDataset, DATASET_READ_FINISHED
+from tools.transforms.BaseTrans import transform_base
 from tools.xyq import x_printer as printer, x_time as xtime
 
 
 class flowDataLoader():
-    def __init__(self, dataset: flowDataset, batch_size: int, transform, showInfo=False):
+    def __init__(self, dataset: flowDataset, batch_size: int, transform: transform_base, showInfo: bool = False):
 
         #######数据分析############
         self.dprate = 0
@@ -23,7 +24,8 @@ class flowDataLoader():
         if rets == DATASET_READ_FINISHED:
             if self.showInfo:
                 printer.xprint_green(
-                    f"\r\033[32mFINISH! Dataset name:【{self.dataset.name}】\tDPR:{int(self.dprate * 100)}%\tBatch_count:{self.batch_count}\tSample_count:{self.sample_count}\033[0m", end='\r')
+                    f"\r\033[32mFINISH! Dataset name:【{self.dataset.name}】\tDPR:{int(self.dprate * 100)}%\tBatch_count:{self.batch_count}\tSample_count:{self.sample_count}\033[0m",
+                    end='\r')
             return DATASET_READ_FINISHED
         else:
             inter_time = time.time() - self.last_read_time if self.last_read_time != 0 else 0
