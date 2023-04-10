@@ -12,13 +12,13 @@ from tools.DataLoader.DataLoader import flowDataLoader
 from tools.transforms import Transforms2D as trans2d
 
 # 设置参数
-weight_path = "logs/train_result_path/2022-11-30 15.21.28 [ResNet]/2022-11-30 15.21.28 [ResNet].pth"
+weight_path = "../logs/train_result_path/2022-11-30 15.21.28 [ResNet]/2022-11-30 15.21.28 [ResNet].pth"
 transform = trans2d.flowHilbertTransform(7)
 net = resnet34(4)
 data_length = 16384
 sampling_step = 8192
 batch_size = 16  # 这里要设置成和训练一样，要不然会影响精度！！！
-val_set_path = "../Dataset/val"
+val_set_path = "../../Dataset/val"
 
 # 加载数据集
 val_dataset = flowDataset(path=val_set_path, length=data_length, step=sampling_step, name="Validation Set")
@@ -34,7 +34,7 @@ loss_function = torch.nn.CrossEntropyLoss()
 # 数据保存相关内容
 model_name = net.__class__.__name__
 task_name = f"[{model_name}]{xtime.getDateTimeForPath()}"
-log_path = os.path.join(os.getcwd(), "logs", "val", task_name)
+log_path = os.path.join(os.getcwd(), "../logs", "val", task_name)
 info_path = os.path.join(log_path, "info.yaml")
 iter_path = os.path.join(log_path, "iter")
 result_path = os.path.join(log_path, "result.yaml")

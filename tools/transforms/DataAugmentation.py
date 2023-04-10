@@ -94,3 +94,4 @@ class data_death(BT.transform_base):
 
     def __call__(self, x):
         return np.zeros_like(x)
+

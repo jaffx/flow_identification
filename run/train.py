@@ -55,7 +55,7 @@ def main():
     date_time_path = xtime.getDateTimeForPath()
     date_time = xtime.getDateTime()
     task_name = f"{date_time_path} [{model_name}]"
-    log_path = os.path.join(os.getcwd(), 'logs', 'train', task_name)
+    log_path = os.path.join(os.getcwd(), '../logs', 'train', task_name)
     os.makedirs(log_path)
     # 权重保存路径 logs/train/<文件名>.pth
     weight_path = os.path.join(log_path, f'{task_name}.pth')

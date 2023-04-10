@@ -8,7 +8,7 @@ else
   #  echo -n "### 运行命令："
 
   # add 执行git add操作
-  add_list='Analysis tools model script xcmd.sh README.md requirements.txt train.py validation.py'
+  add_list='Analysis tools model script xcmd.sh README.md requirements.txt run settings'
   if [[ $process_command == "add" ]]; then
     echo "git add $add_list"
     echo "$add_list" | xargs git add
