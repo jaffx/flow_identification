@@ -76,8 +76,9 @@ def train(setting: train_setting, model):
     # 通过yaml文件记录模型数据
     task_info = {}
     task_info["Task_Name"] = "Model_training"
-    task_info["Data_Source"] = "WMS"
     task_info["Task_Time"] = date_time
+    task_info["Dataset"] = setting.dataset
+    task_info["Device_Name"] = setting.device_name
 
     task_info["Model_Name"] = model_name
     task_info["Model_Parameter_Amount"] = formatter.xNumFormat(model_param_amount, 'm', 3)
@@ -225,7 +226,3 @@ def train(setting: train_setting, model):
                            f"{val_avg_loss:>8.3f}\t{val_batch_num:>8}\t{val_sample_num:>8}\t{val_acc_num:>8}\t{val_acc:>8.3f}\n"
                            )
             epoch_fp.close()
-
-
-if __name__ == '__main__':
-    main()

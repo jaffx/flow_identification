@@ -34,6 +34,7 @@ class transform_base:
 class random_trigger(transform_base):
     # 设置一个概率p和一个transform，有概率p触发这个transform
     def __init__(self, transform, prob=0.5):
+        super().__init__()
         self.transform = transform
         self.prob = prob
 
@@ -49,6 +50,7 @@ class random_trigger(transform_base):
 class random_selector(transform_base):
     # 随机从一个transform中选择一个
     def __init__(self, transforms: list):
+        super().__init__()
         self.transforms = transforms
 
     def __call__(self, x):
@@ -66,6 +68,7 @@ class random_selector(transform_base):
 class transform_selector(transform_base):
     # 按照顺序选择一个transform
     def __init__(self, transforms: list):
+        super().__init__()
         self.transforms = transforms
         self.select = 0
 
@@ -85,6 +88,7 @@ class transform_selector(transform_base):
 class transfrom_set(transform_base):
     # 递归经过所有transform
     def __init__(self, transforms: list):
+        super().__init__()
         self.transforms = transforms
 
     def __call__(self, x):

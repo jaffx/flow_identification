@@ -8,13 +8,14 @@ import numpy as np
 class normalized_random_noise(BT.transform_base):
     # 添加一个正态分布噪声
     def __init__(self, mean, std):
+        super().__init__()
         self.mean = mean
         self.std = std
 
     def __call__(self, x=None):
         shape = x.shape
         noise = np.random.normal(self.mean, self.std, shape)
-        return x + noise if x else noise
+        return x + noise if x is not None else noise
 
     def __str__(self):
         return f"{self.__class__.__name__}(mean={self.mean}, std={self.std})"
@@ -26,6 +27,7 @@ class random_noise(BT.transform_base):
     """
 
     def __init__(self, noise_min, noise_max):
+        super().__init__()
         self.noise_min, self.noise_max = noise_min, noise_max
 
     def __call__(self, x=None):
@@ -43,6 +45,7 @@ class dropout(BT.transform_base):
     """
 
     def __init__(self, rate=0.5):
+        super().__init__()
         self.rate = rate
 
     def __call__(self, x: np.array):
@@ -69,6 +72,7 @@ class random_range_masking(BT.transform_base):
     """
 
     def __init__(self, rate=0.5):
+        super().__init__()
         self.rate = rate
 
     def __call__(self, x):
@@ -94,4 +98,3 @@ class data_death(BT.transform_base):
 
     def __call__(self, x):
         return np.zeros_like(x)
-

@@ -1,5 +1,7 @@
 import time
 
+import numpy as np
+
 from tools.Dataset.Dataset import flowDataset, DATASET_READ_FINISHED
 from tools.transforms.BaseTrans import transform_base
 from tools.xyq import x_printer as printer, x_time as xtime
@@ -40,6 +42,7 @@ class flowDataLoader():
                     f"Sample_count:{self.sample_count}\tRemaining time:{xtime.secsToStr(int(estimate_run_time))}",
                     end='')
             datas, labels, paths = rets
+            datas = np.array(datas)
             return self.transform(datas), labels, paths
 
     def getReadable(self):

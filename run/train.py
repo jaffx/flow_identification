@@ -12,6 +12,8 @@ from tools.Dataset.Dataset import flowDataset
 from tools.DataLoader.DataLoader import flowDataLoader
 from tools.transforms.BaseTrans import *
 from tools.transforms.DataAugmentation import *
+from tools.transforms.Preprocess import *
+from tools.utils.dataset import get_dataset_path
 
 
 def main():
@@ -20,12 +22,15 @@ def main():
     print("using {} device.".format(device))
 
     # 自定义训练参数
-    data_length = 64 * 64
-    sampling_step = 32 * 64
-    batch_size = 32
+    data_length = 4096
+    sampling_step = 1024
+    batch_size = 50
     epoch_num = 50
-    train_set_path, train_set_name = "../Dataset/train", "TrainSet"
-    val_set_path, val_set_name = "../Dataset/val", "ValSet"
+    dataset_name = "wms_old"
+    device_name = "mac"
+    dataset_path = get_dataset_path(dataset=dataset_name, device=device_name)
+    train_set_path, train_set_name = os.path.join(dataset_path, "train"), "TrainSet"
+    val_set_path, val_set_name =  os.path.join(dataset_path, "val"), "ValSet"
     learn_rate = 0.0001
 
     # 导入训练数据
@@ -34,9 +39,19 @@ def main():
     val_set = flowDataset(path=val_set_path, length=data_length, step=sampling_step, name=val_set_name)
     val_set.getDatasetInfo()
     train_transform = transfrom_set([
+        normalization(),
+        random_trigger(prob=0.3, transform=random_selector([
+            normalized_random_noise(mean=0, std=0.1),
+            random_range_masking(0.3),
+            dropout(0.1),
+        ]
+        )),
         toTensor()
     ])
-    val_transform = toTensor()
+    val_transform = transfrom_set([
+        normalization(),
+        toTensor()
+    ])
     train_loader = flowDataLoader(dataset=train_set, batch_size=batch_size, transform=train_transform, showInfo=True)
     val_loader = flowDataLoader(dataset=val_set, batch_size=batch_size, transform=val_transform, showInfo=True)
 
@@ -73,8 +88,10 @@ def main():
     # 通过yaml文件记录模型数据
     task_info = {}
     task_info["Task_Name"] = "Model_training"
-    task_info["Data_Source"] = "WMS"
     task_info["Task_Time"] = date_time
+    task_info["Dataset"] = dataset_name
+    task_info["Device_Name"] = device_name
+
 
     task_info["Model_Name"] = model_name
     task_info["Model_Parameter_Amount"] = formatter.xNumFormat(model_param_amount, 'm', 3)
@@ -91,22 +108,6 @@ def main():
     task_info["Val_Set_Info"] = train_set.getDatasetInfoDict()
 
     yaml.dump(task_info, open(info_fp_path, "w"))
-    # 记录模型数据
-    # with open(info_fp_path, 'a+') as info_fp:
-    #     info_fp.write(f"# TASK_TIME: {date_time}\n")
-    #     info_fp.write(f"# Train Set Info\n")
-    #     for line in train_set_info:
-    #         info_fp.write('\t' + line + '\n')
-    #     info_fp.write(f"# Val Set Info\n")
-    #     for line in val_set_info:
-    #         info_fp.write('\t' + line + '\n')
-    #     info_fp.write(f"# Transform: {transform.__class__.__name__}\n")
-    #     info_fp.write(f"# Data Length: {data_length} \t Sampling Step:{sampling_step}\n")
-    #     info_fp.write(f"# Epoch Num: {epoch_num} \t Batch Size: {batch_size}\n")
-    #     info_fp.write(
-    #         f"# Model Name:{model_name} \t Model Parameters Amount:{formatter.intFormatter(model_param_amount, unit='m', keep_float=3)} \n")
-    #     info_fp.write(f"# Optimizer:{optimizer.__class__.__name__} \t Learn Rate: {learn_rate}\n")
-    #     info_fp.close()
 
     # 开始训练
     best_acc = 0
