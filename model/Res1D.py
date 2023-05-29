@@ -113,7 +113,7 @@ class ResNet1d(nn.Module):
         self.layer3 = self._make_layer(block, 256, blocks_num[2], stride=2)
         self.layer4 = self._make_layer(block, 512, blocks_num[3], stride=2)
         self.softmax = nn.Softmax()
-        self.drop = nn.Dropout(0.2)
+        # self.drop = nn.Dropout(0.2) 不做dropout
         if self.include_top:
             self.avgpool = nn.AdaptiveAvgPool1d(1)  # output size = (1, 1)
             self.fc = nn.Linear(512, num_classes)

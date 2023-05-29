@@ -1,7 +1,9 @@
 import math
 from matplotlib import pyplot as plt
 import numpy as np
-from DataLoader import Hilbert as hilb
+import sys
+sys.path.append(".")
+from tools.transforms import Hilbert as hilb
 
 
 def showHilBert(hil, resolution):

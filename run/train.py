@@ -6,6 +6,8 @@ import torch.nn as nn
 import torch.optim as optim
 import os
 import yaml
+import sys
+sys.path.append(os.path.join(os.getcwd()))
 from tools.xyq import x_printer as printer, x_formatter as formatter, x_time as xtime
 from model.Res1D import resnet1d34
 from tools.Dataset.Dataset import flowDataset

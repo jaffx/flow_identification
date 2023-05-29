@@ -1,5 +1,9 @@
-# 2023年03月28日 压力信号和wms数据处理
-# 将同种工况的wms数据和压力数据归并到一起
+"""
+@date 2023年03月28日
+@brief 压力信号和wms数据处理
+将同种工况的wms数据和压力数据归并到一起
+
+"""
 import os
 import re
 import shutil
