@@ -40,25 +40,44 @@ class flowData:
         return self.r_ptr + length < len(self.data)
 
 
-def readWMSFile(dataset_path, cls_name, filename) -> flowData:
+def readWMSFile(data_path, cls_name) -> flowData | None:
     """
     从文件中加载WMS数据，适用于.epst文件
-    .epst文件前两为表头和单位，每行前9各字符为时间
-    :param dataset_path: 数据集地址
-    :param cls_name: 类名
-    :param filename: 文件名
-    :return:
+    @param dataset_path: 数据集地址
+    @param cls_name: 类名
+    @param filename: 文件名
+    @return
     """
-    file_path = os.path.join(dataset_path, cls_name, filename)
+    file_path = data_path
     try:
 
         with open(file_path) as fp:
-            content = fp.readlines()[2:]
-            data = [float(line[11:]) for line in content]
-        return flowData(data, int(cls_name), file_path)
+            content = fp.readlines()
+            content = content[2:]
+            data = []
+            for line in content:
+                line = line.strip()
+                items = line.split(" ")
+                data.append(float(items[-1]))
+        return flowData(data, cls_name, file_path)
     except Exception as e:
         printer.xprint_red(f"{file_path} 加载错误，原因 {e}")
+        return None
 
+
+def readSimpleDataset(data_path, cls_name) -> flowData | None:
+    file_path = data_path
+    try:
+
+        with open(file_path) as fp:
+            content = fp.readlines()
+            content = content[2:]
+            data = []
+            for line in content:
+                data.append(float(line))
+        return flowData(data, cls_name, file_path)
+    except Exception as e:
+        printer.xprint_red(f"{file_path} 加载错误，原因 {e}")
         return None
 
 
@@ -74,7 +93,8 @@ class flowDataset:
 
         self.step = step
         self.length = length
-        self.loadDataset(path)
+        if path is not None:
+            self.loadDataset(path)
         self.name = name if name else path
 
     def __len__(self):
@@ -109,7 +129,7 @@ class flowDataset:
         """
         infos = []
         infos.append(f"Dataset Path:\t{self.path}")
-        infos.append(f"Class num:\t{len(self.classes)}")
+        infos.append(f"Class num:\t{len(self.classes) if self.classes else 'unset'}")
         infos.append(f"Step:{self.step} \t Sample_length {self.length}")
         cls_ndata = {}
         cls_nfile = {}
@@ -123,9 +143,10 @@ class flowDataset:
             ndata_totals += len(fd)
             nfile_totals += 1
         infos.append("--------*Dataset Infos*---------")
-        infos.append("label\t|\tAmount\t|\tFile")
+        infos.append(f"{'label':<8}\t|\t{'Amount':<8}\t|\t{'File':<8}")
         for cls in cls_ndata:
-            infos.append(f"{cls}\t\t|\t {int(cls_ndata[cls] / 1000)}k\t|\t{cls_nfile[cls]}")
+            infos.append(
+                f"{cls if cls else 'Unknown':<8}\t|\t {str(int(cls_ndata[cls] / 1000)) + 'k':<8}\t|\t{cls_nfile[cls]:<8}")
         infos.append(f"total\t|\t{int(ndata_totals / 1000)}k\t|\t{nfile_totals}")
         infos.append("*-------*-----------*---------*")
         if show:
@@ -151,7 +172,7 @@ class flowDataset:
         for cls in class_paths:
             files = os.listdir(os.path.join(dataset_path, cls))
             for file in files:
-                fdata = readWMSFile(dataset_path, cls, file)
+                fdata = readSimpleDataset(dataset_path, cls)
                 if not fdata:
                     fail_count += 1
                     continue
@@ -160,10 +181,20 @@ class flowDataset:
                 suc_count += 1
         if fail_count:
             printer.xprint_red(f"\r {fail_count}/{total_files} files load Failed! Please check it!")
+            exit(1)
         else:
             printer.xprint_green(
                 f"\r【{total_files} Finished】｜Load {dataset_path} running time: {int((time.time() - time0) * 1000)}ms")
         random.shuffle(self.datas)
+
+    """
+    @brief 设置Dataset内容
+    """
+
+    def setDataset(self, fDataList, path, classes="Unknown"):
+        self.datas = fDataList
+        self.path = path
+        self.classes = classes
 
     def Init(self):
         for d in self.datas:

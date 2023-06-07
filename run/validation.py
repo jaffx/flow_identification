@@ -12,7 +12,7 @@ from tools.DataLoader.DataLoader import flowDataLoader
 from tools.transforms import Transforms2D as trans2d
 
 # 设置参数
-weight_path = "../logs/train_result_path/2022-11-30 15.21.28 [ResNet]/2022-11-30 15.21.28 [ResNet].pth"
+weight_path = "/Users/lyn/codes/python/Flow_Identification/Flow_Identification/result/2023-05-29 12.10.18 [ResNet1d]/2023-05-29 12.10.18 [ResNet1d].pth"
 transform = trans2d.flowHilbertTransform(7)
 net = resnet34(4)
 data_length = 16384

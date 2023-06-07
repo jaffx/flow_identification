@@ -1,0 +1,522 @@
+{
+  "G405L600_Y_Chunshui-2.epst": {
+    "prop": "62%",
+    "flowRegime": 3
+  },
+  "G02L60_Y_Shangqing.epst": {
+    "prop": "96%",
+    "flowRegime": 0
+  },
+  "G405L540_Y_Chunshui-2.epst": {
+    "prop": "54%",
+    "flowRegime": 2
+  },
+  "G225L600_Y_Shangqing.epst": {
+    "prop": "75%",
+    "flowRegime": 2
+  },
+  "G02L420_Y_Shangqing.epst": {
+    "prop": "97%",
+    "flowRegime": 0
+  },
+  "G360L360_Y_Chunshui-2.epst": {
+    "prop": "87%",
+    "flowRegime": 2
+  },
+  "G135L120_Y_Shangqing.epst": {
+    "prop": "54%",
+    "flowRegime": 1
+  },
+  "G405L420_Y_Chunshui-2.epst": {
+    "prop": "50%",
+    "flowRegime": 3
+  },
+  "G45L120_Y_Shangqing.epst": {
+    "prop": "93%",
+    "flowRegime": 0
+  },
+  "G225L420_Y_Shangqing.epst": {
+    "prop": "82%",
+    "flowRegime": 2
+  },
+  "G405L300_Y_Chunshui-2.epst": {
+    "prop": "66%",
+    "flowRegime": 3
+  },
+  "G405L120_Y_Chunshui-2.epst": {
+    "prop": "80%",
+    "flowRegime": 3
+  },
+  "G450L420_Y_Chunshui-2.epst": {
+    "prop": "83%",
+    "flowRegime": 3
+  },
+  "G270L240_Y_Chunshui-2.epst": {
+    "prop": "89%",
+    "flowRegime": 2
+  },
+  "G450L300_Y_Chunshui-2.epst": {
+    "prop": "93%",
+    "flowRegime": 3
+  },
+  "G135L480_Y_Shangqing.epst": {
+    "prop": "55%",
+    "flowRegime": 1
+  },
+  "G180L420_Y_Shangqing.epst": {
+    "prop": "64%",
+    "flowRegime": 2
+  },
+  "G90L600_Y_Shangqing.epst": {
+    "prop": "57%",
+    "flowRegime": 0
+  },
+  "G315L420_Y_Shangqing.epst": {
+    "prop": "91%",
+    "flowRegime": 2
+  },
+  "G00L60_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  },
+  "G90L180_Y_Shangqing.epst": {
+    "prop": "77%",
+    "flowRegime": 0
+  },
+  "G270L420_Y_Shangqing.epst": {
+    "prop": "87%",
+    "flowRegime": 2
+  },
+  "G225L180_Y_Shangqing.epst": {
+    "prop": "82%",
+    "flowRegime": 2
+  },
+  "G00L480_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  },
+  "G01L360_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  },
+  "G45L360_Y_Shangqing.epst": {
+    "prop": "88%",
+    "flowRegime": 0
+  },
+  "G360L180_Y_Chunshui-2.epst": {
+    "prop": "93%",
+    "flowRegime": 2
+  },
+  "G360L600_Y_Chunshui-2.epst": {
+    "prop": "73%",
+    "flowRegime": 2
+  },
+  "G00L600_Y_Shangqing.epst": {
+    "prop": "98%",
+    "flowRegime": 0
+  },
+  "G135L420_Y_Shangqing.epst": {
+    "prop": "53%",
+    "flowRegime": 1
+  },
+  "G01L420_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  },
+  "G450L480_Y_Chunshui-2.epst": {
+    "prop": "77%",
+    "flowRegime": 3
+  },
+  "G01L120_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  },
+  "G225L480_Y_Shangqing.epst": {
+    "prop": "82%",
+    "flowRegime": 2
+  },
+  "G180L300_Y_Shangqing.epst": {
+    "prop": "62%",
+    "flowRegime": 2
+  },
+  "G405L480_Y_Chunshui-2.epst": {
+    "prop": "62%",
+    "flowRegime": 3
+  },
+  "G00L120_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  },
+  "G02L240_Y_Shangqing.epst": {
+    "prop": "98%",
+    "flowRegime": 0
+  },
+  "G180L240_Y_Shangqing.epst": {
+    "prop": "63%",
+    "flowRegime": 2
+  },
+  "G90L120_Y_Shangqing.epst": {
+    "prop": "74%",
+    "flowRegime": 0
+  },
+  "G225L360_Y_Shangqing.epst": {
+    "prop": "84%",
+    "flowRegime": 2
+  },
+  "G00L300_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  },
+  "G90L300_Y_Shangqing.epst": {
+    "prop": "65%",
+    "flowRegime": 0
+  },
+  "G270L360_Y_Shangqing.epst": {
+    "prop": "90%",
+    "flowRegime": 2
+  },
+  "G315L240_Y_Shangqing.epst": {
+    "prop": "96%",
+    "flowRegime": 2
+  },
+  "G02L540_Y_Shangqing.epst": {
+    "prop": "94%",
+    "flowRegime": 0
+  },
+  "G135L240_Y_Shangqing.epst": {
+    "prop": "55%",
+    "flowRegime": 1
+  },
+  "G45L300_Y_Shangqing.epst": {
+    "prop": "92%",
+    "flowRegime": 0
+  },
+  "G450L360_Y_Chunshui-2.epst": {
+    "prop": "90%",
+    "flowRegime": 3
+  },
+  "G315L600_Y_Shangqing.epst": {
+    "prop": "79%",
+    "flowRegime": 2
+  },
+  "G360L60_Y_Chunshui-2.epst": {
+    "prop": "91%",
+    "flowRegime": 2
+  },
+  "G02L180_Y_Shangqing.epst": {
+    "prop": "98%",
+    "flowRegime": 0
+  },
+  "G180L540_Y_Shangqing.epst": {
+    "prop": "67%",
+    "flowRegime": 2
+  },
+  "G135L540_Y_Shangqing.epst": {
+    "prop": "54%",
+    "flowRegime": 1
+  },
+  "G225L240_Y_Shangqing.epst": {
+    "prop": "83%",
+    "flowRegime": 2
+  },
+  "G180L180_Y_Shangqing.epst": {
+    "prop": "64%",
+    "flowRegime": 2
+  },
+  "G225L120_Y_Shangqing.epst": {
+    "prop": "79%",
+    "flowRegime": 2
+  },
+  "G450L540_Y_Chunshui-2.epst": {
+    "prop": "76%",
+    "flowRegime": 3
+  },
+  "G405L180_Y_Chunshui-2.epst": {
+    "prop": "76%",
+    "flowRegime": 3
+  },
+  "G01L300_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  },
+  "G45L540_Y_Shangqing.epst": {
+    "prop": "86%",
+    "flowRegime": 0
+  },
+  "G405L60_Y_Chunshui-2.epst": {
+    "prop": "81%",
+    "flowRegime": 3
+  },
+  "G315L360_Y_Shangqing.epst": {
+    "prop": "92%",
+    "flowRegime": 2
+  },
+  "G45L420_Y_Shangqing.epst": {
+    "prop": "89%",
+    "flowRegime": 0
+  },
+  "G01L240_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  },
+  "G315L180_Y_Shangqing.epst": {
+    "prop": "91%",
+    "flowRegime": 2
+  },
+  "G01L540_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  },
+  "G315L540_Y_Shangqing.epst": {
+    "prop": "84%",
+    "flowRegime": 2
+  },
+  "G315L60_Y_Shangqing.epst": {
+    "prop": "95%",
+    "flowRegime": 2
+  },
+  "G01L600_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  },
+  "G90L240_Y_Shangqing.epst": {
+    "prop": "74%",
+    "flowRegime": 0
+  },
+  "G00L420_Y_Shangqing.epst": {
+    "prop": "97%",
+    "flowRegime": 0
+  },
+  "G02L600_Y_Shangqing.epst": {
+    "prop": "96%",
+    "flowRegime": 0
+  },
+  "G01L480_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  },
+  "G180L360_Y_Shangqing.epst": {
+    "prop": "66%",
+    "flowRegime": 2
+  },
+  "G90L420_Y_Shangqing.epst": {
+    "prop": "58%",
+    "flowRegime": 0
+  },
+  "G360L420_Y_Chunshui-2.epst": {
+    "prop": "86%",
+    "flowRegime": 2
+  },
+  "G135L60_Y_Shangqing.epst": {
+    "prop": "49%",
+    "flowRegime": 1
+  },
+  "G405L360_Y_Chunshui-2.epst": {
+    "prop": "56%",
+    "flowRegime": 3
+  },
+  "G270L480_Y_Shangqing.epst": {
+    "prop": "87%",
+    "flowRegime": 2
+  },
+  "G270L540_Y_Shangqing.epst": {
+    "prop": "82%",
+    "flowRegime": 2
+  },
+  "G270L180_Y_Chunshui-2.epst": {
+    "prop": "95%",
+    "flowRegime": 2
+  },
+  "G270L300_Y_Chunshui-2.epst": {
+    "prop": "85%",
+    "flowRegime": 2
+  },
+  "G315L480_Y_Shangqing.epst": {
+    "prop": "89%",
+    "flowRegime": 2
+  },
+  "G135L600_Y_Shangqing.epst": {
+    "prop": "56%",
+    "flowRegime": 1
+  },
+  "G450L600_Y_Chunshui-2.epst": {
+    "prop": "71%",
+    "flowRegime": 3
+  },
+  "G45L480_Y_Shangqing.epst": {
+    "prop": "86%",
+    "flowRegime": 0
+  },
+  "G45L600_Y_Shangqing.epst": {
+    "prop": "82%",
+    "flowRegime": 0
+  },
+  "G00L540_Y_Shangqing.epst": {
+    "prop": "97%",
+    "flowRegime": 0
+  },
+  "G225L60_Y_Shangqing.epst": {
+    "prop": "72%",
+    "flowRegime": 2
+  },
+  "G90L60_Y_Shangqing.epst": {
+    "prop": "88%",
+    "flowRegime": 0
+  },
+  "G270L60_Y_Shangqing.epst": {
+    "prop": "91%",
+    "flowRegime": 2
+  },
+  "G180L60_Y_Shangqing.epst": {
+    "prop": "52%",
+    "flowRegime": 2
+  },
+  "G180L480_Y_Shangqing.epst": {
+    "prop": "66%",
+    "flowRegime": 2
+  },
+  "G135L180_Y_Shangqing.epst": {
+    "prop": "55%",
+    "flowRegime": 1
+  },
+  "G02L120_Y_Shangqing.epst": {
+    "prop": "97%",
+    "flowRegime": 0
+  },
+  "G90L540_Y_Shangqing.epst": {
+    "prop": "60%",
+    "flowRegime": 0
+  },
+  "G02L360_Y_Shangqing.epst": {
+    "prop": "97%",
+    "flowRegime": 0
+  },
+  "G180L600_Y_Shangqing.epst": {
+    "prop": "64%",
+    "flowRegime": 2
+  },
+  "G315L300_Y_Shangqing.epst": {
+    "prop": "90%",
+    "flowRegime": 2
+  },
+  "G90L360_Y_Shangqing.epst": {
+    "prop": "59%",
+    "flowRegime": 0
+  },
+  "G45L60_Y_Shangqing.epst": {
+    "prop": "95%",
+    "flowRegime": 0
+  },
+  "G00L360_Y_Shangqing.epst": {
+    "prop": "97%",
+    "flowRegime": 0
+  },
+  "G00L240_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  },
+  "G360L120_Y_Chunshui-2.epst": {
+    "prop": "94%",
+    "flowRegime": 2
+  },
+  "G270L600_Y_Shangqing.epst": {
+    "prop": "83%",
+    "flowRegime": 2
+  },
+  "G225L540_Y_Shangqing.epst": {
+    "prop": "80%",
+    "flowRegime": 2
+  },
+  "G01L180_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  },
+  "G225L300_Y_Shangqing.epst": {
+    "prop": "82%",
+    "flowRegime": 2
+  },
+  "G45L180_Y_Shangqing.epst": {
+    "prop": "94%",
+    "flowRegime": 0
+  },
+  "G02L300_Y_Shangqing.epst": {
+    "prop": "98%",
+    "flowRegime": 0
+  },
+  "G315L120_Y_Shangqing.epst": {
+    "prop": "94%",
+    "flowRegime": 2
+  },
+  "G02L480_Y_Shangqing.epst": {
+    "prop": "97%",
+    "flowRegime": 0
+  },
+  "G360L480_Y_Chunshui-2.epst": {
+    "prop": "82%",
+    "flowRegime": 2
+  },
+  "G270L120_Y_Shangqing.epst": {
+    "prop": "90%",
+    "flowRegime": 2
+  },
+  "G135L360_Y_Shangqing.epst": {
+    "prop": "50%",
+    "flowRegime": 1
+  },
+  "G360L240_Y_Chunshui-2.epst": {
+    "prop": "90%",
+    "flowRegime": 2
+  },
+  "G45L240_Y_Shangqing.epst": {
+    "prop": "85%",
+    "flowRegime": 0
+  },
+  "G360L300_Y_Chunshui-2.epst": {
+    "prop": "90%",
+    "flowRegime": 2
+  },
+  "G90L480_Y_Shangqing.epst": {
+    "prop": "59%",
+    "flowRegime": 0
+  },
+  "G450L240_Y_Chunshui-2.epst": {
+    "prop": "96%",
+    "flowRegime": 3
+  },
+  "G450L60_Y_Chunshui-2.epst": {
+    "prop": "99%",
+    "flowRegime": 3
+  },
+  "G135L300_Y_Shangqing.epst": {
+    "prop": "50%",
+    "flowRegime": 1
+  },
+  "G450L120_Y_Chunshui-2.epst": {
+    "prop": "99%",
+    "flowRegime": 3
+  },
+  "G00L180_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  },
+  "G405L240_Y_Chunshui-2.epst": {
+    "prop": "63%",
+    "flowRegime": 3
+  },
+  "G360L540_Y_Chunshui-2.epst": {
+    "prop": "77%",
+    "flowRegime": 2
+  },
+  "G180L120_Y_Shangqing.epst": {
+    "prop": "62%",
+    "flowRegime": 2
+  },
+  "G450L180_Y_Chunshui-2.epst": {
+    "prop": "98%",
+    "flowRegime": 3
+  },
+  "G01L60_Y_Shangqing.epst": {
+    "prop": "99%",
+    "flowRegime": 0
+  }
+}
