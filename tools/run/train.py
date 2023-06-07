@@ -58,9 +58,9 @@ def train(setting: train_setting, model):
     date_time_path = xtime.getDateTimeForPath()
     date_time = xtime.getDateTime()
     task_name = f"{date_time_path} [{model_name}]"
-    log_path = os.path.join(os.getcwd(), 'logs', 'train', task_name)
+    log_path = os.path.join(os.getcwd(), 'result', 'train', task_name)
     os.makedirs(log_path)
-    # 权重保存路径 logs/train/<文件名>.pth
+    # 权重保存路径 result/train/<文件名>.pth
     weight_path = os.path.join(log_path, f'{task_name}.pth')
     # 任务信息保存路径
     info_fp_path = os.path.join(log_path, 'info.yaml')

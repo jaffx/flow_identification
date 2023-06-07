@@ -12,7 +12,7 @@ from tools.DataLoader.DataLoader import flowDataLoader
 from tools.transforms import Transforms2D as trans2d
 
 # 设置参数
-weight_path = "/Users/lyn/codes/python/Flow_Identification/Flow_Identification/result/2023-05-29 12.10.18 [ResNet1d]/2023-05-29 12.10.18 [ResNet1d].pth"
+weight_path = "/results/2023-05-29 12.10.18 [ResNet1d]/2023-05-29 12.10.18 [ResNet1d].pth"
 transform = trans2d.flowHilbertTransform(7)
 net = resnet34(4)
 data_length = 16384
@@ -34,10 +34,10 @@ loss_function = torch.nn.CrossEntropyLoss()
 # 数据保存相关内容
 model_name = net.__class__.__name__
 task_name = f"[{model_name}]{xtime.getDateTimeForPath()}"
-log_path = os.path.join(os.getcwd(), "../logs", "val", task_name)
+log_path = os.path.join(os.getcwd(), "result", "val", task_name)
 info_path = os.path.join(log_path, "info.yaml")
 iter_path = os.path.join(log_path, "iter")
-result_path = os.path.join(log_path, "result.yaml")
+result_path = os.path.join(log_path, "results.yaml")
 model_param_amount = formatter.xNumFormat(sum([p.nelement() for p in net.parameters()]), unit="m", keep_float=2)
 os.makedirs(log_path)
 

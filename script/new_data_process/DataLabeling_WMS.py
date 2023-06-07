@@ -46,7 +46,7 @@ def dealResultJson():
 def do_process():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     originPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/new_data/origin/WMS_FILTER"
-    modelPath = "/Users/lyn/codes/python/Flow_Identification/Flow_Identification/result/2023-05-29 12.10.18 [ResNet1d]/2023-05-29 12.10.18 [ResNet1d].pth"
+    modelPath = "/Users/lyn/codes/python/Flow_Identification/Flow_Identification/results/2023-05-29 12.10.18 [ResNet1d]/2023-05-29 12.10.18 [ResNet1d].pth"
     train_trans = BT.transfrom_set([
         PP.normalization(),
         BT.toTensor()

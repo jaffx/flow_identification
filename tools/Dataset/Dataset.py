@@ -11,10 +11,11 @@ class flowData:
     保存一条流型数据
     """
 
-    def __init__(self, data, label, file_path):
+    def __init__(self, data, label: int, file_path):
         self.r_ptr = 0
         self.data = data
-        self.label = label
+        assert isinstance(label, int), f"label should be int instance, now the type of label is {type(label)}"
+        self.label = label  # label类型必须是int类型
         self.file_path = file_path
 
     def __len__(self):
@@ -68,14 +69,13 @@ def readWMSFile(data_path, cls_name) -> flowData | None:
 def readSimpleDataset(data_path, cls_name) -> flowData | None:
     file_path = data_path
     try:
-
         with open(file_path) as fp:
             content = fp.readlines()
             content = content[2:]
             data = []
             for line in content:
                 data.append(float(line))
-        return flowData(data, cls_name, file_path)
+        return flowData(data, int(cls_name), file_path)
     except Exception as e:
         printer.xprint_red(f"{file_path} 加载错误，原因 {e}")
         return None
@@ -155,11 +155,11 @@ class flowDataset:
         return infos
 
     def loadDataset(self, dataset_path):
-        '''
+        """
         从dataset_path加载数据集
         :param dataset_path:
         :return:
-        '''
+        """
         dataset_path = os.path.join(os.getcwd(), dataset_path)
         assert os.path.exists(dataset_path), f"The dataset path \"{dataset_path}\" not exist!"
         time0 = time.time()
@@ -169,10 +169,16 @@ class flowDataset:
         total_files = sum([len(os.listdir(os.path.join(dataset_path, f))) for f in class_paths])
         suc_count = 0
         fail_count = 0
+        # 数据集格式为B格式，即 数据集-train/val-classname-sample
         for cls in class_paths:
-            files = os.listdir(os.path.join(dataset_path, cls))
+            if cls.startswith("."):
+                continue
+            # 数据集的类名应该是整数类型
+            cls_path = os.path.join(dataset_path, cls)
+            files = os.listdir(cls_path)
             for file in files:
-                fdata = readSimpleDataset(dataset_path, cls)
+                file_path = os.path.join(cls_path, file)
+                fdata = readSimpleDataset(file_path, cls)
                 if not fdata:
                     fail_count += 1
                     continue
@@ -224,8 +230,7 @@ class flowDataset:
             return DATASET_READ_FINISHED
 
     def getDPRate(self):
-        '''
+        """
         获取数据处理率(DPRate)
-        :return:
-        '''
+        """
         return sum([d.r_ptr for d in self.datas]) / len(self)

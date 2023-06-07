@@ -4,7 +4,7 @@ import yaml
 
 
 class train_setting:
-    def __init__(self, file_path="settings/base.yaml"):
+    def __init__(self, file_path="conf/base.yaml"):
 
         self.file_path = file_path
 

@@ -129,12 +129,12 @@ def show_fft(datas):
 # for i in range(4):
 #     d = dts[i]
 #     save_path = f"{svpth}/{i}/"
-#     settings = read_from_file(d)
-#     with open(save_path+'settings.txt', 'w+') as fp:
-#         for dd in settings:
+#     conf = read_from_file(d)
+#     with open(save_path+'conf.txt', 'w+') as fp:
+#         for dd in conf:
 #             fp.write(f"{dd}\n")
-#     tdata = tdata_color(settings) / 255
-#     show_fft(settings)
+#     tdata = tdata_color(conf) / 255
+#     show_fft(conf)
 #     show_hilbert(tdata)
 #     show_spf(tdata)
 show_fft([i for i in range(wh * wh)])

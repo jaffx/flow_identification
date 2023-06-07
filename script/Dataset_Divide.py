@@ -1,4 +1,11 @@
+"""
+@brief 数据集分割脚本，将A类型数据集转化为B类型数据集
+@date 2023年06月07日
+@author xuyongqi
+"""
+
 import os
+import sys
 
 
 def checkAndInitPath(path):
@@ -10,6 +17,16 @@ def checkAndInitPath(path):
 datasetPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/new_data/WMS/WMS_Simple_A"
 targetPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/new_data/WMS/WMS_Simple_B"
 
+args = sys.argv
+if len(args) == 2:
+    datasetPath = args[0]
+    targetPath = args[1]
+
+if not os.path.isdir(datasetPath):
+    print("数据集路径不存在")
+    exit(1)
+
+# 训练集占比
 trainSetRate = 0.7
 trainPath = os.path.join(targetPath, "train")
 valPath = os.path.join(targetPath, "val")

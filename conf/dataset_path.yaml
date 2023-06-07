@@ -1,0 +1,6 @@
+wms_old_src:
+  mac: /Users/lyn/codes/python/Flow_Identification/Dataset/wms_old
+  hy: /home/dataset/wms_old
+wms_new_sim:
+  mac: /Users/lyn/codes/python/Flow_Identification/Dataset/new_data/WMS/WMS_Simple_B
+  hy: /home/dataset/WMS_Simple_B

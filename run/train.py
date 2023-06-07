@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 import time
+from typing import Dict, Any
 
 import torch
 import torch.nn as nn
@@ -7,6 +8,7 @@ import torch.optim as optim
 import os
 import yaml
 import sys
+
 sys.path.append(os.path.join(os.getcwd()))
 from tools.xyq import x_printer as printer, x_formatter as formatter, x_time as xtime
 from model.Res1D import resnet1d34
@@ -28,11 +30,11 @@ def main():
     sampling_step = 1024
     batch_size = 50
     epoch_num = 50
-    dataset_name = "wms_old"
+    dataset_name = "wms_new_sim"
     device_name = "mac"
     dataset_path = get_dataset_path(dataset=dataset_name, device=device_name)
     train_set_path, train_set_name = os.path.join(dataset_path, "train"), "TrainSet"
-    val_set_path, val_set_name =  os.path.join(dataset_path, "val"), "ValSet"
+    val_set_path, val_set_name = os.path.join(dataset_path, "val"), "ValSet"
     learn_rate = 0.0001
 
     # 导入训练数据
@@ -72,18 +74,17 @@ def main():
     date_time_path = xtime.getDateTimeForPath()
     date_time = xtime.getDateTime()
     task_name = f"{date_time_path} [{model_name}]"
-    log_path = os.path.join(os.getcwd(), '../logs', 'train', task_name)
-    os.makedirs(log_path)
-    # 权重保存路径 logs/train/<文件名>.pth
-    weight_path = os.path.join(log_path, f'{task_name}.pth')
+    result_path = os.path.join(os.getcwd(), 'result', 'train', task_name)
+    os.makedirs(result_path)
+    # 权重保存路径 result/train/<文件名>.pth
+    weight_path = os.path.join(result_path, f'{task_name}.pth')
     # 任务信息保存路径
-    info_fp_path = os.path.join(log_path, 'info.yaml')
-    train_iter_fp_path = os.path.join(log_path, 'train_iter')
-    val_iter_fp_path = os.path.join(log_path, 'val_iter')
-    epoch_fp_path = os.path.join(log_path, 'epoch')
-    console_log_file = os.path.join(log_path, 'console_log')
+    info_fp_path = os.path.join(result_path, 'info.yaml')
+    train_iter_fp_path = os.path.join(result_path, 'train_iter')
+    val_iter_fp_path = os.path.join(result_path, 'val_iter')
+    epoch_fp_path = os.path.join(result_path, 'epoch')
+    console_log_file = os.path.join(result_path, 'console_log')
     printer.TARGET_FILES = console_log_file
-
     print(
         f"Model:{model_name} BatchSize: {batch_size} DataLength:{data_length} Step:{sampling_step} Model Parameters {formatter.xNumFormat(model_param_amount, unit='m', keep_float=3)}")
 
@@ -93,7 +94,6 @@ def main():
     task_info["Task_Time"] = date_time
     task_info["Dataset"] = dataset_name
     task_info["Device_Name"] = device_name
-
 
     task_info["Model_Name"] = model_name
     task_info["Model_Parameter_Amount"] = formatter.xNumFormat(model_param_amount, 'm', 3)
