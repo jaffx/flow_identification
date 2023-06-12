@@ -18,10 +18,8 @@ else
 fi
 
 oss cp oss://datasets/v1_WMS_Simple_B.zip  .
-unzip oss://datasets/v1_WMS_Simple_B.zip &
+unzip v1_WMS_Simple_B.zip &
 oss cp oss://datasets/v2_WMS_Sim_B.zip  .
-unzip oss://datasets/v2_WMS_Sim_B.zip
-
-cd /home && git clone https://github.com/jaffx/flow_identification.git
+unzip v2_WMS_Sim_B.zip
 
 exit 0
