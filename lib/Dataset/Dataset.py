@@ -41,7 +41,7 @@ class flowData:
         return self.r_ptr + length < len(self.data)
 
 
-def readWMSFile(data_path, cls_name) -> flowData | None:
+def readWMSFile(data_path, cls_name):
     """
     从文件中加载WMS数据，适用于.epst文件
     @param dataset_path: 数据集地址
@@ -66,7 +66,7 @@ def readWMSFile(data_path, cls_name) -> flowData | None:
         return None
 
 
-def readSimpleDataset(data_path, cls_name) -> flowData | None:
+def readSimpleDataset(data_path, cls_name):
     file_path = data_path
     try:
         with open(file_path) as fp:

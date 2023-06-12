@@ -18,8 +18,8 @@ else
 fi
 
 oss cp oss://datasets/v1_WMS_Simple_B.zip  .
-unzip v1_WMS_Simple_B.zip &
+unzip -q v1_WMS_Simple_B.zip &
 oss cp oss://datasets/v2_WMS_Sim_B.zip  .
-unzip v2_WMS_Sim_B.zip
+unzip -q v2_WMS_Sim_B.zip
 
 exit 0
