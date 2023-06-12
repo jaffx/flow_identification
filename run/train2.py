@@ -1,4 +1,4 @@
-from tools.run import train
+from lib.run import train
 from model.Res1D import resnet1d34
 
 setting = train.train_setting("conf/train/mac.yaml")

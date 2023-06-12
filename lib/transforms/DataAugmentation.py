@@ -1,6 +1,6 @@
 import random
 import sys
-import tools.transforms.BaseTrans as BT
+import lib.transforms.BaseTrans as BT
 
 import numpy as np
 

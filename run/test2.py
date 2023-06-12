@@ -1,7 +1,7 @@
 import time
 
-from tools.transforms.DataAugmentation import *
-from tools.transforms.BaseTrans import *
+from lib.transforms.DataAugmentation import *
+from lib.transforms.BaseTrans import *
 
 import numpy as np
 

@@ -1,4 +1,4 @@
-from tools.transforms import BaseTrans as BT
+from lib.transforms import BaseTrans as BT
 import numpy as np
 
 
@@ -15,3 +15,12 @@ class normalization(BT.transform_base):
             std = max(std, 0.001)
             out[i] = (batch - mean) / std
         return out
+
+
+class divide(BT.transform_base):
+    def __init__(self, divisor: float):
+        super().__init__()
+        self.divisor = divisor
+
+    def __call__(self, x: np.array) -> np.array:
+        return x / self.divisor

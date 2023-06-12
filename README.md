@@ -115,7 +115,7 @@ sh xcmd.sh add
 3. 判断该条flowData中是否还能取出长度为*length*的数据
 4. 保存该数据的信息，包括文件名、标签等
 #### 位置
-    tools/Dataset/Dataset/flowdata
+    lib/Dataset/Dataset/flowdata
 
 ### 1.2 flowDataset
 #### 基本功能
@@ -124,7 +124,7 @@ sh xcmd.sh add
 3. 保存若干个flowData，保存需要从flowData中读取的数据长度和移动步长
 4. 判断一个数据集是否还有数据可读 *（判断是否还有可以读取的flowData）*
 #### 位置
-    tools/Dataset/Dataset/flowDataset
+    lib/Dataset/Dataset/flowDataset
 ### 1.3 flowDataLoader
 #### 基本功能
 1. 用来训练or测试的数据结构
@@ -132,7 +132,7 @@ sh xcmd.sh add
 3. 内部保存一个flowDataset
 4. 保存BatchSize,每次从flowDataset中读取BatchSize大小的数据段。
 #### 位置
-    tools/DataLoader/DataLoader/flowDataLoader
+    lib/DataLoader/DataLoader/flowDataLoader
 
 
 

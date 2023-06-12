@@ -10,14 +10,14 @@ import yaml
 import sys
 
 sys.path.append(os.path.join(os.getcwd()))
-from tools.xyq import x_printer as printer, x_formatter as formatter, x_time as xtime
+from lib.xyq import x_printer as printer, x_formatter as formatter, x_time as xtime
 from model.Res1D import resnet1d34
-from tools.Dataset.Dataset import flowDataset
-from tools.DataLoader.DataLoader import flowDataLoader
-from tools.transforms.BaseTrans import *
-from tools.transforms.DataAugmentation import *
-from tools.transforms.Preprocess import *
-from tools.utils.dataset import get_dataset_path
+from lib.Dataset.Dataset import flowDataset
+from lib.DataLoader.DataLoader import flowDataLoader
+from lib.transforms import BaseTrans as BT
+from lib.transforms import DataAugmentation as DA
+from lib.transforms import Preprocess as PP
+from lib.utils.dataset import get_dataset_path
 
 
 def main():
@@ -30,7 +30,7 @@ def main():
     sampling_step = 1024
     batch_size = 50
     epoch_num = 50
-    dataset_name = "wms_new_sim"
+    dataset_name = "v1_wms"
     device_name = "mac"
     dataset_path = get_dataset_path(dataset=dataset_name, device=device_name)
     train_set_path, train_set_name = os.path.join(dataset_path, "train"), "TrainSet"
@@ -42,19 +42,13 @@ def main():
     train_set.getDatasetInfo()
     val_set = flowDataset(path=val_set_path, length=data_length, step=sampling_step, name=val_set_name)
     val_set.getDatasetInfo()
-    train_transform = transfrom_set([
-        normalization(),
-        random_trigger(prob=0.3, transform=random_selector([
-            normalized_random_noise(mean=0, std=0.1),
-            random_range_masking(0.3),
-            dropout(0.1),
-        ]
-        )),
-        toTensor()
+    train_transform = BT.transfrom_set([
+        PP.divide(100),
+        BT.toTensor()
     ])
-    val_transform = transfrom_set([
-        normalization(),
-        toTensor()
+    val_transform = BT.transfrom_set([
+        PP.divide(100),
+        BT.toTensor()
     ])
     train_loader = flowDataLoader(dataset=train_set, batch_size=batch_size, transform=train_transform, showInfo=True)
     val_loader = flowDataLoader(dataset=val_set, batch_size=batch_size, transform=val_transform, showInfo=True)

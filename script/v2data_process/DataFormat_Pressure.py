@@ -3,7 +3,7 @@
 @brief  压力数据格式处理
 @desc
     从origin文件夹中读取数据，按行处理，将数据放到指定的文件夹中
-    运行结果放到 script/new_data_process/process.log
+    运行结果放到 script/v2data_process/process.log
 """
 
 import os
@@ -64,5 +64,5 @@ for file in files:
     print(f"文件处理完成：{filePath}, 行数：{lineNum}")
     process_desc["succ"].append(file)
 
-with open("script/new_data_process/process.log", "w+") as fp:
+with open("script/v2data_process/process.log", "w+") as fp:
     json.dump(process_desc, fp)

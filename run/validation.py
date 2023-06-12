@@ -3,13 +3,13 @@ import os
 
 import yaml
 
-import tools.xyq.x_time as xtime
-import tools.xyq.x_printer as printer
-import tools.xyq.x_formatter as formatter
+import lib.xyq.x_time as xtime
+import lib.xyq.x_printer as printer
+import lib.xyq.x_formatter as formatter
 from model.Resmodel import resnet34
-from tools.Dataset.Dataset import flowDataset
-from tools.DataLoader.DataLoader import flowDataLoader
-from tools.transforms import Transforms2D as trans2d
+from lib.Dataset.Dataset import flowDataset
+from lib.DataLoader.DataLoader import flowDataLoader
+from lib.transforms import Transforms2D as trans2d
 
 # 设置参数
 weight_path = "/results/2023-05-29 12.10.18 [ResNet1d]/2023-05-29 12.10.18 [ResNet1d].pth"
