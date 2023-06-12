@@ -47,7 +47,7 @@ else
 fi
 
 # 判断运行结果
-if [[ $? == 0 ]]; then
+if [ $? -eq 0 ]; then
   echo " ### 命令运行成功"
 else
   echo "### 命令运行失败，结束码$?"
