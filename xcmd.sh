@@ -7,40 +7,39 @@ if [ -z "$process_command" ]; then
   exit 1
 fi
 
-echo -n "### 运行命令："
-
+printf "### 运行命令："
 
 # add 执行git add操作
 add_list='Analysis README.md model requirements.txt run script conf tools xcmd.sh'
-if [[ $process_command == "add" ]]; then
+if [ "$process_command" = "add" ]; then
   echo "git add $add_list"
   echo "$add_list" | xargs git add
 
-
 # code_count 统计代码数量
-elif [[ $process_command == "code_count" ]]; then
+elif [ "$process_command" = "code_count" ]; then
   echo "统计代码数量"
-  pyfiles=$(find . -name "*.py")
-  # shellcheck disable=SC2034
-  python_file_count=$(echo $pyfiles | wc -l | xargs echo)
-
-  # shellcheck disable=SC2034
-  code_line_count=$(echo $pyfiles | xargs wc -l | sort -r | grep total | sed "s/total//" | xargs echo)
-
-  printf ".py文件数量\t%d\n" python_file_count
-  printf ".py文件代码量\t%d\n" code_line_count
-
+  python_file_count=$(find . -name "*.py" | wc -l)
+  # shellcheck disable=SC2038
+  code_line_count=$(find . -name "*.py" | xargs wc -l | sort -r | grep total | sed "s/total//")
+  printf ".py文件数量\t%d\n" "$python_file_count"
+  printf ".py文件代码量\t%d\n" "$code_line_count"
 
 # clear_program 将路径下奇奇怪怪的文件删除
-elif [[ $process_command == "clear_program" ]];then
+elif [ "$process_command" = "clear_program" ]; then
   echo "将路径下奇奇怪怪的文件(夹)删除"
   remove_files=' .DS_Store .idea __pycache__ '
-  for file in $remove_files;do
+  for file in $remove_files; do
     fileCount=$(find . -name "$file" | wc -l)
     echo "找到 $file 文件数量: $fileCount"
     find . -name $file -exec "mv {} drops && gir rm -r {}" \;
   done
 
+elif [ "$process_command" = "move_result" ]; then
+  echo "将result文件夹保存到oss"
+  dt=$(date "+%Y%m%d_%H%M%S")
+  zipFile="result_""$dt"".zip"
+  cp -r result bk_result && zip -r -q "$zipFile" bk_result && oss cp "$zipFile" oss://result/
+  rm "$zipFile" && rm -r bk_result
 
 # 未知命令
 else
@@ -48,9 +47,8 @@ else
 fi
 
 # 判断运行结果
-# shellcheck disable=SC2181
 if [[ $? == 0 ]]; then
-  echo "### 命令运行成功"
+  echo " ### 命令运行成功"
 else
   echo "### 命令运行失败，结束码$?"
 fi

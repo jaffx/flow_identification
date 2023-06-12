@@ -10,8 +10,15 @@ import os
 import re
 import json
 
-origin_pressure_path = "/Users/lyn/codes/python/Flow_Identification/Dataset/new_data/origin/pressure"
-out_pressure_path = "/Users/lyn/codes/python/Flow_Identification/Dataset/new_data/DiffPressure_IDX3-4"
+def isfloat(s:str):
+    try:
+        f = float(s)
+        return f
+    except:
+        return False
+
+origin_pressure_path = "/Users/lyn/codes/python/Flow_Identification/Dataset/v2/origin/pressure"
+out_pressure_path = "/Users/lyn/codes/python/Flow_Identification/Dataset/v2/Pressure/Pressure_IDX3"
 files = os.listdir(origin_pressure_path)
 if not os.path.exists(out_pressure_path):
     print(f"目标文件夹不存在，创建文件夹{out_pressure_path}")
@@ -34,26 +41,27 @@ for file in files:
     with open(filePath) as rfp, open(outFileName, "w+") as wfp:
         lineNum = 0
         try:
-            while rfp:
-                lineNum += 1
-                line = rfp.readline()
-                if line == "":
-                    break
+            content = rfp.readlines()
+            for line in content:
+
                 line = line.strip()
                 # print(line)
                 items = line.split("\t")
                 # print(items)
                 if len(items) != 5:
                     print(f"[{file}@LINE{lineNum}]数据字段数量错误" + json.dumps(items))
-                if not items[3].isnumeric() or not items[4].isnumeric():
                     continue
-                target_line = f"{float(items[3])-float(items[4]):.4f}\n"
+                if not isfloat(items[3]):
+                    continue
+                target_line = f"{float(items[3]):.4f}\n"
+                lineNum += 1
                 wfp.write(target_line)
         except Exception as e:
             process_desc["err"].append({"file": file, "err": str(e), "lineNum": lineNum, "content": line})
+            print(e)
         rfp.close()
         wfp.close()
-    print(f"文件处理完成：{filePath} -> {outFileName}")
+    print(f"文件处理完成：{filePath}, 行数：{lineNum}")
     process_desc["succ"].append(file)
 
 with open("script/new_data_process/process.log", "w+") as fp:
