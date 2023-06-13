@@ -1,7 +1,5 @@
 # -*- coding:utf-8 -*-
 import time
-from typing import Dict, Any
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -9,7 +7,7 @@ import os
 import yaml
 import sys
 
-sys.path.append(os.path.join(os.getcwd()))
+sys.path.append(".")
 from lib.xyq import x_printer as printer, x_formatter as formatter, x_time as xtime
 from model.Res1D import resnet1d34
 from lib.Dataset.Dataset import flowDataset
@@ -17,7 +15,7 @@ from lib.DataLoader.DataLoader import flowDataLoader
 from lib.transforms import BaseTrans as BT
 from lib.transforms import DataAugmentation as DA
 from lib.transforms import Preprocess as PP
-from lib.utils.dataset import get_dataset_path
+from lib.utils import conf
 
 
 def main():
@@ -27,12 +25,12 @@ def main():
 
     # 自定义训练参数
     data_length = 4096
-    sampling_step = 1024
-    batch_size = 50
-    epoch_num = 50
-    dataset_name = "v1_wms"
-    device_name = "mac"
-    dataset_path = get_dataset_path(dataset=dataset_name, device=device_name)
+    sampling_step = 4096 // 4
+    batch_size = 64
+    epoch_num = 200
+    dataset_name = "v2_wms"
+    device_name = conf.getDeviceName()
+    dataset_path = conf.getDatasetPath(dataset=dataset_name, device=device_name)
     train_set_path, train_set_name = os.path.join(dataset_path, "train"), "TrainSet"
     val_set_path, val_set_name = os.path.join(dataset_path, "val"), "ValSet"
     learn_rate = 0.0001
@@ -43,11 +41,11 @@ def main():
     val_set = flowDataset(path=val_set_path, length=data_length, step=sampling_step, name=val_set_name)
     val_set.getDatasetInfo()
     train_transform = BT.transfrom_set([
-        PP.divide(100),
+        PP.normalization(),
         BT.toTensor()
     ])
     val_transform = BT.transfrom_set([
-        PP.divide(100),
+        PP.normalization(),
         BT.toTensor()
     ])
     train_loader = flowDataLoader(dataset=train_set, batch_size=batch_size, transform=train_transform, showInfo=True)
@@ -96,6 +94,7 @@ def main():
     task_info["Train_Transform"] = train_transform.str()
     task_info["Val_Transform"] = val_transform.str()
     task_info["Batch_Size"] = batch_size
+    task_info["Epoch_Num"] = epoch_num
     task_info["Learn_Rate"] = learn_rate
     task_info["Optimizer"] = optimizer.__class__.__name__
     task_info["Loss_Function"] = loss_function.__class__.__name__

@@ -3,7 +3,7 @@
 process_command=$1
 
 show_xcmd() {
-  cat xcmd.sh | grep  "^#@xcmd" xcmd.sh | sed "s/#@xcmd //g" | sed "s/ /\t/1" | awk '{ printf "sh xcmd.sh %-20s\t%-20s\n",$1,$2}' | cat -n
+  cat xcmd.sh | grep "^#@xcmd" xcmd.sh | sed "s/#@xcmd //g" | sed "s/ /\t/1" | awk '{ printf "sh xcmd.sh %-20s\t%-20s\n",$1,$2}' | cat -n
   return 0
 }
 
@@ -14,8 +14,8 @@ fi
 
 printf "### 运行命令："
 
-#@xcmd add 执行git add操作
-add_list='Analysis README.md model requirements.txt run script conf lib xcmd.sh'
+#@xcmd add 执行git_add操作
+add_list='analysis README.md model requirements.txt run script conf lib xcmd.sh'
 if [ "$process_command" = "add" ]; then
   echo "git add $add_list"
   echo "$add_list" | xargs git add
