@@ -28,7 +28,7 @@ def main():
     sampling_step = 4096 // 4
     batch_size = 64
     epoch_num = 200
-    dataset_name = "v2_wms"
+    dataset_name = sys.argv[1]
     device_name = conf.getDeviceName()
     dataset_path = conf.getDatasetPath(dataset=dataset_name, device=device_name)
     train_set_path, train_set_name = os.path.join(dataset_path, "train"), "TrainSet"

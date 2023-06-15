@@ -44,7 +44,7 @@ class Analyzer_Epoch_Train(Analyzer):
         plt.yticks(self.getRange(0, 1, 0.2))
         # x
         ax.set_xlim(-1, self.getInfo("Epoch_Num") + 1)
-        plt.xticks(self.getRange(0, self.getInfo("Epoch_Num"), 5))
+        plt.xticks(self.getRange(0, self.getInfo("Epoch_Num"), self.getInfo("Epoch_Num")//10))
         plt.text(0, 0, "xyq")
         self.pltShow(title="Accurate", xlabel='Epoch', ylabel='Accurate')
 
@@ -53,6 +53,6 @@ class Analyzer_Epoch_Train(Analyzer):
         ax.plot(train_loss, label="Train Loss", **alyEnum.Style_Plot_Black_H)
         ax.set_ylim(-0.05, 1.1)
         ax.set_xlim(-1, self.getInfo("Epoch_Num") + 1)
-        plt.xticks(self.getRange(0, self.getInfo("Epoch_Num"), 5))
+        plt.xticks(self.getRange(0, self.getInfo("Epoch_Num"), self.getInfo("Epoch_Num")//10))
         plt.yticks(self.getRange(0, 1, 0.2))
         self.pltShow(title="Loss", xlabel='Epoch', ylabel='Loss')

@@ -2,10 +2,7 @@
 # 工程辅助命令
 process_command=$1
 
-show_xcmd() {
-  cat xcmd.sh | grep "^#@xcmd" xcmd.sh | sed "s/#@xcmd //g" | sed "s/ /\t/1" | awk '{ printf "sh xcmd.sh %-20s\t%-20s\n",$1,$2}' | cat -n
-  return 0
-}
+. script/bash/xcmd_funcs.sh
 
 if [ -z "$process_command" ]; then
   show_xcmd
