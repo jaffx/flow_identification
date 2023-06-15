@@ -43,6 +43,7 @@ def main():
     batch_size = args.batch_size
     epoch_num = args.epochs
     dataset_name = args.dataset
+
     device_name = conf.getDeviceName()
     dataset_path = conf.getDatasetPath(dataset=dataset_name, device=device_name)
     train_set_path, train_set_name = os.path.join(dataset_path, "train"), "TrainSet"
