@@ -2,10 +2,7 @@
 # 工程辅助命令
 process_command=$1
 
-show_xcmd() {
-  cat xcmd.sh | grep "^#@xcmd" xcmd.sh | sed "s/#@xcmd //g" | sed "s/ /\t/1" | awk '{ printf "sh xcmd.sh %-20s\t%-20s\n",$1,$2}' | cat -n
-  return 0
-}
+. script/bash/xcmd_funcs.sh
 
 if [ -z "$process_command" ]; then
   show_xcmd
@@ -32,13 +29,7 @@ elif [ "$process_command" = "code_count" ]; then
 #@xcmd clear_program 将路径下奇奇怪怪的文件删除
 elif [ "$process_command" = "clear_program" ]; then
   echo "将路径下奇奇怪怪的文件(夹)删除"
-  remove_files=' .DS_Store .idea __pycache__ '
-  for file in $remove_files; do
-    fileCount=$(find . '(' -name "$file" -path ./drops ')' | wc -l)
-    echo "找到 $file 文件数量: $fileCount"
-    find . -name $file -exec git rm -r --cache {} \;
-    find . -name $file -exec rm -r {} \;
-  done
+  clear_program
 
 #@xcmd move_result 将result文件夹保存到oss
 elif [ "$process_command" = "move_result" ]; then

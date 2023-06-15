@@ -61,7 +61,7 @@ class Analyzer:
     def checkResult(self) -> bool:
         files = os.listdir(self.result_path)
         # 检查数据文件存在
-        if "train_iter" not in files or "val_iter" not in files or "info" not in files or "epoch" not in files:
+        if "train_iter" not in files or "val_iter" not in files or "info.yaml" not in files or "epoch" not in files:
             return False
         # 检查权重文件存在
         find_pth = False
@@ -73,10 +73,10 @@ class Analyzer:
             return False
         # 检查训练是否完成
         info = self.loadInfo()
-        epoch_num = info["Epoch_Num"]
-        with open(os.path.join(self.result_path)) as fp:
+        epoch_num = min(info["Epoch_Num"], 50)
+        with open(os.path.join(self.result_path, "info.yaml")) as fp:
             content = fp.readlines()
-            if len(content) != epoch_num + 1:
+            if len(content) < epoch_num + 1:
                 return False
         return True
 

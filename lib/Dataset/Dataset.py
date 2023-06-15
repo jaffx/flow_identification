@@ -147,7 +147,7 @@ class flowDataset:
         for cls in cls_ndata:
             infos.append(
                 f"{cls if cls is not None else 'Unknown':<8}\t|\t {str(int(cls_ndata[cls] / 1000)) + 'k':<8}\t|\t{cls_nfile[cls]:<8}")
-        infos.append(f"total\t|\t{int(ndata_totals / 1000)}k\t|\t{nfile_totals}")
+        infos.append(f"{'total':<8}\t|\t{int(ndata_totals / 1000)}k\t|\t{nfile_totals}")
         infos.append("*-------*-----------*---------*")
         if show:
             for info in infos:

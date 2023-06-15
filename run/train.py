@@ -1,11 +1,12 @@
 # -*- coding:utf-8 -*-
+import os
+import sys
 import time
+import yaml
+import argparse
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import os
-import yaml
-import sys
 
 sys.path.append(".")
 from lib.xyq import x_printer as printer, x_formatter as formatter, x_time as xtime
@@ -13,27 +14,43 @@ from model.Res1D import resnet1d34
 from lib.Dataset.Dataset import flowDataset
 from lib.DataLoader.DataLoader import flowDataLoader
 from lib.transforms import BaseTrans as BT
-from lib.transforms import DataAugmentation as DA
 from lib.transforms import Preprocess as PP
 from lib.utils import conf
 
 
+def dealArgs():
+    parser = argparse.ArgumentParser(description='train')
+    # 2. 添加命令行参数
+    parser.add_argument('-d', '--dataset', type=str, required=True, help='Dataset name, see in conf/dataset_path.yaml.')
+    parser.add_argument('-e', '--epochs', type=int, default=50, help='Number of epochs to train.')
+    parser.add_argument('-b', '--batch_size', type=int, default=64, help='Number of batch size to train.')
+    parser.add_argument('-l', '--length', type=int, default=4096, help='Data Length')
+    parser.add_argument('-s', '--step', type=int, default=2048, help='Step Length')
+    # 3. 从命令行中结构化解析参数
+    args = parser.parse_args()
+    return args
+
+
 def main():
+    args = dealArgs()
     # 定义训练设备
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("using {} device.".format(device))
 
     # 自定义训练参数
-    data_length = 4096
-    sampling_step = 4096 // 4
-    batch_size = 64
-    epoch_num = 200
-    dataset_name = "v2_wms"
+    data_length = args.length
+    sampling_step = args.step
+    batch_size = args.batch_size
+    epoch_num = args.epochs
+    dataset_name = args.dataset
     device_name = conf.getDeviceName()
     dataset_path = conf.getDatasetPath(dataset=dataset_name, device=device_name)
     train_set_path, train_set_name = os.path.join(dataset_path, "train"), "TrainSet"
     val_set_path, val_set_name = os.path.join(dataset_path, "val"), "ValSet"
     learn_rate = 0.0001
+
+    print(f"开始训练,信息如下：\n"
+          f"\t epoch {epoch_num},batch_size {batch_size}, dataset {dataset_name}, length {data_length}, step {sampling_step}")
 
     # 导入训练数据
     train_set = flowDataset(path=train_set_path, length=data_length, step=sampling_step, name=train_set_name)
