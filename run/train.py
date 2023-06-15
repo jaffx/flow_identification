@@ -20,7 +20,7 @@ from lib.utils import conf
 
 def main():
     # 定义训练设备
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("using {} device.".format(device))
 
     # 自定义训练参数

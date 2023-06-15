@@ -1,9 +1,5 @@
-import re
+from analysis.epoch import Analyzer_Epoch_Train
 
-string1 = "<span>hello world</span>"
-rs = re.match("(?P<span_contexts><span>(.*?)</span>)", string1)
-print(rs.groups())
-print("group0", rs.group(0))
-print("group1", rs.group(1))
-print("group2", rs.group(2))
-print(rs.group("span_contexts"))
+path = "/Users/lyn/codes/python/Flow_Identification/Flow_Identification/bk_result/train/2023-06-12 02.01.39 [ResNet1d]"
+aly = Analyzer_Epoch_Train(path)
+aly.do_aly()

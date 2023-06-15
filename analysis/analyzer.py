@@ -2,11 +2,17 @@ import os
 
 import yaml
 from matplotlib import pyplot as plt
+from matplotlib.legend_handler import HandlerLine2D
+
 from analysis import alyEnum
+import matplotlib.font_manager
 
 
 class Analyzer:
+
     def __init__(self, result_path):
+        self.info = None
+        self.pltInit()
         self.result_path = result_path
 
     @staticmethod
@@ -45,6 +51,13 @@ class Analyzer:
             info["Epoch_Num"] = 50
         return info
 
+    def getInfo(self, key):
+        if not self.info:
+            self.info = self.loadInfo()
+        if key in self.info:
+            return self.info[key]
+        return None
+
     def checkResult(self) -> bool:
         files = os.listdir(self.result_path)
         # 检查数据文件存在
@@ -67,38 +80,56 @@ class Analyzer:
                 return False
         return True
 
-    def getEpochAcc(self, type="val"):
-        epoch_path = os.path.join(self.result_path, "epoch")
-        assert type in ("val", "train")
-        assert os.path.isfile(epoch_path), f'epoch文件不存在{epoch_path}'
-        idx = alyEnum.Epoch_IDX_ValAcc if type == "val" else alyEnum.Epoch_IDX_TrainAcc
-        acc = self.readDataFromFile(epoch_path, idx, float)
-        return acc
+    @staticmethod
+    def getAxis():
+        fig = plt.figure("title", figsize=(18, 12))
+        ax = fig.add_subplot(111)
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.spines['left'].set_linewidth(4)
+        ax.spines['bottom'].set_linewidth(4)
+        ax.xaxis.set_ticks_position('bottom')
+        ax.yaxis.set_ticks_position('left')
+        return ax
 
-    def getEpochLoss(self, type="val"):
-        epoch_path = os.path.join(self.result_path, "epoch")
-        assert type in ("val", "train")
-        assert os.path.isfile(epoch_path), f'epoch文件不存在{epoch_path}'
-        idx = alyEnum.Epoch_IDX_ValLoss if type == "val" else alyEnum.Epoch_IDX_TrainLoss
-        loss = self.readDataFromFile(epoch_path, idx, float)
-        return loss
+    @staticmethod
+    def pltInit():
+        plt.rcParams['xtick.direction'] = 'in'  # 将x周的刻度线方向设置向内
+        plt.rcParams['ytick.direction'] = 'in'  # 将y轴的刻度方向设置向内
+        plt.rcParams['font.sans-serif'] = ['Songti SC']
+        plt.rcParams['axes.unicode_minus'] = False
 
-    def alyEpoch(self):
-        val_acc = self.getEpochAcc("val")
-        train_acc = self.getEpochAcc("train")
-        val_loss = self.getEpochLoss("val")
-        train_loss = self.getEpochLoss("train")
-        plt.title("Loss")
-        plt.plot(val_loss)
-        plt.plot(train_loss)
+    @staticmethod
+    def pltShow(title, xlabel='X', ylabel='Y'):
+        # 设置标题
+        plt.title(title, fontsize=40)
+        # 设置图例
+        # loc 0 best
+        plt.legend(framealpha=1, fontsize=30, loc=0)
+        # 设置坐标轴
+        plt.xlabel(xlabel, fontsize=30)
+        plt.ylabel(ylabel, fontsize=30)
+        plt.tick_params(axis='x', width=2, size=6)
+        plt.tick_params(axis='y', width=2, size=6)
+        plt.xticks(size=25)
+        plt.yticks(size=25)
         plt.show()
 
-        plt.title("Accurate")
-        plt.plot(val_acc)
-        plt.plot(train_acc)
-        plt.show()
+    def do_aly(self):
+        pass
 
-
-path = "/Users/lyn/codes/python/Flow_Identification/Flow_Identification/bk_result/train/2023-06-12 02.01.39 [ResNet1d]"
-aly = Analyzer(path)
-aly.alyEpoch()
+    @staticmethod
+    def getRange(start, end, step):
+        limit = 1000
+        ranges = []
+        i = start
+        while i <= end:
+            if limit <= 0:
+                return ranges
+            limit -= 1
+            if i <= end:
+                ranges.append(i)
+            else:
+                return ranges
+            i += step
+        return ranges

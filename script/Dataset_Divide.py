@@ -14,8 +14,8 @@ def checkAndInitPath(path):
         print(f"创建文件夹:{path}")
 
 
-datasetPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/new_data/WMS/WMS_Simple_A"
-targetPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/new_data/WMS/WMS_Simple_B"
+datasetPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/v2/WMS/v2_WMS_Label_Simple_A"
+targetPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/v2/WMS/v2_WMS_Label_Simple_B"
 
 args = sys.argv
 if len(args) == 2:

@@ -3,7 +3,7 @@ import yaml
 
 
 def getDeviceName():
-    if os.path.isdir("/home/hy-tmp"):
+    if os.path.isdir("/hy-tmp"):
         return "hy"
     return "mac"
 
