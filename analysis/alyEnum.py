@@ -1,10 +1,13 @@
-import enum
-
+###################################
 Epoch_IDX_ValAcc = 13
 Epoch_IDX_ValLoss = 9
 Epoch_IDX_TrainAcc = 8
 Epoch_IDX_TrainLoss = 4
-
+###################################
+Iter_IDX_Acc = 6
+Iter_IDX_AvgLoss = 8
+Iter_IDX_Loss = 7
+###################################
 Style_Plot_Black_H = dict(color='black', marker='H', markersize=15)
 Style_Plot_Red_H = dict(color='red', marker='H', markersize=15)
 Style_Plot_Blue_H = dict(color='blue', marker='H', markersize=15)

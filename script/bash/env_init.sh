@@ -21,7 +21,9 @@ unzip -q v1_WMS_Simple_B.zip &
 oss cp oss://datasets/v2_WMS_Sim_B.zip  .
 unzip -q v2_WMS_Sim_B.zip &
 oss cp oss://datasets/v2_WMS_Label_Simple_B.zip  .
-unzip -q v2_WMS_Label_Simple_B.zip
+unzip -q v2_WMS_Label_Simple_B.zip &
+oss cp oss://datasets/v3_WMS_Simple_B.zip .
+unzip -q v3_WMS_Simple_B.zip
 
 # git 设置
 git config --global user.name HY

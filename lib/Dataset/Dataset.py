@@ -30,7 +30,8 @@ class flowData:
         end = self.r_ptr + length
         if end >= len(self.data):
             r_ptr = 0
-        data = copy.deepcopy(self.data[self.r_ptr:end])
+        # data = copy.deepcopy(self.data[self.r_ptr:end])
+        data = self.data[self.r_ptr:end]
         self.r_ptr += step
         return data, self.label, self.file_path
 
@@ -143,16 +144,29 @@ class flowDataset:
             ndata_totals += len(fd)
             nfile_totals += 1
         infos.append("--------*Dataset Infos*---------")
-        infos.append(f"{'label':<8}\t|\t{'Amount':<8}\t|\t{'File':<8}")
+        infos.append(f"{'label':<8}|{'Amount':<8}|{'File':<8}")
         for cls in cls_ndata:
             infos.append(
-                f"{cls if cls is not None else 'Unknown':<8}\t|\t {str(int(cls_ndata[cls] / 1000)) + 'k':<8}\t|\t{cls_nfile[cls]:<8}")
-        infos.append(f"{'total':<8}\t|\t{int(ndata_totals / 1000)}k\t|\t{nfile_totals}")
+                f"{cls if cls is not None else 'Unknown':<8}|{str(int(cls_ndata[cls] / 1000)) + 'k':<8}|{cls_nfile[cls]:<8}")
+        infos.append(f"{'total':<8}|{str(int(ndata_totals / 1000)) + 'k':<8}|{nfile_totals:<8}")
         infos.append("*-------*-----------*---------*")
         if show:
             for info in infos:
                 printer.xprint(info)
         return infos
+
+    def getTotalFile(self):
+        dataset_path = self.path
+        total_files = 0
+        class_paths = os.listdir(dataset_path)
+        for cls in class_paths:
+            if cls.startswith("."):
+                continue
+            cls_path = os.path.join(dataset_path, cls)
+            if not os.path.isdir(cls_path):
+                continue
+            total_files += len(os.listdir(cls_path))
+        return total_files
 
     def loadDataset(self, dataset_path):
         """
@@ -166,7 +180,7 @@ class flowDataset:
         self.path = dataset_path
         class_paths = os.listdir(dataset_path)
         self.classes = class_paths
-        total_files = sum([len(os.listdir(os.path.join(dataset_path, f))) for f in class_paths])
+        total_files = self.getTotalFile()
         suc_count = 0
         fail_count = 0
         # 数据集格式为B格式，即 数据集-train/val-classname-sample
@@ -214,16 +228,20 @@ class flowDataset:
         return read / len(self)
 
     def getData(self, batch_size):
+
         readables = [i for i in range(len(self.datas)) if self.datas[i].isReadableForLength(self.length)]
+
         if readables:
             datas, labels, paths = [], [], []
             for i in range(min(len(readables), batch_size)):
                 idx = random.choice(readables)
                 readables.remove(idx)
                 data, label, path = self.datas[idx].getSample(length=self.length, step=self.step)
+
                 datas.append([data])
                 labels.append(label)
                 paths.append(path)
+
             return datas, labels, paths
         else:
             self.Init()

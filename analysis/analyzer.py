@@ -82,7 +82,7 @@ class Analyzer:
 
     @staticmethod
     def getAxis():
-        fig = plt.figure("title", figsize=(18, 12))
+        fig = plt.figure(figsize=(18, 12))
         ax = fig.add_subplot(111)
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
@@ -99,8 +99,25 @@ class Analyzer:
         plt.rcParams['font.sans-serif'] = ['Songti SC']
         plt.rcParams['axes.unicode_minus'] = False
 
-    @staticmethod
-    def pltShow(title, xlabel='X', ylabel='Y'):
+    def getDeaultFooter(self):
+        lines = []
+        lines.append(
+            f"Dataset={self.getInfo('Dataset')} Epoch={self.getInfo('Epoch_Num')} "
+            f"BatchSize={self.getInfo('Batch_Size')} Length={self.getInfo('Data_Length')} "
+            f"Step={self.getInfo('Sampling_Step')} LR={self.getInfo('Learn_Rate')}"
+        )
+
+        # mes_son = [mes_str[i: i + 8] for i in range(0, len(mes_str), 8)]
+        lines.append(f"Ttrans={self.getInfo('Train_Transform')}")
+        lines.append(f"Vtrans{self.getInfo('Val_Transform')}")
+
+        content = "    ".join(lines);
+        line_length = 120
+        content = [content[i: i + line_length] for i in range(0, len(content), line_length)]
+
+        return "\n".join(content)
+
+    def pltShow(self, title, footer=None, xlabel='X', ylabel='Y', save=False):
         # 设置标题
         plt.title(title, fontsize=40)
         # 设置图例
@@ -113,20 +130,30 @@ class Analyzer:
         plt.tick_params(axis='y', width=2, size=6)
         plt.xticks(size=25)
         plt.yticks(size=25)
-        plt.show()
+
+        if footer is True:
+            footer = self.getDeaultFooter()
+            bottom_space = 0.05 * len(footer.split("\n"))
+            bottom_space = max(min(bottom_space, 0.3), 0.15)
+            plt.subplots_adjust(bottom=bottom_space)
+        plt.annotate(footer,
+                     xy=(0, 0), xytext=(0, 10),
+                     xycoords=('axes fraction', 'figure fraction'),
+                     textcoords='offset points',
+                     size=20, ha='left', va='bottom')
+        if save:
+            plt.savefig(save)
+        else:
+            plt.show()
 
     def do_aly(self):
         pass
 
     @staticmethod
     def getRange(start, end, step):
-        limit = 1000
         ranges = []
         i = start
         while i <= end:
-            if limit <= 0:
-                return ranges
-            limit -= 1
             if i <= end:
                 ranges.append(i)
             else:
