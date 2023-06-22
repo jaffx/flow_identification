@@ -20,13 +20,15 @@ from lib.utils import conf
 
 def dealArgs():
     parser = argparse.ArgumentParser(description='train')
-    # 2. 添加命令行参数
+    # 添加命令行参数
     parser.add_argument('-d', '--dataset', type=str, required=True, help='Dataset name, see in conf/dataset_path.yaml.')
+    parser.add_argument('-c', '--class_num', type=int, required=True, help='Class num')
     parser.add_argument('-e', '--epochs', type=int, default=50, help='Number of epochs to train.')
     parser.add_argument('-b', '--batch_size', type=int, default=64, help='Number of batch size to train.')
     parser.add_argument('-l', '--length', type=int, default=4096, help='Data Length')
     parser.add_argument('-s', '--step', type=int, default=2048, help='Step Length')
-    # 3. 从命令行中结构化解析参数
+
+    # 从命令行中结构化解析参数
     args = parser.parse_args()
     return args
 
@@ -43,6 +45,7 @@ def main():
     batch_size = args.batch_size
     epoch_num = args.epochs
     dataset_name = args.dataset
+    class_num = args.class_num
 
     device_name = conf.getDeviceName()
     dataset_path = conf.getDatasetPath(dataset=dataset_name, device=device_name)
@@ -71,7 +74,7 @@ def main():
 
     # 定义模型
 
-    net = resnet1d34()
+    net = resnet1d34(class_num)
 
     net = net.to(device)
     loss_function = nn.CrossEntropyLoss()
@@ -104,6 +107,7 @@ def main():
     task_info["Task_Time"] = date_time
     task_info["Dataset"] = dataset_name
     task_info["Device_Name"] = device_name
+    task_info["Class_Num"] = class_num
 
     task_info["Model_Name"] = model_name
     task_info["Model_Parameter_Amount"] = formatter.xNumFormat(model_param_amount, 'm', 3)
