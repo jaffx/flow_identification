@@ -4,6 +4,24 @@
 
 # 〇、基础篇
 
+## 1. 启动训练
+
+```shell
+# 指定数据集
+python run/train.py -d v1_wms -c 4
+python run/train.py -d v2_wms -c 4
+python run/train.py -d v3_wms -c 7
+
+# 指定预处理方案
+python run/train.py -d v3_wms -c 7 -t aug0.2
+
+# 指定数据长度和步长
+python run/train.py -d v3_wms -c 7 -l 4096 -s 2048
+
+# 指定数据epoch和batchsize
+python run/train.py -d v3_wms -c 7 -e 100 -b 2048
+```
+
 # 一、Git篇
 
 ## 1.1 代码仓库
@@ -11,10 +29,10 @@
 [仓库地址点这里](https://github.com/jaffx/flow_identification)
 
 ```shell
-    # ssh方式
-    git clone git@github.com:jaffx/flow_identification.git
-    #http方式
-    git clone https://github.com/jaffx/flow_identification.git
+# ssh方式
+git clone git@github.com:jaffx/flow_identification.git
+#http方式
+git clone https://github.com/jaffx/flow_identification.git
 ```
 
 ## 1.2 提交代码
@@ -105,33 +123,46 @@ sh xcmd.sh add
 本工程基于pytorch框架搭建，自行开发了一些适合流型数据处理的工具。使用方法与pytorch中提供的工具有相似之处，但
 具体细节还以实物为准。
 
-
 ## 1. 数据结构
+
 ### 1.1 flowData
+
 #### 基本功能
+
 1. 保存一条流型数据，也就是一个数据文件的内容
 2. 获取指定长度（length）的数据段，并将**数据读取位置** *（数据指针）* 向后移动一定步长（step）。
-*（【注意】只实现"取+移动"的功能，并不决定数据长度和步长）*
+   *（【注意】只实现"取+移动"的功能，并不决定数据长度和步长）*
 3. 判断该条flowData中是否还能取出长度为*length*的数据
 4. 保存该数据的信息，包括文件名、标签等
+
 #### 位置
+
     lib/Dataset/Dataset/flowdata
 
 ### 1.2 flowDataset
+
 #### 基本功能
+
 1. 保存一个数据集的数据+信息 *（训练集or测试集中的一个）*
 2. 可以获取一个batch的数据 *（不决定batch的size）*
 3. 保存若干个flowData，保存需要从flowData中读取的数据长度和移动步长
 4. 判断一个数据集是否还有数据可读 *（判断是否还有可以读取的flowData）*
+
 #### 位置
+
     lib/Dataset/Dataset/flowDataset
+
 ### 1.3 flowDataLoader
+
 #### 基本功能
+
 1. 用来训练or测试的数据结构
 2. 保存一轮训练的信息，如训练时长，batch的个数，预估剩余时长等
 3. 内部保存一个flowDataset
 4. 保存BatchSize,每次从flowDataset中读取BatchSize大小的数据段。
+
 #### 位置
+
     lib/DataLoader/DataLoader/flowDataLoader
 
 

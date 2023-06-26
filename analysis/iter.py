@@ -25,7 +25,7 @@ class Analyzer_Iter_Train(Analyzer):
         avg_loss = self.readDataFromFile(iter_path, alyEnum.Iter_IDX_Loss)
         return avg_loss
 
-    def do_aly(self):
+    def do_aly(self, save=False):
         train_acc, val_acc = self.getAcc("train"), self.getAcc("val")
         train_loss, val_loss = self.getAvgLoss("train"), self.getAvgLoss("val")
         train_x = self.getRange(1, len(train_acc), 1)
@@ -41,5 +41,5 @@ class Analyzer_Iter_Train(Analyzer):
         ax.scatter(train_x, train_acc, s=10, color="black", marker=".", label="Train Accurate", )
         ax.scatter(val_x, val_acc, s=10, color="red", marker=".", label="Val Accurate", )
         ax.set_ylim(-0.05, 1.1)
-        self.pltShow(title="Iteration Accurate", save=f"figs/iter_acc_{self.result_path.split('/')[-1]}.png")
-
+        # self.pltShow(title="Iteration Accurate", save=f"figs/iter_acc_{self.result_path.split('/')[-1]}.png")
+        self.pltShow(title="Iteration Accurate", save=save)

@@ -48,7 +48,10 @@ class random_trigger(transform_base):
 
 
 class random_selector(transform_base):
-    # 随机从一个transform中选择一个
+    """
+    :brief
+        随机的选择一个transform分支
+    """
     def __init__(self, transforms: list):
         super().__init__()
         self.transforms = transforms
@@ -66,7 +69,10 @@ class random_selector(transform_base):
 
 
 class transform_selector(transform_base):
-    # 按照顺序选择一个transform
+    """
+    :brief
+        顺序的选择一个transform分支
+    """
     def __init__(self, transforms: list):
         super().__init__()
         self.transforms = transforms
@@ -85,7 +91,7 @@ class transform_selector(transform_base):
         return ret
 
 
-class transfrom_set(transform_base):
+class transform_set(transform_base):
     # 递归经过所有transform
     def __init__(self, transforms: list):
         super().__init__()

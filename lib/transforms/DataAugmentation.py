@@ -41,7 +41,7 @@ class random_noise(BT.transform_base):
 
 class dropout(BT.transform_base):
     """
-    数据按照随
+    数据点按照比例随机设置为0
     """
 
     def __init__(self, rate=0.5):
@@ -64,14 +64,16 @@ class dropout(BT.transform_base):
 
 class random_range_masking(BT.transform_base):
     """
-    随机区间数据遮蔽
-    @input
-        数据输入只能包含三个维度(batch, channel, length)
     @description
+        随机区间数据遮蔽
         对输入数据的一个区间进行遮蔽，将其值转化为0
+        数据输入只能包含三个维度(batch, channel, length)
     """
 
     def __init__(self, rate=0.5):
+        """
+        :param rate 遮蔽区间的长度比例
+        """
         super().__init__()
         self.rate = rate
 

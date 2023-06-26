@@ -141,10 +141,7 @@ class Analyzer:
                      xycoords=('axes fraction', 'figure fraction'),
                      textcoords='offset points',
                      size=20, ha='left', va='bottom')
-        if save:
-            plt.savefig(save)
-        else:
-            plt.show()
+        plt.show()
 
     def do_aly(self):
         pass

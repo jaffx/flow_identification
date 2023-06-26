@@ -7,18 +7,32 @@ import lib.xyq.x_time as xtime
 import lib.xyq.x_printer as printer
 import lib.xyq.x_formatter as formatter
 from model.Resmodel import resnet34
+from model.Res1D import resnet1d34
 from lib.Dataset.Dataset import flowDataset
 from lib.DataLoader.DataLoader import flowDataLoader
 from lib.transforms import Transforms2D as trans2d
+from analysis import analyzer as aly
+from lib.utils import conf
 
 # 设置参数
-weight_path = "/results/2023-05-29 12.10.18 [ResNet1d]/2023-05-29 12.10.18 [ResNet1d].pth"
-transform = trans2d.flowHilbertTransform(7)
-net = resnet34(4)
+train_result = ""
+transform = conf.getTransform("")
+net = resnet1d34(4)
 data_length = 16384
 sampling_step = 8192
 batch_size = 16  # 这里要设置成和训练一样，要不然会影响精度！！！
-val_set_path = "../../Dataset/val"
+val_set_path = conf.getDatasetPath("", "")  # dataset device
+
+alyer = aly.Analyzer(train_result)
+assert alyer.checkResult(), "训练结果不完整，不建议进行验证"
+
+weight_path = os.path.join(train_result, "weight.pth")
+if not os.path.isfile(weight_path):
+    files = os.listdir(train_result)
+    for file in files:
+        if file.endswith(".pth"):
+            weight_path = os.path.join(train_result, file)
+            break
 
 # 加载数据集
 val_dataset = flowDataset(path=val_set_path, length=data_length, step=sampling_step, name="Validation Set")

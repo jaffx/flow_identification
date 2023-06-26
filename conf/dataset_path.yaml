@@ -10,3 +10,6 @@ v2_label_wms:
 v3_wms:
   mac: /Users/lyn/codes/python/Flow_Identification/Dataset/v3/WMS/v3_WMS_Simple_B
   hy: /home/dataset/v3/WMS/v3_WMS_Simple_B
+v4_wms:
+  mac: /Users/lyn/codes/python/Flow_Identification/Dataset/v4/WMS/v4_WMS_Simple_B
+  hy: /home/dataset/v4/WMS/v4_WMS_Simple_B

@@ -1,5 +1,6 @@
 import os
 import yaml
+from lib.utils.transform import transform
 
 
 def getDeviceName():
@@ -18,3 +19,14 @@ def getDatasetPath(dataset="wms_old", device="mac"):
             print(f"\t{key}")
         exit(1)
     return datasets[dataset][device]
+
+
+def getTransform(name):
+    try:
+        return transform.getTransform(name)
+    except:
+        infos = transform.getAllTransformInfos()
+        print(f"指定的transform错误，请选择如下transform")
+        for info in infos:
+            print(f"\t{info['name']:<8}\t{info['desc']}")
+        exit(1)

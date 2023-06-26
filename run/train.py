@@ -13,8 +13,6 @@ from lib.xyq import x_printer as printer, x_formatter as formatter, x_time as xt
 from model.Res1D import resnet1d34
 from lib.Dataset.Dataset import flowDataset
 from lib.DataLoader.DataLoader import flowDataLoader
-from lib.transforms import BaseTrans as BT
-from lib.transforms import Preprocess as PP
 from lib.utils import conf
 
 
@@ -27,6 +25,8 @@ def dealArgs():
     parser.add_argument('-b', '--batch_size', type=int, default=64, help='Number of batch size to train.')
     parser.add_argument('-l', '--length', type=int, default=4096, help='Data Length')
     parser.add_argument('-s', '--step', type=int, default=2048, help='Step Length')
+    parser.add_argument('-t', '--transform', type=str, default="normalization", help='Transform for train method')
+    parser.add_argument('--lr', type=float, default=0.0001, help='learn rate')
 
     # 从命令行中结构化解析参数
     args = parser.parse_args()
@@ -34,12 +34,9 @@ def dealArgs():
 
 
 def main():
+    # 训练参数初始化
     args = dealArgs()
-    # 定义训练设备
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    print("using {} device.".format(device))
 
-    # 自定义训练参数
     data_length = args.length
     sampling_step = args.step
     batch_size = args.batch_size
@@ -49,26 +46,26 @@ def main():
 
     device_name = conf.getDeviceName()
     dataset_path = conf.getDatasetPath(dataset=dataset_name, device=device_name)
-    train_set_path, train_set_name = os.path.join(dataset_path, "train"), "TrainSet"
-    val_set_path, val_set_name = os.path.join(dataset_path, "val"), "ValSet"
-    learn_rate = 0.0001
+    train_set_path, train_set_name = os.path.join(dataset_path, "train"), f"{dataset_name}-train"
+    val_set_path, val_set_name = os.path.join(dataset_path, "val"), f"{dataset_name}-val"
+    learn_rate = args.lr
+
+    train_transform = conf.getTransform(args.transform)
+    val_transform = conf.getTransform("normalization")
 
     print(f"开始训练,信息如下：\n"
-          f"\t epoch {epoch_num},batch_size {batch_size}, dataset {dataset_name}, length {data_length}, step {sampling_step}")
+          f"\t epoch {epoch_num},batch_size {batch_size}, dataset {dataset_name}, length {data_length}, step {sampling_step}\n"
+          f"\t lr {learn_rate}, train_transform {args.transform}"
+          )
 
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    print(f"using device : {device}")
     # 导入训练数据
     train_set = flowDataset(path=train_set_path, length=data_length, step=sampling_step, name=train_set_name)
     train_set.getDatasetInfo()
     val_set = flowDataset(path=val_set_path, length=data_length, step=sampling_step, name=val_set_name)
     val_set.getDatasetInfo()
-    train_transform = BT.transfrom_set([
-        PP.normalization(),
-        BT.toTensor()
-    ])
-    val_transform = BT.transfrom_set([
-        PP.normalization(),
-        BT.toTensor()
-    ])
+
     train_loader = flowDataLoader(dataset=train_set, batch_size=batch_size, transform=train_transform, showInfo=True)
     val_loader = flowDataLoader(dataset=val_set, batch_size=batch_size, transform=val_transform, showInfo=True)
 
@@ -86,11 +83,11 @@ def main():
     model_name = net.__class__.__name__
     date_time_path = xtime.getDateTimeForPath()
     date_time = xtime.getDateTime()
-    task_name = f"{date_time_path} [{model_name}]"
+    task_name = f"{date_time_path}_{model_name}"
     result_path = os.path.join(os.getcwd(), 'result', 'train', task_name)
     os.makedirs(result_path)
     # 权重保存路径 result/train/<文件名>.pth
-    weight_path = os.path.join(result_path, f'{task_name}.pth')
+    weight_path = os.path.join(result_path, f'weight.pth')
     # 任务信息保存路径
     info_fp_path = os.path.join(result_path, 'info.yaml')
     train_iter_fp_path = os.path.join(result_path, 'train_iter')
@@ -122,7 +119,7 @@ def main():
     task_info["Loss_Function"] = loss_function.__class__.__name__
 
     task_info["Train_Set_Info"] = train_set.getDatasetInfoDict()
-    task_info["Val_Set_Info"] = train_set.getDatasetInfoDict()
+    task_info["Val_Set_Info"] = val_set.getDatasetInfoDict()
 
     yaml.dump(task_info, open(info_fp_path, "w"))
 

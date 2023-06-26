@@ -7,8 +7,8 @@ def InitPath(path):
         os.makedirs(path)
 
 
-SourcePath = "/Users/lyn/codes/python/Flow_Identification/Dataset/v3/v3_WMS_Label_Source_A"
-SimplePath = "/Users/lyn/codes/python/Flow_Identification/Dataset/v3/v3_WMS_Label_Simple_A"
+SourcePath = "/Users/lyn/codes/python/Flow_Identification/Dataset/v4/WMS_Source_A"
+SimplePath = "/Users/lyn/codes/python/Flow_Identification/Dataset/v4/WMS_Simple_A"
 
 InitPath(SimplePath)
 
