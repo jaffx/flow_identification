@@ -1,11 +1,11 @@
 """
 定义在这里
 """
-from lib.transforms import BaseTrans as BT
-from lib.transforms import Preprocess as PP
-from lib.transforms import DataAugmentation as DA
+from xlib.transforms import BaseTrans as BT
+from xlib.transforms import Preprocess as PP
+from xlib.transforms import DataAugmentation as DA
 
-from lib.utils.transform.transform import addTransform
+from xlib.utils.transform.transform import addTransform
 
 normalization = BT.transform_set([
     PP.normalization(),
@@ -38,7 +38,7 @@ aug2 = BT.transform_set([
     ),
     BT.toTensor()
 ])
-addTransform("aug0.3", aug1, "概率为0.3的小强度数据增强")
+addTransform("aug0.3", aug2, "概率为0.3的小强度数据增强")
 aug3 = BT.transform_set([
     PP.normalization(),
     BT.random_trigger(
@@ -51,4 +51,4 @@ aug3 = BT.transform_set([
     ),
     BT.toTensor()
 ])
-addTransform("aug0.4", aug1, "概率为0.4的小强度数据增强")
+addTransform("aug0.4", aug3, "概率为0.4的小强度数据增强")

@@ -11,11 +11,11 @@ import sys
 
 sys.path.append(".")
 import torch
-from lib.transforms import Preprocess as PP
-from lib.transforms import BaseTrans as BT
-from lib.DataLoader import DataLoader as DL
-from lib.Dataset import Dataset
-from lib.xyq import x_printer as XP
+from xlib.transforms import Preprocess as PP
+from xlib.transforms import BaseTrans as BT
+from xlib.DataLoader import DataLoader as DL
+from xlib.Dataset import Dataset
+from xlib.xyq import x_printer as XP
 from model.Res1D import resnet1d34
 
 sys.path.append(".")

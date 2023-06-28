@@ -3,16 +3,14 @@ import os
 
 import yaml
 
-import lib.xyq.x_time as xtime
-import lib.xyq.x_printer as printer
-import lib.xyq.x_formatter as formatter
-from model.Resmodel import resnet34
+import xlib.xyq.x_time as xtime
+import xlib.xyq.x_printer as printer
+import xlib.xyq.x_formatter as formatter
 from model.Res1D import resnet1d34
-from lib.Dataset.Dataset import flowDataset
-from lib.DataLoader.DataLoader import flowDataLoader
-from lib.transforms import Transforms2D as trans2d
+from xlib.Dataset.Dataset import flowDataset
+from xlib.DataLoader.DataLoader import flowDataLoader
 from analysis import analyzer as aly
-from lib.utils import conf
+from xlib.conf import conf
 
 # 设置参数
 train_result = ""

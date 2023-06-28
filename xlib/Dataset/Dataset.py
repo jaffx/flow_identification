@@ -2,8 +2,8 @@ import time
 import os
 import copy
 import random
-import lib.xyq.x_printer as printer
-import lib.xyq.x_formatter as formatter
+import xlib.xyq.x_printer as printer
+import xlib.xyq.x_formatter as formatter
 
 
 class flowData:
@@ -191,6 +191,8 @@ class flowDataset:
             cls_path = os.path.join(dataset_path, cls)
             files = os.listdir(cls_path)
             for file in files:
+                if file.startswith("."):
+                    continue
                 file_path = os.path.join(cls_path, file)
                 fdata = readSimpleDataset(file_path, cls)
                 if not fdata:

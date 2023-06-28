@@ -9,24 +9,24 @@ import torch.nn as nn
 import torch.optim as optim
 
 sys.path.append(".")
-from lib.xyq import x_printer as printer, x_formatter as formatter, x_time as xtime
+from xlib.xyq import x_printer as printer, x_formatter as formatter, x_time as xtime
 from model.Res1D import resnet1d34
-from lib.Dataset.Dataset import flowDataset
-from lib.DataLoader.DataLoader import flowDataLoader
-from lib.utils import conf
+from xlib.Dataset.Dataset import flowDataset
+from xlib.DataLoader.DataLoader import flowDataLoader
+from xlib.conf import conf
 
 
 def dealArgs():
     parser = argparse.ArgumentParser(description='train')
     # 添加命令行参数
     parser.add_argument('-d', '--dataset', type=str, required=True, help='Dataset name, see in conf/dataset_path.yaml.')
-    parser.add_argument('-c', '--class_num', type=int, required=True, help='Class num')
     parser.add_argument('-e', '--epochs', type=int, default=50, help='Number of epochs to train.')
     parser.add_argument('-b', '--batch_size', type=int, default=64, help='Number of batch size to train.')
     parser.add_argument('-l', '--length', type=int, default=4096, help='Data Length')
     parser.add_argument('-s', '--step', type=int, default=2048, help='Step Length')
     parser.add_argument('-t', '--transform', type=str, default="normalization", help='Transform for train method')
-    parser.add_argument('--lr', type=float, default=0.0001, help='learn rate')
+    parser.add_argument('--lr', type=float, default=0.00001, help='learn rate')
+    parser.add_argument('--mod', type=str, default="test", help='epoch modifier')
 
     # 从命令行中结构化解析参数
     args = parser.parse_args()
@@ -42,20 +42,24 @@ def main():
     batch_size = args.batch_size
     epoch_num = args.epochs
     dataset_name = args.dataset
-    class_num = args.class_num
 
     device_name = conf.getDeviceName()
-    dataset_path = conf.getDatasetPath(dataset=dataset_name, device=device_name)
+    dataset_path, class_num = conf.getDatasetPathAndClassNum(dataset=dataset_name, device=device_name)
     train_set_path, train_set_name = os.path.join(dataset_path, "train"), f"{dataset_name}-train"
     val_set_path, val_set_name = os.path.join(dataset_path, "val"), f"{dataset_name}-val"
     learn_rate = args.lr
+    modifier_name = args.mod
+    transform_name = args.transform
 
     train_transform = conf.getTransform(args.transform)
     val_transform = conf.getTransform("normalization")
 
+    modifier = conf.getModifier(args.mod)
+
     print(f"开始训练,信息如下：\n"
-          f"\t epoch {epoch_num},batch_size {batch_size}, dataset {dataset_name}, length {data_length}, step {sampling_step}\n"
-          f"\t lr {learn_rate}, train_transform {args.transform}"
+          f"\tepoch {epoch_num},\tbatch_size {batch_size},\t lr {learn_rate}\n"
+          f"\tdataset {dataset_name},\tlength {data_length},\tstep {sampling_step}\n"
+          f"\ttrain_transform: {args.transform}"
           )
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -99,47 +103,55 @@ def main():
         f"Model:{model_name} BatchSize: {batch_size} DataLength:{data_length} Step:{sampling_step} Model Parameters {formatter.xNumFormat(model_param_amount, unit='m', keep_float=3)}")
 
     # 通过yaml文件记录模型数据
-    task_info = {}
-    task_info["Task_Name"] = "Model_training"
-    task_info["Task_Time"] = date_time
-    task_info["Dataset"] = dataset_name
-    task_info["Device_Name"] = device_name
-    task_info["Class_Num"] = class_num
-
-    task_info["Model_Name"] = model_name
-    task_info["Model_Parameter_Amount"] = formatter.xNumFormat(model_param_amount, 'm', 3)
-    task_info["Data_Length"] = data_length
-    task_info["Sampling_Step"] = sampling_step
-    task_info["Train_Transform"] = train_transform.str()
-    task_info["Val_Transform"] = val_transform.str()
-    task_info["Batch_Size"] = batch_size
-    task_info["Epoch_Num"] = epoch_num
-    task_info["Learn_Rate"] = learn_rate
-    task_info["Optimizer"] = optimizer.__class__.__name__
-    task_info["Loss_Function"] = loss_function.__class__.__name__
-
-    task_info["Train_Set_Info"] = train_set.getDatasetInfoDict()
-    task_info["Val_Set_Info"] = val_set.getDatasetInfoDict()
-
+    task_info = {
+        "Task_Name": "Model_training",
+        "Task_Time": date_time,
+        "Dataset": dataset_name,
+        "Device_Name": device_name,
+        "Class_Num": class_num,
+        "Transform": args.transform,
+        "Model_Name": model_name,
+        "Model_Parameter_Amount": formatter.xNumFormat(model_param_amount, 'm', 3),
+        "Data_Length": data_length,
+        "Sampling_Step": sampling_step,
+        "Train_Transform": train_transform.str(),
+        "Val_Transform": val_transform.str(),
+        "Batch_Size": batch_size,
+        "Epoch_Num": epoch_num,
+        "Learn_Rate": learn_rate,
+        "Optimizer": optimizer.__class__.__name__,
+        "Loss_Function": loss_function.__class__.__name__,
+        "Train_Set_Info": train_set.getDatasetInfoDict(),
+        "Val_Set_Info": val_set.getDatasetInfoDict(),
+        "modifier": args.mod
+    }
     yaml.dump(task_info, open(info_fp_path, "w"))
 
     # 开始训练
     best_acc = 0
+
     with open(epoch_fp_path, 'a+') as epoch_fp:
-        epoch_fp.write(f" {'Epoch':5}\t{'Train Time':10}\t{'Val Time':10}\t"
-                       f"{'Train Loss':8}\t{'Train Batch':8}\t{'TNSample':8}\t{'Train NAcc':8}\t{'Train ACC':8}\t"
-                       f"{'Val Loss':8}\t{'Val Batch':8}\t{'VNSample':8}\t{'Val NAcc':8}\t{'Val ACC':8}\n"
+        epoch_fp.write(f" {'Epoch':5}\t{'Train Time':10}\t{'Val Time':10}\t{'LR':8}\t{'Trans':10}\t"
+                       f"{'TLoss':8}\t{'T Batch':8}\t{'TNSample':8}\t{'TNAcc':8}\t{'TACC':8}\t"
+                       f"{'VLoss':8}\t{'V Batch':8}\t{'VNSample':8}\t{'VNAcc':8}\t{'VACC':8}\n"
                        )
         epoch_fp.close()
+
     with open(train_iter_fp_path, 'a+') as titer_fp:
         titer_fp.write(
             f"{'Method':>6}\t{'epoch':>6}\t{'batch':>6}\t{'NSample':>6}\t{'AccNum':>6}\t{'ACC':>6}\t{'Loss':>6}\t{'AVGLoss':>6}\n")
         titer_fp.close()
+
     with open(val_iter_fp_path, 'a+') as viter_fp:
         viter_fp.write(
             f"{'Method':>6}\t{'epoch':>6}\t{'batch':>6}\t{'NSample':>6}\t{'AccNum':>6}\t{'ACC':>6}\t{'Loss':>6}\t{'AVGLoss':>6}\n")
         viter_fp.close()
+
     for epoch in range(epoch_num):
+        # modifier干涉训练
+        if modifier and modifier.mod_or_not(epoch):
+            learn_rate = modifier.mod_lr(epoch, learn_rate)
+            optimizer.lr = learn_rate
         # Epoch初始化
         train_batch_num, val_batch_num = 0, 0
         train_acc_num, val_acc_num = 0, 0
@@ -196,6 +208,7 @@ def main():
         val_set.Init()
         # printer.xprint("Epoch{} val start at {}".format(epoch, xtime.getDateTime()))
         # 开始测试
+
         while val_loader.getReadable():
             data, label, path = val_loader.getData()
             data = data.to(device)
@@ -247,11 +260,13 @@ def main():
         printer.xprint_cyan(
             f"{line_sign}Epoch {epoch} \t Train ACC:{train_acc * 100:.2f}% \t Val ACC:{val_acc * 100:.2f}% \t Train Loss{train_avg_loss:.2f}\tVal Loss{val_avg_loss:.2f}"
         )
+        # epoch数据保存
         with open(epoch_fp_path, 'a+') as epoch_fp:
-            epoch_fp.write(f"{line_sign}{epoch:>5d}\t{train_running_time:>10}\t{val_running_time:10}\t"
-                           f"{train_avg_loss:>8.3f}\t{train_batch_num:>8}\t{train_sample_num:>8}\t{train_acc_num:>8}\t{train_acc:>8.3f}\t"
-                           f"{val_avg_loss:>8.3f}\t{val_batch_num:>8}\t{val_sample_num:>8}\t{val_acc_num:>8}\t{val_acc:>8.3f}\n"
-                           )
+            epoch_fp.write(
+                f"{line_sign}{epoch:>5d}\t{train_running_time:>10}\t{val_running_time:>10}\t{learn_rate:>8}\t{transform_name:>10}\t"
+                f"{train_avg_loss:>8.3f}\t{train_batch_num:>8}\t{train_sample_num:>8}\t{train_acc_num:>8}\t{train_acc:>8.3f}\t"
+                f"{val_avg_loss:>8.3f}\t{val_batch_num:>8}\t{val_sample_num:>8}\t{val_acc_num:>8}\t{val_acc:>8.3f}\n"
+            )
             epoch_fp.close()
 
 
