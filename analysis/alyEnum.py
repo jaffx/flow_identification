@@ -1,8 +1,8 @@
 ###################################
-Epoch_IDX_ValAcc = 13
-Epoch_IDX_ValLoss = 9
-Epoch_IDX_TrainAcc = 8
-Epoch_IDX_TrainLoss = 4
+Epoch_IDX_ValAcc = 15
+Epoch_IDX_ValLoss = 11
+Epoch_IDX_TrainAcc = 10
+Epoch_IDX_TrainLoss = 6
 ###################################
 Iter_IDX_Acc = 6
 Iter_IDX_AvgLoss = 8

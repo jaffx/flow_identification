@@ -1,0 +1,35 @@
+# 数据集信息
+test:
+  class_num: 3
+  paths:
+    mac: /Users/lyn/codes/python/Flow_Identification/Dataset/test
+v1_wms:
+  class_num: 4
+  paths:
+    mac: /Users/lyn/codes/python/Flow_Identification/Dataset/v1/WMS_Simple_B
+    hy: /home/dataset/v1/WMS_Simple_B
+v3_wms:
+  class_num: 7
+  paths:
+    mac: /Users/lyn/codes/python/Flow_Identification/Dataset/v3/WMS/v3_WMS_Simple_B
+    hy: /home/dataset/v3/WMS/v3_WMS_Simple_B
+v4_wms:
+  class_num: 7
+  paths:
+    mac: /Users/lyn/codes/python/Flow_Identification/Dataset/v4/WMS/v4_WMS_Simple_B
+    hy: /home/dataset/v4/WMS/v4_WMS_Simple_B
+v4_pre_3:
+  class_num: 7
+  paths:
+    mac: /Users/lyn/codes/python/Flow_Identification/Dataset/v4/Pressure/v4_Pressure_IDX3_Simple_B
+    hy: /home/dataset/v4/Pressure/v4_Pressure_IDX3_Simple_B
+v4_pre_4:
+  class_num: 7
+  paths:
+    mac: /Users/lyn/codes/python/Flow_Identification/Dataset/v4/Pressure/v4_Pressure_IDX4_Simple_B
+    hy: /home/dataset/v4/Pressure/v4_Pressure_IDX4_Simple_B
+v4_dp_34:
+  class_num: 7
+  paths:
+    mac: /Users/lyn/codes/python/Flow_Identification/Dataset/v4/Pressure/v4_DiffPressure_IDX3-4_Simple_B
+    hy: /home/dataset/v4/Pressure/v4_DiffPressure_IDX3-4_Simple_B

@@ -1,4 +1,4 @@
-from lib.transforms import BaseTrans as BT
+from xlib.transforms import BaseTrans as BT
 import numpy as np
 
 

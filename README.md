@@ -123,7 +123,11 @@ sh xcmd.sh add
 本工程基于pytorch框架搭建，自行开发了一些适合流型数据处理的工具。使用方法与pytorch中提供的工具有相似之处，但
 具体细节还以实物为准。
 
-## 1. 数据结构
+# 四、工具篇
+
+该部分主要介绍自行开发的处理工具
+
+## DataLoader 数据加载器
 
 ### 1.1 flowData
 
@@ -137,7 +141,7 @@ sh xcmd.sh add
 
 #### 位置
 
-    lib/Dataset/Dataset/flowdata
+    xlib/Dataset/Dataset/flowdata
 
 ### 1.2 flowDataset
 
@@ -150,7 +154,7 @@ sh xcmd.sh add
 
 #### 位置
 
-    lib/Dataset/Dataset/flowDataset
+    xlib/Dataset/Dataset/flowDataset
 
 ### 1.3 flowDataLoader
 
@@ -163,9 +167,102 @@ sh xcmd.sh add
 
 #### 位置
 
-    lib/DataLoader/DataLoader/flowDataLoader
+    xlib/DataLoader/DataLoader/flowDataLoader
 
+## Transform 转换器
 
+pytorch提供了transform模块，但使用起来不顺手，因此重新设计该模块。
+
+### 基本功能
+
+1. 数据预处理（标准化、傅里叶变换 等数学处理）
+2. 数据格式处理 （升维/降维，tensor转化）
+3. 数据增强 （随机噪声、随机失活等）
+
+### 使用
+
+#### 预定义transform
+
+1. 在xlib/utils/transform.__init__.py中添加定义
+
+```python
+from xlib.transforms import BaseTrans as BT  # 基本模块
+from xlib.transforms import Preprocess as PP  # 预处理模块
+from xlib.utils.transform.transform import addTransform
+
+# 1. 定义transform
+normalization = BT.transform_set([
+    PP.normalization(),  # 先标准化
+    BT.toTensor()  # 标准化的结果转化为tensor类型
+])
+# 2.注册。
+# addTransform("名字",transform,"描述")
+addTransform("normalization", normalization, "标准化")
+```
+
+#### 使用预定义的transform
+
+程序中使用预定义transform
+
+```python
+from xlib.conf import conf
+
+train_transform = conf.getTransform("normalization")
+```
+
+训练时指定transform
+
+```shell
+# -t参数用来指定训练集transform
+python run/train.py -d test -t "aug0.2"
+```
+
+#### transform基本原理
+
+```python
+class transform_base:
+    def __init__(self):
+        pass
+
+    def __call__(self, x):
+        # 输入一组数据，返回对数据的处理结果
+        return x
+
+    def __str__(self):
+        # 获取该转换器的字符描述
+        return f"{self.__class__.__name__}()"
+```
+
+#### 使用transform进行数据增强
+
+```python
+# 基本模块
+from xlib.transforms import BaseTrans as BT  
+# 预处理模块
+from xlib.transforms import Preprocess as PP  
+# 数据增强模块
+from xlib.transforms import DataAugmentation as DA  
+from xlib.utils.transform.transform import addTransform
+
+aug1 = BT.transform_set([
+    # 顺序触发下列transform
+    PP.normalization(),
+    BT.random_trigger( 
+        # 0.2概率触发内部transform，不触发就是恒等变换
+        BT.random_selector([
+            # 随机从下列transform中选择一个触发
+            DA.random_range_masking(0.1),
+            DA.random_noise(-0.05, 0.05),
+            DA.normalized_random_noise(0, 0.05),
+        ]),
+        prob=0.2
+    ),
+    BT.toTensor()
+])
+addTransform("aug0.2", aug1, "概率为0.2的小强度数据增强")
+```
+
+## Modifier 修改器
 
 
 

@@ -9,6 +9,7 @@ sys.path.append(".")
 from analysis.analyzer import Analyzer
 
 check_result_path = "bk_result/train"
+# check_result_path = "/Users/lyn/codes/python/Flow_Identification/Flow_Identification/ex_result/bk"
 target_result_path = "ex_result/train"
 
 

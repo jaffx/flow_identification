@@ -73,8 +73,12 @@ class Analyzer:
             return False
         # 检查训练是否完成
         info = self.loadInfo()
-        epoch_num = min(info["Epoch_Num"], 50)
-        with open(os.path.join(self.result_path, "info.yaml")) as fp:
+
+        epoch_num = self.getInfo("Epoch_Num")
+        if epoch_num is None:
+            epoch_num = 50
+        epoch_num = min(epoch_num, 50)
+        with open(os.path.join(self.result_path, "epoch")) as fp:
             content = fp.readlines()
             if len(content) < epoch_num + 1:
                 return False

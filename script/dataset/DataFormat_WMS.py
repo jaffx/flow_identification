@@ -1,7 +1,10 @@
+"""
+@brief 将wms的.epst从Source格式转化为Simple格式
+"""
 import os
 
-originPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/new_data/WMS/WMS_Source"
-outPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/new_data/WMS/WMS_Simple"
+originPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/v4/WMS/v4_WMS_Label_Source_A"
+outPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/v4/WMS/v4_WMS_Label_Simple_A"
 
 
 def checkAndInitPath(path):

@@ -12,7 +12,7 @@ fi
 printf "### 运行命令："
 
 #@xcmd add 执行git_add操作
-add_list='analysis README.md model requirements.txt run script conf lib xcmd.sh'
+add_list='analysis README.md model requirements.txt run script conf xlib xcmd.sh train.sh'
 if [ "$process_command" = "add" ]; then
   echo "git add $add_list"
   echo "$add_list" | xargs git add
@@ -20,11 +20,11 @@ if [ "$process_command" = "add" ]; then
 #@xcmd code_count 统计代码数量
 elif [ "$process_command" = "code_count" ]; then
   echo "统计代码数量"
-  python_file_count=$(find . -name "*.py" | wc -l)
+  python_file_count=$(find . '(' -name "*.py" -or -name "*.sh" -or -name '*.md' ')' | wc -l)
   # shellcheck disable=SC2038
-  code_line_count=$(find . -name "*.py" | xargs wc -l | sort -r | grep total | sed "s/total//g")
-  printf ".py文件数量\t%s\n" "$python_file_count"
-  printf ".py文件代码量\t%s\n" "$code_line_count"
+  code_line_count=$(find . '(' -name "*.py" -or -name "*.sh" -or -name '*.md' ')' | xargs wc -l | sort -r | grep total | sed "s/total//g")
+  printf "文件量\t%s\n" "$python_file_count"
+  printf "代码量\t%s\n" "$code_line_count"
 
 #@xcmd clear_program 将路径下奇奇怪怪的文件删除
 elif [ "$process_command" = "clear_program" ]; then

@@ -9,21 +9,21 @@ import os
 import shutil
 import sys
 
-sys.path.append(".")
+sys.path.append("../v2data_process")
 import torch
-from lib.transforms import Preprocess as PP
-from lib.transforms import BaseTrans as BT
-from lib.DataLoader import DataLoader as DL
-from lib.Dataset import Dataset
-from lib.xyq import x_printer as XP
+from xlib.transforms import Preprocess as PP
+from xlib.transforms import BaseTrans as BT
+from xlib.DataLoader import DataLoader as DL
+from xlib.Dataset import Dataset
+from xlib.xyq import x_printer as XP
 from model.Res1D import resnet1d34
 
-sys.path.append(".")
+sys.path.append("../v2data_process")
 from model.Res1D import resnet1d34
 
 
 def dealResultJson():
-    result = json.load(open("result.json"))
+    result = json.load(open("../v2data_process/result.json"))
     ret = {}
     for file in result:
         props = result[file]
@@ -38,7 +38,7 @@ def dealResultJson():
             "prop": f"{int(maxProp / sumProp * 100)}%",
             "flowRegime": maxPropIdx
         }
-    fp = open("WMS_Label.json", "w+")
+    fp = open("../v2data_process/WMS_Label.json", "w+")
     json.dump(ret, fp)
     fp.close()
 
@@ -82,7 +82,7 @@ def do_process():
                 res[paths[i]][j] += results[i][j].item()
         count += 1
         if count % 100 == 0:
-            fp = open("result.json", "w+")
+            fp = open("../v2data_process/result.json", "w+")
             v = json.dumps(res)
             fp.write(v)
             fp.close()
@@ -90,7 +90,7 @@ def do_process():
 
 
 def moveFile():
-    labelRes = json.load(open("WMS_Label.json"))
+    labelRes = json.load(open("../v2data_process/WMS_Label.json"))
     fromPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/new_data/origin/WMS_FILTER"
     toPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/new_data/WMS"
     for file in labelRes:
