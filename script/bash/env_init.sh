@@ -21,7 +21,13 @@ unzip -q v1_WMS_Simple_B.zip &
 oss cp oss://datasets/v3_WMS_Simple_B.zip .
 unzip -q v3_WMS_Simple_B.zip &
 oss cp oss://datasets/v4_WMS_Simple_B.zip .
-unzip -q v4_WMS_Simple_B.zip
+unzip -q v4_WMS_Simple_B.zip &
+oss cp oss://datasets/v4_Pressure_IDX3_Simple_B.zip .
+unzip -q v4_Pressure_IDX3_Simple_B.zip &
+oss cp oss://datasets/v4_Pressure_IDX4_Simple_B.zip  .
+unzip -q v4_Pressure_IDX4_Simple_B.zip &
+oss cp oss://datasets/v4_DiffPressure_IDX3-4_Simple_B.zip .
+unzip -q v4_DiffPressure_IDX3-4_Simple_B.zip
 
 # git 设置
 git config --global user.name HY
