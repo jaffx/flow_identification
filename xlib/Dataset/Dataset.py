@@ -67,7 +67,7 @@ def readWMSFile(data_path, cls_name):
         return None
 
 
-def readSimpleDataset(data_path, cls_name):
+def readSimpleData(data_path, cls_name):
     file_path = data_path
     try:
         with open(file_path) as fp:
@@ -78,7 +78,8 @@ def readSimpleDataset(data_path, cls_name):
                 data.append(float(line))
         return flowData(data, int(cls_name), file_path)
     except Exception as e:
-        printer.xprint_red(f"{file_path} 加载错误，原因 {e}")
+        printer.xprint_red(f"{file_path} 加载错误，原因 {e}", end = "\n\n")
+        exit(1)
         return None
 
 
@@ -194,9 +195,10 @@ class flowDataset:
                 if file.startswith("."):
                     continue
                 file_path = os.path.join(cls_path, file)
-                fdata = readSimpleDataset(file_path, cls)
-                if not fdata:
+                fdata = readSimpleData(file_path, cls)
+                if fdata is None:
                     fail_count += 1
+                    printer.xprint_red(f"dataset Error, path {file_path}")
                     continue
                 self.datas.append(fdata)
                 print(f"\rLoad dataset: 【{suc_count}/{total_files}】| Loading->{file}", end='')

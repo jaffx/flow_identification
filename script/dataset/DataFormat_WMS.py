@@ -3,8 +3,8 @@
 """
 import os
 
-originPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/v4/WMS/v4_WMS_Label_Source_A"
-outPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/v4/WMS/v4_WMS_Label_Simple_A"
+originPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/Val/WMS_Source"
+outPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/Val/WMS_Simple"
 
 
 def checkAndInitPath(path):

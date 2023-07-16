@@ -1,10 +1,24 @@
 # Flow_Identification 流型识别
+*@author 徐永麒*</br>
+*@email xuyongqi.lyn@qq.com*
 
-*@author: 徐永麒*
+本人的硕士毕业课题项目代码 </br>
+如有需要，联系本人 </br>
+
 
 # 〇、基础篇
 
-## 1. 启动训练
+## 下载代码
+```shell
+# 全量下载代码
+git clone https://github.com/jaffx/flow_identification.git
+
+
+# 更新代码
+git pull origin main
+```
+
+## 启动训练
 
 ```shell
 # 指定数据集
@@ -22,9 +36,7 @@ python run/train.py -d v3_wms -c 7 -l 4096 -s 2048
 python run/train.py -d v3_wms -c 7 -e 100 -b 2048
 ```
 
-# 一、Git篇
-
-## 1.1 代码仓库
+## 代码仓库
 
 [仓库地址点这里](https://github.com/jaffx/flow_identification)
 
@@ -35,14 +47,14 @@ git clone git@github.com:jaffx/flow_identification.git
 git clone https://github.com/jaffx/flow_identification.git
 ```
 
-## 1.2 提交代码
+## 提交代码
 
 ```shell
 # 这是xcmd.sh中添加的快捷add指令
 sh xcmd.sh add
 ```
 
-# 二、数据集
+# 数据集
 
 ## 数据集格式
 
@@ -123,7 +135,7 @@ sh xcmd.sh add
 本工程基于pytorch框架搭建，自行开发了一些适合流型数据处理的工具。使用方法与pytorch中提供的工具有相似之处，但
 具体细节还以实物为准。
 
-# 四、工具篇
+# 工具篇
 
 该部分主要介绍自行开发的处理工具
 

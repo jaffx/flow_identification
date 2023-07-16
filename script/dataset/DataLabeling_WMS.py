@@ -17,54 +17,70 @@ from xlib.DataLoader import DataLoader as DL
 from xlib.Dataset import Dataset
 from xlib.xyq import x_printer as XP
 from model.Res1D import resnet1d34
-
+import re
 sys.path.append("../v2data_process")
 from model.Res1D import resnet1d34
+import csv
+
+class_num = 7
 
 
-def dealResultJson():
-    result = json.load(open("../v2data_process/result.json"))
-    ret = {}
+def dealResultJson(path):
+    result = json.load(open(path))
+    pattern = re.compile(".*G(\d+)L(\d+).*")
+    rows = []
     for file in result:
         props = result[file]
         sumProp = sum(props)
+        for i in range(len(props)):
+            props[i] = round(props[i] / sumProp,2)
+
         maxProp = max(props)
         maxPropIdx = 0
         for i in range(len(props)):
             if props[i] == maxProp:
                 maxPropIdx = i
-        fileName = file.split("/")[-1]
-        ret[fileName] = {
-            "prop": f"{int(maxProp / sumProp * 100)}%",
-            "flowRegime": maxPropIdx
-        }
-    fp = open("../v2data_process/WMS_Label.json", "w+")
-    json.dump(ret, fp)
+        fileName = file.split("/")
+        Dir = fileName[-2]
+        fileName = fileName[-1]
+        ret = pattern.match(fileName)
+        gas = ret.group(1)
+        liquid = ret.group(2)
+        row = [Dir,fileName, int(gas), int(liquid), props[0], props[1], props[2], props[3], props[4], props[5], props[6], maxPropIdx, maxProp]
+        rows.append(row)
+    filename = path.split("/")[-1].split(".")[0]
+    fp = open(f"{filename}.csv", "w+")
+    writer = csv.writer(fp, "excel")
+    headers = ['文件夹','文件名','气速','液速', '0', '1', '2', '3', '4', '5', '6', '模型标签', '置信度']
+    writer.writerow(headers)
+    writer.writerows(rows)
     fp.close()
 
 
-def do_process():
+def do_process(path, model):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    originPath = "/Users/lyn/codes/python/Flow_Identification/Dataset/new_data/origin/WMS_FILTER"
-    modelPath = "/Users/lyn/codes/python/Flow_Identification/Flow_Identification/results/2023-05-29 12.10.18 [ResNet1d]/2023-05-29 12.10.18 [ResNet1d].pth"
-    train_trans = BT.transfrom_set([
+    originPath = path
+    modelPath = model
+    train_trans = BT.transform_set([
         PP.normalization(),
         BT.toTensor()
     ])
 
-    fDataList = []
-    files = os.listdir(originPath)
-    for file in files:
-        fdt = Dataset.readWMSFile(os.path.join(originPath, file), None)
-        if fdt is None:
-            XP.xprint_red(f"加载失败{file}")
-        fDataList.append(fdt)
-    dataset = DL.flowDataset(path=None, length=16384, step=8192, name="originWMS")
-    dataset.setDataset(fDataList, path=originPath)
+    # fDataList = []
+    # files = os.listdir(originPath)
+    # for file in files:
+    #     if file.startswith("."):
+    #         continue
+    #     fdt = Dataset.readSimpleData(os.path.join(originPath, file), None)
+    #     if fdt is None:
+    #         XP.xprint_red(f"加载失败{file}")
+    #     fDataList.append(fdt)
+    dataset = DL.flowDataset(path=path, length=16384, step=8192, name="originWMS")
+    # dataset.setDataset(fDataList, path=originPath)
     dataset.getDatasetInfo()
     dataloader = DL.flowDataLoader(dataset=dataset, batch_size=16, transform=train_trans)
 
-    net = resnet1d34(4)
+    net = resnet1d34(class_num)
     net = net.to(device)
     weight = torch.load(modelPath, map_location=device)
     net.load_state_dict(weight)
@@ -77,12 +93,14 @@ def do_process():
         results = softmax(net(datas))
         for i in range(len(results)):
             if paths[i] not in res:
-                res[paths[i]] = [0, 0, 0, 0]
-            for j in range(4):
+                res[paths[i]] = [0 for i in range(class_num)]
+            for j in range(class_num):
                 res[paths[i]][j] += results[i][j].item()
         count += 1
         if count % 100 == 0:
-            fp = open("../v2data_process/result.json", "w+")
+            dir = path.split("/")[-1]
+            result_path = f"result{dir}.json"
+            fp = open(result_path, "w")
             v = json.dumps(res)
             fp.write(v)
             fp.close()
@@ -96,10 +114,15 @@ def moveFile():
     for file in labelRes:
         toDir = os.path.join(toPath, str(labelRes[file]["flowRegime"]))
         if not os.path.exists(toDir):
-            os.makedirs(toDir,0o777)
+            os.makedirs(toDir, 0o777)
         shutil.copy(os.path.join(fromPath, file), toDir)
 
 
-# do_process()
-# dealResultJson()
-moveFile()
+dpath = "/Users/lyn/codes/python/Flow_Identification/Dataset/Val/WMS_Simple"
+paths = [
+    os.path.join(dpath) for cls in os.listdir(dpath) if not dpath.startswith(".")
+]
+model = "/Users/lyn/codes/python/Flow_Identification/Flow_Identification/ex_result/train/20230704.160806_ResNet1d/weight.pth"
+# do_process(dpath, model)
+dealResultJson("/Users/lyn/codes/python/Flow_Identification/Flow_Identification/script/dataset/resultWMS_Simple.json")
+# moveFile()
