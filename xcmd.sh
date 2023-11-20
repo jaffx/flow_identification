@@ -12,7 +12,7 @@ fi
 printf "### 运行命令："
 
 #@xcmd add 执行git_add操作
-add_list='analysis README.md model requirements.txt run script conf xlib xcmd.sh train.sh'
+add_list='README.md requirements.txt xcmd.sh model script conf lib'
 if [ "$process_command" = "add" ]; then
   echo "git add $add_list"
   echo "$add_list" | xargs git add

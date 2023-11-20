@@ -1,0 +1,26 @@
+# 数据集信息
+test:
+  class_num: 3
+  paths:
+    mac: /Users/lyn/codes/python/Flow_Identification/Dataset/test
+v1_wms:
+  class_num: 4
+  paths:
+    mac: /Users/lyn/codes/python/Flow_Identification/Dataset/v1/WMS_Simple_B
+    hy: /home/dataset/v1/WMS_Simple_B
+v3_wms:
+  class_num: 7
+  paths:
+    mac: /Users/lyn/codes/python/Flow_Identification/Dataset/v3/WMS/v3_WMS_Simple_B
+    hy: /home/dataset/v3/WMS/v3_WMS_Simple_B
+v4_wms:
+  class_num: 7
+  paths:
+    mac: /Users/lyn/codes/python/Flow_Identification/Dataset/v4/WMS/v4_WMS_Simple_B
+    hy: /home/dataset/v4/WMS/v4_WMS_Simple_B
+mv1:
+  class_num: 7
+  paths:
+    mac: /Users/lyn/codes/python/Flow_Identification/Dataset/mv1
+  type: MultiSource
+  sources: [ "wms","pressure" ]

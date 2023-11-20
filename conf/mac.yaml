@@ -1,7 +1,0 @@
-dataset: wms_old
-device_name: mac
-data_length: 4096
-sampling_step: 1024
-epoch_num: 50
-learn_rate: 0.0001
-batch_size: 32
