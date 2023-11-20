@@ -22,5 +22,6 @@ mv1:
   class_num: 7
   paths:
     mac: /Users/lyn/codes/python/Flow_Identification/Dataset/mv1
+    hy: /home/dataset/mv1
   type: MultiSource
   sources: [ "wms","pressure" ]
