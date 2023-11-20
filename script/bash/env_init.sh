@@ -27,7 +27,9 @@ unzip -q v4_Pressure_IDX3_Simple_B.zip &
 oss cp oss://datasets/v4_Pressure_IDX4_Simple_B.zip  .
 unzip -q v4_Pressure_IDX4_Simple_B.zip &
 oss cp oss://datasets/v4_DiffPressure_IDX3-4_Simple_B.zip .
-unzip -q v4_DiffPressure_IDX3-4_Simple_B.zip
+unzip -q v4_DiffPressure_IDX3-4_Simple_B.zip &
+oss cp oss://datasets/mv1.zip .
+unzip -q mv1.zip &
 
 # git 设置
 git config --global user.name HY
