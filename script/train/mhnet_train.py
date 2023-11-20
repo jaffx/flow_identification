@@ -23,7 +23,7 @@ def dealArgs():
     parser.add_argument('-b', '--batch_size', type=int, default=64, help='Number of batch size to train.')
     parser.add_argument('-l', '--length', type=int, default=4096, help='Data Length')
     parser.add_argument('-s', '--step', type=int, default=2048, help='Step Length')
-    parser.add_argument('-t', '--transform', type=str, default="normalization", help='Transform for train method')
+    parser.add_argument('-t', '--transform', type=str, default="ms-normalization", help='Transform for train method')
     parser.add_argument('--lr', type=float, default=0.00001, help='learn rate')
     parser.add_argument('--mod', type=str, default="None", help='epoch modifier')
     # 从命令行中结构化解析参数
@@ -170,7 +170,8 @@ def main():
             # 读取数据
 
             data, label, path = train_loader.getData()
-            data = data.to(device)
+            for i in range(len(data)):
+                data[i] = data[i].to(device)
             label = torch.tensor(label, dtype=torch.long).to(device)
             # 正向传播
             predict_y = net(data)
@@ -213,7 +214,8 @@ def main():
 
         while val_loader.getReadable():
             data, label, path = val_loader.getData()
-            data = data.to(device)
+            for i in range(len(data)):
+                data[i] = data[i].to(device)
             label = torch.tensor(label, dtype=torch.long).to(device)
             # 正向传播
             predict_y = net(data)
