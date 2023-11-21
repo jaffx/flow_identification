@@ -19,7 +19,8 @@ class flowDataLoader():
 
     def getData(self):
         rets = self.dataset.getData(self.batch_size)
-        if rets is None:
+        if rets is None or len(rets[0]) == 1:
+            # 如果一个batch只有一个数据，bn层会出错，这种情况下默认训练结束
             if self.showInfo:
                 xyq.printer.xprint_green(
                     f"\r\033[32mFINISH! Dataset name:【{self.dataset.name}】    "

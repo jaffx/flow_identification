@@ -194,7 +194,7 @@ class MSDataset:
         判断数据集是否读完
         :return:
         """
-        return len([i for i in range(len(self.dataset)) if self.dataset[i].isReadableForLength(self.length)]) > 0
+        return len([i for i in range(len(self.dataset)) if self.dataset[i].isReadableForLength(self.length)]) > 1
 
     def getData(self, batch_size):
         readables = [i for i in range(len(self.dataset)) if self.dataset[i].isReadableForLength(self.length)]

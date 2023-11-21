@@ -189,7 +189,7 @@ class flowDataset:
             d.Init()
 
     def isReadable(self):
-        return len([i for i in range(len(self.datas)) if self.datas[i].isReadableForLength(self.length)]) > 0
+        return len([i for i in range(len(self.datas)) if self.datas[i].isReadableForLength(self.length)]) > 1
 
     def getDataProcessRate(self):
         read = sum([d.r_ptr for d in self.datas])
