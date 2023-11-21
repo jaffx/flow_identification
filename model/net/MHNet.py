@@ -31,7 +31,6 @@ class FusionBlock(torch.nn.Module):
         feature1 = self.avgPool(feature1)
         feature1 = feature1.view(-1, self.in_length1)
         feature1 = self.resizer1(feature1)
-        print(feature1.shape)
         feature1 = self.bn1(feature1)
         # 特征2 resize
         feature2 = self.avgPool(feature2)
