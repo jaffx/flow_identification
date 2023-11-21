@@ -57,7 +57,7 @@ class ModifierEpoch:
         :param name 修改器名称
         :return dict|None
         """
-        __modconf_path = "xyq/epoch_modifier.json"
+        __modconf_path = "conf/modifier/epoch.yaml"
         mod_config = config.config(__modconf_path)
         conf = mod_config.get(name)
         if conf is None:

@@ -55,4 +55,4 @@ class Analyzer_Epoch_Train(Analyzer):
         ax.set_xlim(-1, self.getInfo("Epoch_Num") + 1)
         plt.xticks(self.getRange(0, self.getInfo("Epoch_Num"), self.getInfo("Epoch_Num")//10))
         plt.yticks(self.getRange(0, 1, 0.2))
-        self.pltShow(title="Loss", xlabel='Epoch', ylabel='Loss')
+        self.pltShow(title="Loss", xlabel='Epoch', ylabel='Loss', footer = True)

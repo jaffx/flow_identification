@@ -20,25 +20,29 @@ class FusionBlock(torch.nn.Module):
         self.avgPool = torch.nn.AdaptiveAvgPool1d(1)
         self.resizer1 = torch.nn.Linear(in_length1, out_length)
         self.resizer2 = torch.nn.Linear(in_length2, out_length)
+        self.bn1 = torch.nn.BatchNorm1d(out_length)
+        self.bn2 = torch.nn.BatchNorm1d(out_length)
         self.fusion = torch.nn.Linear(out_length * 2, out_length)
         self.softMax = torch.nn.Softmax(dim=1)
+        self.bn3 = torch.nn.BatchNorm1d(out_length)
 
     def __call__(self, feature1, feature2):
         # 特征1 resize
         feature1 = self.avgPool(feature1)
         feature1 = feature1.view(-1, self.in_length1)
         feature1 = self.resizer1(feature1)
-        feature1 = self.softMax(feature1)
+        print(feature1.shape)
+        feature1 = self.bn1(feature1)
         # 特征2 resize
         feature2 = self.avgPool(feature2)
         feature2 = feature2.view(-1, self.in_length2)
         feature2 = self.resizer2(feature2)
-        feature2 = self.softMax(feature2)
+        feature2 = self.bn2(feature2)
         # 特征拼接
         feature = torch.cat((feature1, feature2), dim=1)
         # 特征融合
         feature = self.fusion(feature)
-        feature = self.softMax(feature)
+        feature = self.bn3(feature)
         return feature
 
 
@@ -64,9 +68,13 @@ class MHNet(torch.nn.Module):
         self.fusion = FusionBlock(512, 512, 256)
         self.classifier = Classifier(256, num_classes)
 
+        for m in self.modules():
+            if isinstance(m, torch.nn.Conv1d):
+                torch.nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+
     def __call__(self, input: tuple):
         feature1 = self.head1(input[0])
-        feature2 = self.head1(input[1])
+        feature2 = self.head2(input[1])
         feature = self.fusion(feature1, feature2)
         feature = self.classifier(feature)
         return feature

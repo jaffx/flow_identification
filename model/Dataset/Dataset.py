@@ -196,9 +196,7 @@ class flowDataset:
         return read / len(self)
 
     def getData(self, batch_size):
-
         readables = [i for i in range(len(self.datas)) if self.datas[i].isReadableForLength(self.length)]
-
         if readables:
             datas, labels, paths = [], [], []
             for i in range(min(len(readables), batch_size)):

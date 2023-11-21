@@ -49,14 +49,13 @@ class dropout(BT.transformBase):
         self.rate = rate
 
     def __call__(self, x: np.array):
-        out = x.copy()
-        for item in out:
+        for item in x:
             shape: tuple = item.shape
             mask = np.random.normal(loc=0.5, scale=0.5, size=shape)
             mask[mask > self.rate] = 1
             mask[mask < self.rate] = 0
             item *= mask
-        return out
+        return x
 
     def __str__(self):
         return f"{self.__class__.__name__}(rate={self.rate})"
@@ -81,13 +80,12 @@ class randomRangeMasking(BT.transformBase):
         assert len(x.shape) == 3, \
             f"随机数据遮蔽只接受数据维度为(batch, channel, length)的数据,当前输入数据维度为{x.shape}"
         batch, channel, length = x.shape
-        out = x.copy()
         mask_len = int(length * self.rate)
         for i in range(batch):
             for j in range(channel):
                 start: int = random.randint(0, length - mask_len)
-                out[i, j, start:start + mask_len] = np.zeros(shape=mask_len)
-        return out
+                x[i, j, start:start + mask_len] = np.zeros(shape=mask_len)
+        return x
 
     def __str__(self):
         return f"{self.__class__.__name__}(rate={self.rate})"

@@ -4,7 +4,7 @@ import yaml
 from matplotlib import pyplot as plt
 from matplotlib.legend_handler import HandlerLine2D
 
-from analyzer import alyEnum
+from . import alyEnum
 import matplotlib.font_manager
 
 
