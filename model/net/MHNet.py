@@ -11,9 +11,7 @@ class MHNet(torch.nn.Module):
         self.fusionClassifier = Module.Classifier(512, num_classes)
         self.classifier1 = Module.Classifier(512, num_classes)
         self.classifier2 = Module.Classifier(512, num_classes)
-
         self.toVector = Module.ToVector()
-
         for m in self.modules():
             if isinstance(m, torch.nn.Conv1d):
                 torch.nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')

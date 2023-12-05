@@ -58,7 +58,7 @@ class AnalyzerTrain(analyzer.Analyzer):
 
 class AnalyzerTrainEpoch(AnalyzerTrain):
     def __init__(self, path):
-        super(Analyzer_TrainEpoch, self).__init__(path)
+        super(AnalyzerTrainEpoch, self).__init__(path)
         self.epochPath = os.path.join(self.path, "epoch")
         assert os.path.isfile(self.epochPath), f'epoch文件不存在{self.epochPath}'
 
