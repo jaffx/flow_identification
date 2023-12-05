@@ -14,6 +14,20 @@ def normalization():
 
 
 def aug1():
+    """
+         标准化
+         |
+    (1-p)|-------|（p）
+         |       |---------------|
+         |       |(p/3)  |(p/3)  |(p/3)
+         |       |       |       |
+         无增强   均匀噪声 正态噪声 随机遮蔽
+         |       |       |       |
+         |       |       |       |
+         |-----------------------|
+         |
+        转tensor
+    """
     return BaseTrans.tsfmSet([
         Preprocess.normalization(),
         BaseTrans.randomTrigger(

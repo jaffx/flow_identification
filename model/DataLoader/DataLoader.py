@@ -1,6 +1,7 @@
 import time
 import numpy as np
 from ..transform.BaseTrans import transformBase
+from ..Dataset import MSDataset
 from lib import xyq
 
 
@@ -44,7 +45,7 @@ class flowDataLoader():
                     f"Batch_count:{self.batch_count}    "
                     f"Sample_count:{self.sample_count}    "
                     f"Remaining time:{xyq.format.secsToStr(int(estimate_run_time))}",
-                    end='')
+                    end='\r')
             datas = np.array(datas)
             return self.transform(datas), labels, paths
 

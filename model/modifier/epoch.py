@@ -1,3 +1,4 @@
+from . import *
 import json
 
 from model.config import config
@@ -37,7 +38,7 @@ condition规则
 """
 
 
-class ModifierEpoch:
+class ModifierEpoch(modifier.Modifier):
     """
     :brief
         Epoch维度的修改器，根据配置对训练参数进行调整
@@ -70,16 +71,8 @@ class ModifierEpoch:
             raise Exception("Modifier not exist")
         return conf
 
-    @staticmethod
-    def checkConf(conf: dict):
-        """
-        :param conf 配置
-        """
-        if "desc" not in conf or "mod" not in conf:
-            return False
-        return True
-
     def __init__(self, name: str, total_epoch=50):
+        super(ModifierEpoch, self).__init__()
         mod_conf = ModifierEpoch.__getModifierByName(name)
         assert self.checkConf(mod_conf), "mod配置错误"
         self.mods = {}

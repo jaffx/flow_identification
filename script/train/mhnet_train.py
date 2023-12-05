@@ -171,7 +171,8 @@ def main():
 
             data, label, path = train_loader.getData()
             for i in range(len(data)):
-                data[i] = data[i].to(device)
+                if data[i] is not None:
+                    data[i] = data[i].to(device)
             label = torch.tensor(label, dtype=torch.long).to(device)
             # 正向传播
             predict_y = net(data)

@@ -19,7 +19,7 @@ from lib import xyq
 def dealArgs():
     parser = argparse.ArgumentParser(description='train')
     # 添加命令行参数
-    parser.add_argument('-d', '--dataset', type=str, required=True, help='Dataset name, see in xyq/dataset_path.yaml.')
+    parser.add_argument('-d', '--dataset', type=str, required=True, help='训练使用的数据集，见conf/dataset/info.yaml')
     parser.add_argument('-e', '--epochs', type=int, default=50, help='Number of epochs to train.')
     parser.add_argument('-b', '--batch_size', type=int, default=64, help='Number of batch size to train.')
     parser.add_argument('-l', '--length', type=int, default=4096, help='Data Length')

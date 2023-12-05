@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append("../../run")
-import model.modifier.modepoch as mod
+import model.modifier.epoch as mod
 
 total_epoch = 50
 modifier = mod.ModifierEpoch("lr*0.9>20", total_epoch=total_epoch)

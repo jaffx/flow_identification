@@ -61,7 +61,7 @@ test:
     '*':
       lr:
         action: multiply
-        value: 1
+        value: 0.95
     '20,30':
       lr:
         action: multiply

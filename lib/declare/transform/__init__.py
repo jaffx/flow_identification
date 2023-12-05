@@ -15,3 +15,5 @@ function.addTransform("ms-normalization", multiSource.normalization, "标准化"
 function.addTransform("ms-aug0.2", multiSource.MSAug1, "概率为0.2的小强度数据增强")
 function.addTransform("ms-aug0.3", multiSource.MSAug2, "概率为0.2的小强度数据增强")
 function.addTransform("ms-aug0.4", multiSource.MSAug3, "概率为0.2的小强度数据增强")
+function.addTransform("ms-invalidator-normalization", multiSource.MSInvalidatorNormalization,
+                      "概率为0.2的数据源失活的数据增强")

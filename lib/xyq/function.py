@@ -2,7 +2,7 @@ import os
 import yaml
 from ..declare import transform
 from model.config import config
-from model.modifier.modepoch import ModifierEpoch as Modifier
+from model.modifier.epoch import ModifierEpoch as Modifier
 from . import *
 
 def getDeviceName():
