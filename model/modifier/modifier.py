@@ -1,4 +1,6 @@
 from . import *
+
+
 class Modifier:
     @staticmethod
     def checkConf(conf: dict):

@@ -22,18 +22,16 @@ git pull origin main
 
 ```shell
 # 指定数据集
-python run/train.py -d v1_wms -c 4
-python run/train.py -d v2_wms -c 4
-python run/train.py -d v3_wms -c 7
+python script/train/train.py -d v1_wms
 
 # 指定预处理方案
-python run/train.py -d v3_wms -c 7 -t aug0.2
+python run/train.py -d v3_wms -t aug0.2
 
 # 指定数据长度和步长
-python run/train.py -d v3_wms -c 7 -l 4096 -s 2048
+python run/train.py -d v3_wms -l 4096 -s 2048
 
 # 指定数据epoch和batchsize
-python run/train.py -d v3_wms -c 7 -e 100 -b 2048
+python run/train.py -d v3_wms -e 100 -b 2048
 ```
 
 ## 代码仓库
@@ -151,9 +149,6 @@ sh xcmd.sh add
 3. 判断该条flowData中是否还能取出长度为*length*的数据
 4. 保存该数据的信息，包括文件名、标签等
 
-#### 位置
-
-    xlib/Dataset/Dataset/flowdata
 
 ### 1.2 flowDataset
 
@@ -164,9 +159,7 @@ sh xcmd.sh add
 3. 保存若干个flowData，保存需要从flowData中读取的数据长度和移动步长
 4. 判断一个数据集是否还有数据可读 *（判断是否还有可以读取的flowData）*
 
-#### 位置
 
-    xlib/Dataset/Dataset/flowDataset
 
 ### 1.3 flowDataLoader
 
@@ -177,9 +170,6 @@ sh xcmd.sh add
 3. 内部保存一个flowDataset
 4. 保存BatchSize,每次从flowDataset中读取BatchSize大小的数据段。
 
-#### 位置
-
-    xlib/DataLoader/DataLoader/flowDataLoader
 
 ## Transform 转换器
 

@@ -84,13 +84,13 @@ class Analyzer:
         plt.show()
 
     @staticmethod
-    def readDataFromFile(path, idx=0, vtype=float, head=True):
+    def readDataFromFile(path, idx=0, vType=float, head=True):
         """
         从path指定的文件中读取第idx列数据数据
         如果idx==0，则读取全部数据
         :param path: 文件路径
         :param idx: 第几列，0表示全部
-        :param vtype: 数据的类型，使用强制转换，默认float类型
+        :param vType: 数据的类型，使用强制转换，默认float类型
         :param head: 数据文件是否包括表头，True则去掉第一行
         :return:
         """
@@ -105,7 +105,7 @@ class Analyzer:
                 items = line.split("\t")
                 if idx != 0:
                     assert len(items) >= idx, f"数据字段数量错误"
-                    data = vtype(items[idx - 1])
+                    data = vType(items[idx - 1])
                     datas.append(data)
                 else:
                     datas.append(items)

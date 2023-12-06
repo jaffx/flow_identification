@@ -6,16 +6,12 @@ class AnalyzerTrain(analyzer.Analyzer):
         super(AnalyzerTrain, self).__init__(path)
 
     def getDefaultFooter(self):
-        lines = []
-        lines.append(
-            f"Dataset={self.getInfo('Dataset')} Epoch={self.getInfo('Epoch_Num')} "
-            f"BatchSize={self.getInfo('Batch_Size')} Length={self.getInfo('Data_Length')} "
-            f"Step={self.getInfo('Sampling_Step')} LR={self.getInfo('Learn_Rate')}"
-        )
+        lines = [f"Dataset={self.getInfo('Dataset')} Epoch={self.getInfo('Epoch_Num')} "
+                 f"BatchSize={self.getInfo('Batch_Size')} Length={self.getInfo('Data_Length')} "
+                 f"Step={self.getInfo('Sampling_Step')} LR={self.getInfo('Learn_Rate')}",
+                 f"Ttrans={self.getInfo('Train_Transform')}", f"Vtrans{self.getInfo('Val_Transform')}"]
 
         # mes_son = [mes_str[i: i + 8] for i in range(0, len(mes_str), 8)]
-        lines.append(f"Ttrans={self.getInfo('Train_Transform')}")
-        lines.append(f"Vtrans{self.getInfo('Val_Transform')}")
 
         content = "    ".join(lines);
         line_length = 120

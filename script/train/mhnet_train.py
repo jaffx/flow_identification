@@ -18,14 +18,15 @@ from lib import xyq
 def dealArgs():
     parser = argparse.ArgumentParser(description='train')
     # 添加命令行参数
-    parser.add_argument('-d', '--dataset', type=str, required=True, help='Dataset name, see in xyq/dataset_path.yaml.')
-    parser.add_argument('-e', '--epochs', type=int, default=50, help='Number of epochs to train.')
-    parser.add_argument('-b', '--batch_size', type=int, default=64, help='Number of batch size to train.')
-    parser.add_argument('-l', '--length', type=int, default=4096, help='Data Length')
-    parser.add_argument('-s', '--step', type=int, default=2048, help='Step Length')
-    parser.add_argument('-t', '--transform', type=str, default="ms-normalization", help='Transform for train method')
-    parser.add_argument('--lr', type=float, default=0.00001, help='learn rate')
-    parser.add_argument('--mod', type=str, default="None", help='epoch modifier')
+    parser.add_argument('-d', '--dataset', type=str, required=True, help='数据集名称，定义在：xyq/dataset_path.yaml.')
+    parser.add_argument('-e', '--epochs', type=int, default=80, help='训练epoch数量，默认50')
+    parser.add_argument('-b', '--batch_size', type=int, default=64, help='BatchSize, 默认64')
+    parser.add_argument('-l', '--length', type=int, default=4096, help='数据长度')
+    parser.add_argument('-s', '--step', type=int, default=2048, help='数据采样步长')
+    parser.add_argument('-t', '--transform', type=str, default="ms-normalization", help='指定训练集transform')
+    parser.add_argument('-c', '--comment', type=str, required=True, help="训练实验备注，详细填写")
+    parser.add_argument('--lr', type=float, default=0.00001, help='训练初始学习率')
+    parser.add_argument('--mod', type=str, default="None", help='训练epoch修改器')
     # 从命令行中结构化解析参数
 
     args = parser.parse_args()
@@ -106,7 +107,7 @@ def main():
 
     # 通过yaml文件记录模型数据
     task_info = {
-        "Task_Name": "Model_training",
+        "Task_Name": "Model_training_MultiHeadNet",
         "Task_Time": date_time,
         "Dataset": dataset_name,
         "Device_Name": device_name,
@@ -125,9 +126,10 @@ def main():
         "Loss_Function": loss_function.__class__.__name__,
         "Train_Set_Info": train_set.getDatasetInfoDict(),
         "Val_Set_Info": val_set.getDatasetInfoDict(),
-        "modifier": args.mod
+        "Modifier": args.mod,
+        "Comment": args.comment,
     }
-    yaml.dump(task_info, open(info_fp_path, "w"))
+    yaml.dump(task_info, open(info_fp_path, "w", encoding='utf-8'), allow_unicode=True)
 
     # 开始训练
     best_acc = 0
