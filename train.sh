@@ -8,7 +8,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # 实验备注，详细填写
-comment=""
+comment="三个分类器分开，这轮实验只训练融合分类器"
 # 训练集transform
 tt="ms-normalization"
 # 测试集transform
@@ -16,6 +16,18 @@ vt="ms-normalization"
 epoch="80"
 dataset="mv1"
 python script/train/mhnet_train.py --dataset "$dataset" --tt="$tt" --vt="$vt" --epochs "$epoch" --comment "$comment" >>out.txt
+
+
+# 实验备注，详细填写
+comment="三个分类器分开，使用20%的数据源失活"
+# 训练集transform
+tt="ms-invalidator-20%"
+# 测试集transform
+vt="ms-normalization"
+epoch="80"
+dataset="mv1"
+python script/train/mhnet_train.py --dataset "$dataset" --tt="$tt" --vt="$vt" --epochs "$epoch" --comment "$comment" >>out.txt
+
 
 sh xcmd.sh move_result
 shutdown
