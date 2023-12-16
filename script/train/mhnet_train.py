@@ -18,12 +18,14 @@ from lib import xyq
 def dealArgs():
     parser = argparse.ArgumentParser(description='train')
     # 添加命令行参数
-    parser.add_argument('-d', '--dataset', type=str, required=True, help='数据集名称，定义在：xyq/dataset_path.yaml.')
+    parser.add_argument('-d', '--dataset', type=str, required=True,
+                        help='数据集名称，定义在：conf/dataset/dataset_path.yaml.')
     parser.add_argument('-e', '--epochs', type=int, default=80, help='训练epoch数量，默认50')
     parser.add_argument('-b', '--batch_size', type=int, default=64, help='BatchSize, 默认64')
     parser.add_argument('-l', '--length', type=int, default=4096, help='数据长度')
     parser.add_argument('-s', '--step', type=int, default=2048, help='数据采样步长')
-    parser.add_argument('-t', '--transform', type=str, default="ms-normalization", help='指定训练集transform')
+    parser.add_argument('--tt', type=str, default="ms-normalization", help='指定训练集transform')
+    parser.add_argument('--vt', type=str, default="ms-normalization", help='指定测试集transform')
     parser.add_argument('-c', '--comment', type=str, required=True, help="训练实验备注，详细填写")
     parser.add_argument('--lr', type=float, default=0.00001, help='训练初始学习率')
     parser.add_argument('--mod', type=str, default="None", help='训练epoch修改器')
@@ -50,15 +52,15 @@ def main():
     train_set_path, train_set_name = os.path.join(dataset_path, "train"), f"{dataset_name}-train"
     val_set_path, val_set_name = os.path.join(dataset_path, "val"), f"{dataset_name}-val"
     # 加载transform
-    transform_name = args.transform
-    train_transform = xyq.function.getTransform(args.transform)
-    val_transform = xyq.function.getTransform("ms-normalization")
+    trainTransformName, valTransformName = args.tt, args.vt
+    train_transform = xyq.function.getTransform(trainTransformName)
+    val_transform = xyq.function.getTransform(valTransformName)
 
     modifier = xyq.function.getModifier(args.mod)
     xyq.printer.xprint("开始训练,信息如下")
     xyq.printer.xprint(f"\tepoch {epoch_num},\tbatch_size {batch_size},\t lr {args.lr}\n"
                        f"\tdataset {dataset_name},\tlength {data_length},\tstep {sampling_step}\n"
-                       f"\ttrain_transform: {args.transform}"
+                       f"\ttrain_transform: {trainTransformName}"
                        )
     if torch.cuda.is_available():
         device = torch.device("cuda:0")
@@ -112,7 +114,8 @@ def main():
         "Dataset": dataset_name,
         "Device_Name": device_name,
         "Class_Num": class_num,
-        "Transform": args.transform,
+        "Train Transform": trainTransformName,
+        "Validation Transform": valTransformName,
         "Model_Name": model_name,
         "Model_Parameter_Amount": formatter.xNumFormat(model_param_amount, 'm', 3),
         "Data_Length": data_length,
@@ -279,8 +282,8 @@ def main():
         with open(epoch_fp_path, 'a+') as epoch_fp:
             epoch_fp.write(
                 f"{line_sign}{epoch:>5d}\t{train_running_time:>10}\t{val_running_time:>10}\t{learn_rate:>8}\t{transform_name:>10}\t"
-                f"{train_avg_loss:>8.3f}\t{train_batch_num:>8}\t{train_sample_num:>8}\t{train_acc_num:>8}\t{train_acc:>8.3f}\t"
-                f"{val_avg_loss:>8.3f}\t{val_batch_num:>8}\t{val_sample_num:>8}\t{val_acc_num:>8}\t{val_acc:>8.3f}\n"
+                f"{train_avg_loss:>8.6f}\t{train_batch_num:>8}\t{train_sample_num:>8}\t{train_acc_num:>8}\t{train_acc:>8.4f}\t"
+                f"{val_avg_loss:>8.6f}\t{val_batch_num:>8}\t{val_sample_num:>8}\t{val_acc_num:>8}\t{val_acc:>8.4f}\n"
             )
             epoch_fp.close()
 

@@ -38,6 +38,11 @@ elif [ "$process_command" = "move_result" ]; then
   zipFile="result_""$dt"".zip"
   cp -r result bk_result && zip -r -q "$zipFile" bk_result && oss cp "$zipFile" oss://result/ && rm "$zipFile" && rm -r bk_result
 
+#@xcmd make_train.sh 创建train.sh脚本
+elif [ "$process_command" = "make_train.sh" ]; then
+  echo "创建训练脚本"
+  cp -f script/bash/train.template.sh ./train.sh
+
 #@xcmd show_xcmd 展示支持的二级命令
 elif [ "$process_command" = "show_xcmd" ]; then
   echo "xcmd命令列表"

@@ -3,30 +3,29 @@ import os
 
 import yaml
 import sys
-sys.path.append("../../run")
-import lib.xyq.x_time as xtime
+
+sys.path.append(".")
 import lib.xyq.printer as printer
 import lib.xyq.format as formatter
 from model.net.Res1D import resnet1d34
-from model.Dataset.Dataset import flowDataset
-from lib.DataLoader.DataLoader import flowDataLoader
+from lib.declare import transform
+from model.Dataset import Dataset
+from model.DataLoader import DataLoader
 from model.analyzer import analyzer as aly
 
 # 设置参数
-train_result = "/Users/lyn/codes/python/Flow_Identification/Flow_Identification/ex_result/train/20230702.141917_ResNet1d"
+trainResultPath = ""
+transformName = ""
+
 # 加载分析器
-alyer = aly.Analyzer(train_result)
+alyer = aly.Analyzer(trainResultPath)
 assert alyer.checkResult(), "训练结果不完整，不建议进行验证"
-transform = conf.getTransform(alyer.getInfo("Transform"))
-num_class = alyer.getInfo("Class_Num")
+transform = transform.function.getTransform(transformName)
 net = resnet1d34(num_class)
 data_length = 4096
 sampling_step = 2048
 batch_size = 16  # 这里要设置成和训练一样，要不然会影响精度！！！
-val_set_path = os.path.join(conf.getDatasetInfo("v4_wms")["paths"]["mac"],"val")  # dataset device
-
-
-
+val_set_path = os.path.join(conf.getDatasetInfo("v4_wms")["paths"]["mac"], "val")  # dataset device
 
 weight_path = os.path.join(train_result, "weight.pth")
 if not os.path.isfile(weight_path):
