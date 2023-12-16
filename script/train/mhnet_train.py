@@ -281,7 +281,8 @@ def main():
         # epoch数据保存
         with open(epoch_fp_path, 'a+') as epoch_fp:
             epoch_fp.write(
-                f"{line_sign}{epoch:>5d}\t{train_running_time:>10}\t{val_running_time:>10}\t{learn_rate:>8}\t{transform_name:>10}\t"
+                f"{line_sign}{epoch:>5d}\t{train_running_time:>10}\t{val_running_time:>10}\t{learn_rate:>8}\t"
+                f"{trainTransformName:>10}\t"
                 f"{train_avg_loss:>8.6f}\t{train_batch_num:>8}\t{train_sample_num:>8}\t{train_acc_num:>8}\t{train_acc:>8.4f}\t"
                 f"{val_avg_loss:>8.6f}\t{val_batch_num:>8}\t{val_sample_num:>8}\t{val_acc_num:>8}\t{val_acc:>8.4f}\n"
             )

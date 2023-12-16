@@ -15,6 +15,7 @@ printf "### 运行命令："
 add_list='README.md requirements.txt xcmd.sh model script conf lib train.sh'
 if [ "$process_command" = "add" ]; then
   echo "git add $add_list"
+  clear_program
   echo "$add_list" | xargs git add
 
 #@xcmd code_count 统计代码数量
