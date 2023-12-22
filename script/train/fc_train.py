@@ -211,7 +211,7 @@ def main():
         while val_loader.getReadable():
             data, label, path = val_loader.getData()
             data = data.to(device)
-            label = torch.tensor(label, dtype=torch.long).to(device)
+            label = torch.tensor(label, dtype=torch.float).to(device)
             # 正向传播
             predict_y = net(data)
             val_loss = loss_function(predict_y, label)
@@ -248,8 +248,8 @@ def main():
         printer.xprint_cyan(
             "    ".join([
                 f"{line_sign}Epoch {epoch}",
-                f"Train MSE:{trainMSE * 100:.2f}%",
-                f"Val MSE:{valMSE * 100:.2f}% ",
+                f"Train MSE:{trainMSE:.2f}",
+                f"Val MSE:{valMSE:.2f} ",
             ]
             )
         )
