@@ -29,3 +29,4 @@ fc1:
   type: FlowCalculation
   paths:
     mac: /Users/lyn/codes/python/Flow_Identification/Dataset/fc
+    hy: /home/dataset/fc
