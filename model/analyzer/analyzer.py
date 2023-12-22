@@ -8,47 +8,12 @@ from . import alyEnum
 import matplotlib.font_manager
 
 
-class Analyzer:
-    """
-    Analyzer 分析器
-    提供数据筛选、数据分析、图表绘制等能力，对训练结果进行格式化分析
-    """
-
-    def __init__(self, path):
-        """
-        指定一个result文件路径，该路径下默认存在info.yaml文件
-        :param path:
-        """
-        self.info = None
+class Drawer:
+    def __init__(self):
         self.pltInit()
-        self.path = path
-
-    def checkResult(self) -> bool:
-        if not os.path.isdir(self.path):
-            return False
-        if not os.path.isfile(os.path.join(self.path, "info.yaml")):
-            return False
-        return True
-
-    def do_aly(self):
-        pass
 
     def getDefaultFooter(self):
         return "Made by XuYongQi"
-
-    def loadInfo(self):
-        """
-        读取基本信息，默认读取info.yaml的内容
-        :return:
-        """
-        info_path = os.path.join(self.path, "info.yaml")
-        assert os.path.isfile(info_path), f"info文件不存在{info_path}"
-        with open(info_path) as fp:
-            info = yaml.safe_load(fp)
-            fp.close()
-        if "Epoch_Num" not in info:
-            info["Epoch_Num"] = 50
-        return info
 
     def getInfo(self, key):
         if not self.info:
@@ -57,12 +22,17 @@ class Analyzer:
             return self.info[key]
         return None
 
-    def pltShow(self, title, footer=None, xLabel='X', yLabel='Y', save=False):
+    def pltShow(self, *args, **kwargs):
+        self.pltFormat(*args, **kwargs)
+        plt.show()
+
+    def pltFormat(self, title, footer=None, xLabel='X', yLabel='Y', save=False, legend=True):
         # 设置标题
         plt.title(title, fontsize=40)
         # 设置图例
         # loc=0，自行选择位置
-        plt.legend(framealpha=1, fontsize=30, loc=0)
+        if legend:
+            plt.legend(framealpha=1, fontsize=30, loc=0)
         # 设置坐标轴
         plt.xlabel(xLabel, fontsize=30)
         plt.ylabel(yLabel, fontsize=30)
@@ -81,10 +51,9 @@ class Analyzer:
                      xycoords=('axes fraction', 'figure fraction'),
                      textcoords='offset points',
                      size=20, ha='left', va='bottom')
-        plt.show()
 
     @staticmethod
-    def readDataFromFile(path, idx=0, vType=float, head=True):
+    def readDataFromFile(path, idx=0, vType=float, head=True, length=None):
         """
         从path指定的文件中读取第idx列数据数据
         如果idx==0，则读取全部数据
@@ -97,7 +66,10 @@ class Analyzer:
         assert os.path.isfile(path), f"{path}文件不存在"
         datas = []
         with open(path) as fp:
-            lines = fp.readlines()
+            if not length:
+                lines = fp.readlines()
+            else:
+                lines = fp.readlines()
             if head:
                 lines = lines[1:]
             for line in lines:
@@ -112,20 +84,25 @@ class Analyzer:
         fp.close()
         return datas
 
-    @staticmethod
-    def getAxis():
-        fig = plt.figure(figsize=(18, 12))
-        ax = fig.add_subplot(111)
+    def initAxis(self, ax):
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set_linewidth(4)
         ax.spines['bottom'].set_linewidth(4)
         ax.xaxis.set_ticks_position('bottom')
         ax.yaxis.set_ticks_position('left')
+
+    def getFig(self, width=18, height=12):
+        return plt.figure(figsize=(width, height))
+
+    def getAxis(self, fig=None, nRows=1, nCols=1, index=1):
+        if fig is None:
+            fig = self.getFig()
+        ax = fig.add_subplot(nRows, nCols, index)
+        self.initAxis(ax)
         return ax
 
-    @staticmethod
-    def pltInit():
+    def pltInit(self):
         plt.rcParams['xtick.direction'] = 'in'  # 将x周的刻度线方向设置向内
         plt.rcParams['ytick.direction'] = 'in'  # 将y轴的刻度方向设置向内
         plt.rcParams['font.sans-serif'] = ['Songti SC']
@@ -142,3 +119,44 @@ class Analyzer:
                 return ranges
             i += step
         return ranges
+
+
+class Analyzer(Drawer):
+    """
+    Analyzer 分析器
+    提供数据筛选、数据分析、图表绘制等能力，对训练结果进行格式化分析
+    """
+
+    def __init__(self, path):
+        """
+        指定一个result文件路径，该路径下默认存在info.yaml文件
+        :param path:
+        """
+        super(Analyzer, self).__init__()
+        self.info = None
+        self.pltInit()
+        self.path = path
+
+    def checkResult(self) -> bool:
+        if not os.path.isdir(self.path):
+            return False
+        if not os.path.isfile(os.path.join(self.path, "info.yaml")):
+            return False
+        return True
+
+    def do_aly(self):
+        pass
+
+    def loadInfo(self):
+        """
+        读取基本信息，默认读取info.yaml的内容
+        :return:
+        """
+        info_path = os.path.join(self.path, "info.yaml")
+        assert os.path.isfile(info_path), f"info文件不存在{info_path}"
+        with open(info_path) as fp:
+            info = yaml.safe_load(fp)
+            fp.close()
+        if "Epoch_Num" not in info:
+            info["Epoch_Num"] = 50
+        return info

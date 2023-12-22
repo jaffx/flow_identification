@@ -1,9 +1,11 @@
+import functools
 import os
 import yaml
 from ..declare import transform
 from model.config import config
 from model.modifier.epoch import ModifierEpoch as Modifier
 from . import *
+
 
 def getDeviceName():
     """
@@ -17,23 +19,7 @@ def getDeviceName():
     return "mac"
 
 
-def getDatasetPath(dataset="wms_old", device="mac"):
-    """
-    根据数据集名称和设备名称获取数据集路径
-    :dataset str 数据集名
-    :device str 设备名
-    """
-    with open("xyq/dataset_path.yaml") as fp:
-        datasets = yaml.full_load(fp)
-        fp.close()
-    if dataset not in datasets or device not in datasets[dataset]:
-        print(f"数据集配置不存在：{device}-{dataset},支持的数据集包括:")
-        for key in datasets:
-            print(f"\t{key}")
-        exit(1)
-    return datasets[dataset][device]
-
-
+@functools.lru_cache(maxsize=5)
 def getDatasetInfo(dataset):
     """
     获取数据集的配置信息
@@ -47,6 +33,18 @@ def getDatasetInfo(dataset):
             printer.xprint_red(f"\t{key}")
         raise Exception("Dataset Not Found")
     return _info
+
+
+def getDatasetPath(dataset, device="mac"):
+    """
+    根据数据集名称和设备名称获取数据集路径
+    :dataset str 数据集名
+    :device str 设备名
+    """
+    _info = getDatasetInfo(dataset)
+    assert "paths" in _info, f"数据集【{dataset}】配置信息错误"
+    assert device in _info["paths"], f"数据集【{dataset}】在设备【{device}】上路径未找到"
+    return _info["paths"][device]
 
 
 def getDatasetPathAndClassNum(dataset: str, device: str):

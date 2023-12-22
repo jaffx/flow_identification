@@ -148,7 +148,7 @@ class flowDataset:
         total_files = self.getTotalFile()
         suc_count = 0
         fail_count = 0
-        # 数据集格式为B格式，即 数据集-train/val-classname-sample
+        # 数据集格式为B格式，即 数据集-train/val-classname-samples
         for cls in class_paths:
             if cls.startswith("."):
                 continue
@@ -159,7 +159,7 @@ class flowDataset:
                 if file.startswith("."):
                     continue
                 file_path = os.path.join(cls_path, file)
-                fdata = readSimpleData(file_path, cls)
+                fdata = readSimpleData(file_path, int(cls))
                 if fdata is None:
                     fail_count += 1
                     printer.xprint_red(f"dataset Error, path {file_path}")

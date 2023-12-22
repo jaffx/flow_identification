@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 开始训练之前必须登录oss
-oss ls -s
+oss ls -s > /dev/null
 if [ $? -ne 0 ]; then
   echo "\033[31m oss未登录 \033[0m"
   exit 1

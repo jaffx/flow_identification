@@ -73,6 +73,8 @@ class AnalyzerTrainEpoch(AnalyzerTrain):
     def getBestAcc(self, method="val"):
         return max(self.getEpochAcc(method))
 
+
+
     def do_aly(self):
         val_acc = self.getEpochAcc("val")
         train_acc = self.getEpochAcc("train")
