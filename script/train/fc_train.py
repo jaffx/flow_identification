@@ -129,7 +129,7 @@ def main():
     yaml.dump(task_info, open(info_fp_path, "w"))
 
     # 开始训练
-    minMSE = 0
+    minMSE = 1e9
     learn_rate = args.lr
     with open(epoch_fp_path, 'a+') as epoch_fp:
         epoch_fp.write("\t".join([f" {'Epoch':5}",
@@ -240,7 +240,7 @@ def main():
         line_sign = ' '  # epoch结果中的行首标志，最优为*
 
         # 权重保存
-        if minMSE < valMSE:
+        if minMSE > valMSE:
             minMSE = valMSE
             torch.save(net.state_dict(), weight_path)
             line_sign = '*'
