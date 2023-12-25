@@ -167,7 +167,7 @@ def main():
         net.train()
         train_loader.Init()
         # 开始训练
-        while train_loader.getReadable():
+        while train_loader.isReadable():
             # 读取数据
 
             data, label, path = train_loader.getData()
@@ -212,7 +212,7 @@ def main():
         # printer.xprint("Epoch{} val start at {}".format(epoch, xtime.getDateTime()))
         # 开始测试
 
-        while val_loader.getReadable():
+        while val_loader.isReadable():
             data, label, path = val_loader.getData()
             data = data.to(device)
             label = torch.tensor(label, dtype=torch.long).to(device)

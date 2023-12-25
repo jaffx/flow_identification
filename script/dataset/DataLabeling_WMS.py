@@ -87,7 +87,7 @@ def do_process(path, model):
     res = {}
     count = 0
     softmax = torch.nn.Softmax(1)
-    while dataloader.getReadable():
+    while dataloader.isReadable():
         datas, _, paths = dataloader.getData()
         datas = datas.to(device)
         results = softmax(net(datas))

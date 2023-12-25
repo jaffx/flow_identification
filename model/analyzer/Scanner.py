@@ -51,7 +51,7 @@ class Scanner:
         assert os.path.isdir(self.path), f"Scanner 路径【{self.path}】不存在"
         results = os.listdir(self.path)
         for r in results:
-            alyer = analyzer.Analyzer(path=os.path.join(self.path, r))
+            alyer = Analyzer.Analyzer(path=os.path.join(self.path, r))
             # 判断文件格式是否完整
             if not alyer.checkResult():
                 continue

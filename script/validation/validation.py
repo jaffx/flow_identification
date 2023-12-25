@@ -11,7 +11,7 @@ from model.net.Res1D import resnet1d34
 from lib.declare import transform
 from model.Dataset import Dataset
 from model.DataLoader import DataLoader
-from model.analyzer import analyzer as aly
+from model.analyzer import Analyzer as aly
 
 # 设置参数
 trainResultPath = ""
@@ -92,7 +92,7 @@ def main():
     with torch.no_grad():
         acc = 0
         count = 0
-        while val_loader.getReadable():
+        while val_loader.isReadable():
             data, label, path = val_loader.getData()
             data = data.to(device)
             label = torch.Tensor(label).to(device)

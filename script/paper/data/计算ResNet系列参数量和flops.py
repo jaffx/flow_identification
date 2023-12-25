@@ -7,7 +7,7 @@ result = {}
 
 
 def getNetParamNum1D(name, net):
-    data = torch.randn(1, 1, 224)
+    data = torch.randn(1, 1, 4096)
     flops, params = profile(net, inputs=(data,))
     result[name] = (f"{flops/1e6:.2f}m", f"{params/1e6:.2f}m")
 

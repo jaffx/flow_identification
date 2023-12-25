@@ -49,7 +49,7 @@ class flowDataLoader():
             datas = np.array(datas)
             return self.transform(datas), labels, paths
 
-    def getReadable(self):
+    def isReadable(self):
         return self.dataset.isReadable()
 
     def Init(self):

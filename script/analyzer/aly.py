@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append('.')
-from model.analyzer.alyTrain import AnalyzerTrainIter, AnalyzerTrainEpoch
+from model.analyzer.AnalyzerTrain import AnalyzerTrainIter, AnalyzerTrainEpoch
 
 
 # dir_path = "/Users/lyn/codes/python/Flow_Identification/Flow_Identification/ex_result/train"

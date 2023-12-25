@@ -3,7 +3,7 @@
 """
 
 from matplotlib import pyplot as plt
-from model.analyzer.analyzer import Drawer
+from model.analyzer.Analyzer import Drawer
 import numpy as np
 
 

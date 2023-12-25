@@ -1,7 +1,7 @@
 from . import *
 
 
-class AnalyzerTrain(analyzer.Analyzer):
+class AnalyzerTrain(Analyzer.Analyzer):
     def __init__(self, path):
         super(AnalyzerTrain, self).__init__(path)
 
@@ -60,13 +60,13 @@ class AnalyzerTrainEpoch(AnalyzerTrain):
 
     def getEpochAcc(self, method="val"):
         assert method in ("val", "train")
-        idx = alyEnum.Epoch_IDX_ValAcc if method == "val" else alyEnum.Epoch_IDX_TrainAcc
+        idx = DrawEnum.Epoch_IDX_ValAcc if method == "val" else DrawEnum.Epoch_IDX_TrainAcc
         acc = self.readDataFromFile(self.epochPath, idx, float)
         return acc
 
     def getEpochLoss(self, method="val"):
         assert method in ("val", "train")
-        idx = alyEnum.Epoch_IDX_ValLoss if method == "val" else alyEnum.Epoch_IDX_TrainLoss
+        idx = DrawEnum.Epoch_IDX_ValLoss if method == "val" else DrawEnum.Epoch_IDX_TrainLoss
         loss = self.readDataFromFile(self.epochPath, idx, float)
         return loss
 
@@ -85,12 +85,12 @@ class AnalyzerTrainEpoch(AnalyzerTrain):
 
         ax = self.getAxis()
 
-        ax.plot(val_acc, label="Validation Accurate", **alyEnum.Style_Plot_Red_H)
-        ax.plot(train_acc, label="Train Accurate", **alyEnum.Style_Plot_Black_H)
+        ax.plot(val_acc, label="Validation Accurate", **DrawEnum.Style_Plot_Red_H)
+        ax.plot(train_acc, label="Train Accurate", **DrawEnum.Style_Plot_Black_H)
 
-        ax.plot(best_val_acc_idx, best_val_acc, **alyEnum.Style_Plot_Best_Acc)
+        ax.plot(best_val_acc_idx, best_val_acc, **DrawEnum.Style_Plot_Best_Acc)
         plt.text(best_val_acc_idx, best_val_acc - 0.05, f"{best_val_acc * 100:.2f}%",
-                 **alyEnum.Style_Text_Best_Acc)
+                 **DrawEnum.Style_Text_Best_Acc)
         # y
         ax.set_ylim(-0.1, 1.1)
         plt.yticks(self.getRange(0, 1, 0.2))
@@ -101,8 +101,8 @@ class AnalyzerTrainEpoch(AnalyzerTrain):
         self.pltShow(title="Accurate", xLabel='Epoch', yLabel='Accurate')
 
         ax = self.getAxis()
-        ax.plot(val_loss, label="Validation Loss", **alyEnum.Style_Plot_Red_H)
-        ax.plot(train_loss, label="Train Loss", **alyEnum.Style_Plot_Black_H)
+        ax.plot(val_loss, label="Validation Loss", **DrawEnum.Style_Plot_Red_H)
+        ax.plot(train_loss, label="Train Loss", **DrawEnum.Style_Plot_Black_H)
         ax.set_ylim(-0.05, 1.1)
         ax.set_xlim(-1, self.getInfo("Epoch_Num") + 1)
         plt.xticks(self.getRange(0, self.getInfo("Epoch_Num"), self.getInfo("Epoch_Num") // 10))
@@ -121,7 +121,7 @@ class AnalyzerTrainIter(AnalyzerTrain):
             iter_path = os.path.join(self.path, "train_iter")
         else:
             iter_path = os.path.join(self.path, "val_iter")
-        accs = self.readDataFromFile(iter_path, alyEnum.Iter_IDX_Acc)
+        accs = self.readDataFromFile(iter_path, DrawEnum.Iter_IDX_Acc)
         return accs
 
     def getAvgLoss(self, type="train"):
@@ -130,7 +130,7 @@ class AnalyzerTrainIter(AnalyzerTrain):
             iter_path = os.path.join(self.path, "train_iter")
         else:
             iter_path = os.path.join(self.path, "val_iter")
-        avg_loss = self.readDataFromFile(iter_path, alyEnum.Iter_IDX_Loss)
+        avg_loss = self.readDataFromFile(iter_path, DrawEnum.Iter_IDX_Loss)
         return avg_loss
 
     def do_aly(self, save=False):

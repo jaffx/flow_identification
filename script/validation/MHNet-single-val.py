@@ -16,7 +16,7 @@ from model.net import MHNet
 from lib.declare import transform
 from model.Dataset import MSDataset, Dataset
 from model.DataLoader import DataLoader
-from model.analyzer import analyzer as aly
+from model.analyzer import Analyzer as aly
 from lib import xyq
 
 # 权重文件路径
@@ -56,7 +56,7 @@ def valWMS():
                                           batch_size=batchSize, showInfo=True)
     acc, count = 0, 0
     with torch.no_grad():
-        while valLoader.getReadable():
+        while valLoader.isReadable():
             data, label, path = valLoader.getData()
             if isinstance(data, torch.Tensor):
                 data = data.to(device)
@@ -83,7 +83,7 @@ def valPressure():
                                           batch_size=batchSize, showInfo=True)
     acc, count = 0, 0
     with torch.no_grad():
-        while valLoader.getReadable():
+        while valLoader.isReadable():
             data, label, path = valLoader.getData()
             if isinstance(data, torch.Tensor):
                 data = data.to(device)
@@ -110,7 +110,7 @@ def valFusion():
                                           batch_size=batchSize, showInfo=True)
     acc, count = 0, 0
     with torch.no_grad():
-        while valLoader.getReadable():
+        while valLoader.isReadable():
             data, label, path = valLoader.getData()
             if isinstance(data, torch.Tensor):
                 data = data.to(device)

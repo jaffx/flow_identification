@@ -3,11 +3,11 @@
 """
 
 from matplotlib import pyplot as plt
-from model.analyzer.analyzer import Drawer
+from model.analyzer import Drawer
 import numpy as np
 
 
-class ppAly(Drawer):
+class ppAly(Drawer.Drawer):
     dataPaths = [
         # "/Users/lyn/codes/python/Flow_Identification/Dataset/v1/WMS_Simple_B/train/0/L50G0_Y_Sensor_2.epst",
         "/Users/lyn/codes/python/Flow_Identification/Dataset/v1/WMS_Simple_B/train/1/L50G230_Y_Sensor_2.epst",

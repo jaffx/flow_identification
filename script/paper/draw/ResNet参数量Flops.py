@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from model.analyzer import analyzer
+from model.analyzer import Drawer
 
 
-class Alyer(analyzer.Drawer):
+class Alyer(Drawer.Drawer):
     def draw(self):
         # 生成一些示例数据
         x = np.arange(10)

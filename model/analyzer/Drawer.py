@@ -1,32 +1,26 @@
-import os
-
-import yaml
 from matplotlib import pyplot as plt
-from matplotlib.legend_handler import HandlerLine2D
-
-from . import alyEnum
-import matplotlib.font_manager
+import os
 
 
 class Drawer:
     def __init__(self):
         self.pltInit()
-
-    def getDefaultFooter(self):
-        return "Made by XuYongQi"
-
-    def getInfo(self, key):
-        if not self.info:
-            self.info = self.loadInfo()
-        if key in self.info:
-            return self.info[key]
-        return None
+        self.figWidth = 18
+        self.figHeight = 12
 
     def pltShow(self, *args, **kwargs):
         self.pltFormat(*args, **kwargs)
         plt.show()
 
-    def pltFormat(self, title, footer=None, xLabel='X', yLabel='Y', save=False, legend=True):
+    def pltFormat(self, title="", footer=None, xLabel='X', yLabel='Y', legend=True):
+        """
+        绘图格式化
+        @param title: str 标题
+        @param footer: None|str 脚注
+        @param xLabel: str X轴文字，系列名
+        @param yLabel: str Y轴文字，系列名
+        @param legend: bool 是否添加图例
+        """
         # 设置标题
         plt.title(title, fontsize=40)
         # 设置图例
@@ -41,8 +35,8 @@ class Drawer:
         plt.xticks(size=25)
         plt.yticks(size=25)
 
-        if footer is True:
-            footer = self.getDefaultFooter()
+        # 添加脚注
+        if footer is not None:
             bottom_space = 0.05 * len(footer.split("\n"))
             bottom_space = max(min(bottom_space, 0.3), 0.15)
             plt.subplots_adjust(bottom=bottom_space)
@@ -92,7 +86,10 @@ class Drawer:
         ax.xaxis.set_ticks_position('bottom')
         ax.yaxis.set_ticks_position('left')
 
-    def getFig(self, width=18, height=12):
+    def getFig(self, width=None, height=None):
+        if not width or not height:
+            width = self.figWidth
+            height = self.figHeight
         return plt.figure(figsize=(width, height))
 
     def getAxis(self, fig=None, nRows=1, nCols=1, index=1):
@@ -119,44 +116,3 @@ class Drawer:
                 return ranges
             i += step
         return ranges
-
-
-class Analyzer(Drawer):
-    """
-    Analyzer 分析器
-    提供数据筛选、数据分析、图表绘制等能力，对训练结果进行格式化分析
-    """
-
-    def __init__(self, path):
-        """
-        指定一个result文件路径，该路径下默认存在info.yaml文件
-        :param path:
-        """
-        super(Analyzer, self).__init__()
-        self.info = None
-        self.pltInit()
-        self.path = path
-
-    def checkResult(self) -> bool:
-        if not os.path.isdir(self.path):
-            return False
-        if not os.path.isfile(os.path.join(self.path, "info.yaml")):
-            return False
-        return True
-
-    def do_aly(self):
-        pass
-
-    def loadInfo(self):
-        """
-        读取基本信息，默认读取info.yaml的内容
-        :return:
-        """
-        info_path = os.path.join(self.path, "info.yaml")
-        assert os.path.isfile(info_path), f"info文件不存在{info_path}"
-        with open(info_path) as fp:
-            info = yaml.safe_load(fp)
-            fp.close()
-        if "Epoch_Num" not in info:
-            info["Epoch_Num"] = 50
-        return info
