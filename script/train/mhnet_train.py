@@ -9,7 +9,6 @@ import torch.optim as optim
 
 sys.path.append(".")
 from lib.xyq import printer as printer, format as formatter
-from model.net.MHNet import MHNet
 from model.Dataset.MSDataset import MSDataset
 from model.DataLoader.DataLoader import flowDataLoader
 from lib import xyq
@@ -26,6 +25,7 @@ def dealArgs():
     parser.add_argument('-s', '--step', type=int, default=2048, help='数据采样步长')
     parser.add_argument('--tt', type=str, default="ms-normalization", help='指定训练集transform')
     parser.add_argument('--vt', type=str, default="ms-normalization", help='指定测试集transform')
+    parser.add_argument('--net', type=str, required=True, help="指定训练使用的神经网络")
     parser.add_argument('-c', '--comment', type=str, required=True, help="训练实验备注，详细填写")
     parser.add_argument('--lr', type=float, default=0.00001, help='训练初始学习率')
     parser.add_argument('--mod', type=str, default="None", help='训练epoch修改器')
@@ -47,8 +47,11 @@ def main():
 
     # 获取执行环境 mac本地/恒源云
     device_name = xyq.function.getDeviceName()
-    # 加载数据集
+    # 获取数据集信息
     dataset_path, class_num = xyq.function.getMSDatasetInfo(dataset=dataset_name, device=device_name)
+    # 获取模型
+    net = xyq.function.getNet(name=args.net, num_classes=class_num)
+    # 加载数据集
     train_set_path, train_set_name = os.path.join(dataset_path, "train"), f"{dataset_name}-train"
     val_set_path, val_set_name = os.path.join(dataset_path, "val"), f"{dataset_name}-val"
     # 加载transform
@@ -78,7 +81,7 @@ def main():
     val_loader = flowDataLoader(dataset=val_set, batch_size=batch_size, transform=val_transform, showInfo=True)
 
     # 定义+初始化 模型&优化器
-    net = MHNet(class_num)
+
     net = net.to(device)
     params = [p for p in net.parameters() if p.requires_grad]
     optimizer = optim.Adam(params, lr=args.lr)
@@ -131,6 +134,7 @@ def main():
         "Val_Set_Info": val_set.getDatasetInfoDict(),
         "Modifier": args.mod,
         "Comment": args.comment,
+        "Net": args.net,
     }
     yaml.dump(task_info, open(info_fp_path, "w", encoding='utf-8'), allow_unicode=True)
 

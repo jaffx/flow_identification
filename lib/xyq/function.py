@@ -1,7 +1,7 @@
 import functools
 import os
 import yaml
-from ..declare import transform
+from ..declare import transform as dclrTransform, net as dclrNet
 from model.config import config
 from model.modifier.epoch import ModifierEpoch as Modifier
 from . import *
@@ -74,9 +74,9 @@ def getTransform(name):
     获取转换器
     """
     try:
-        return transform.function.getTransform(name)
+        return dclrTransform.function.getTransform(name)
     except:
-        infos = transform.function.getAllTransformInfos()
+        infos = dclrTransform.function.getAllTransformInfos()
         printer.xprint_red(f"指定的transform错误，请选择如下transform")
         for info in infos:
             printer.xprint_red(f"\t{info['name']:<8}\t{info['desc']}")
@@ -88,3 +88,21 @@ def getModifier(name: str):
         return None
     modifier = Modifier(name)
     return modifier
+
+
+def getNet(name: str, **kwargs):
+    if name is None or name == "None":
+        return None
+    try:
+        netCreator = dclrNet.function.getNet(name)
+        net = netCreator(**kwargs)
+        return net
+    except AssertionError:
+        infos = dclrNet.function.getAllNetInfo()
+        printer.xprint_red(f"神经网络模型「{name}」指定错误，请选择如下网络：")
+        for info in infos:
+            printer.xprint_red(f"\t{info['name']:<8}\t{info['desc']}")
+        raise Exception("Net not found")
+    except Exception as e:
+        printer.xprint_red(f"创建网络出现错误：{e}")
+        raise Exception(f"创建网络错误:{e}")

@@ -2,12 +2,24 @@ from . import *
 
 
 # 多头分类器
-class MHNet(torch.nn.Module):
-    def __init__(self, num_classes=7):
-        super(MHNet, self).__init__()
-        self.head1 = Res1D.resnet1d34(include_top=False)
-        self.head2 = Res1D.resnet1d34(include_top=False)
-        self.fusion = Fusion.FusionBlock(512, 512, 512)
+class MSFINet(torch.nn.Module):
+    def __init__(self, num_classes=7, head1=None, head2=None, fusion=None):
+        super(MSFINet, self).__init__()
+        # 特征提取模块1
+        if head1 is None:
+            self.head1 = Res1D.resnet1d34(include_top=False)
+        else:
+            self.head1 = head1
+        # 特征提取模块2
+        if head2 is None:
+            self.head2 = Res1D.resnet1d34(include_top=False)
+        else:
+            self.head2 = head2
+        # 特征融合模块
+        if fusion is None:
+            self.fusion = Fusion.FusionBlock(512, 512, 512)
+        else:
+            self.fusion = fusion
         self.fusionClassifier = Module.Classifier(512, num_classes)
         self.classifier1 = Module.Classifier(512, num_classes)
         self.classifier2 = Module.Classifier(512, num_classes)
@@ -43,9 +55,7 @@ class MHNet(torch.nn.Module):
         @return:
         """
         feature1 = self.head1(x[0])
-        feature1 = self.toVector(feature1)
         feature2 = self.head2(x[1])
-        feature2 = self.toVector(feature2)
         feature = self.fusion(feature1, feature2)
         return self.fusionClassifier(feature)
 
@@ -56,13 +66,11 @@ class MHNet(torch.nn.Module):
         @return:
         """
         feature1 = self.head1(x[0])
-        feature1 = self.toVector(feature1)
         feature2 = self.head2(x[1])
-        feature2 = self.toVector(feature2)
         feature = self.fusion(feature1, feature2)
         return self.classifier1(feature1), self.classifier2(feature2), self.fusionClassifier(feature)
 
-    def __call__(self, x: tuple):
+    def forward(self, x: tuple):
         if x[0] is not None and x[1] is not None:
             return self.callFusion(x)
         elif x[0] is not None:

@@ -107,7 +107,7 @@ class AnalyzerTrainEpoch(AnalyzerTrain):
         ax.set_xlim(-1, self.getInfo("Epoch_Num") + 1)
         plt.xticks(self.getRange(0, self.getInfo("Epoch_Num"), self.getInfo("Epoch_Num") // 10))
         plt.yticks(self.getRange(0, 1, 0.2))
-        self.pltShow(title="Loss", footer=True, xLabel='Epoch', yLabel='Loss')
+        self.pltShow(title="Loss", footer=None, xLabel='Epoch', yLabel='Loss')
 
 
 class AnalyzerTrainIter(AnalyzerTrain):
@@ -143,11 +143,11 @@ class AnalyzerTrainIter(AnalyzerTrain):
         ax.scatter(train_x, train_loss, s=10, color="black", marker=".", label="Train Loss", )
         ax.scatter(val_x, val_loss, s=10, color="red", marker=".", label="Val Loss", )
         ax.set_ylim(-0.05, 1.1)
-        self.pltShow(title="Iteration Loss", save=f"figs/iter_loss_{self.path.split('/')[-1]}.png")
+        self.pltShow(title="Iteration Loss")
 
         ax = self.getAxis()
         ax.scatter(train_x, train_acc, s=10, color="black", marker=".", label="Train Accurate", )
         ax.scatter(val_x, val_acc, s=10, color="red", marker=".", label="Val Accurate", )
         ax.set_ylim(-0.05, 1.1)
         # self.pltShow(title="Iteration Accurate", save=f"figs/iter_acc_{self.path.split('/')[-1]}.png")
-        self.pltShow(title="Iteration Accurate", save=save)
+        self.pltShow(title="Iteration Accurate",)

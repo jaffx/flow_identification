@@ -1,4 +1,4 @@
-__DECLARE_FUNCS__ = dict()
+__DECLARE_FUNCS__ = {}
 
 
 def addNet(name: str, creator, desc: str):
@@ -11,5 +11,5 @@ def getNet(name: str):
     return __DECLARE_FUNCS__[name][0]
 
 
-def getAllNet():
+def getAllNetInfo():
     return [{"name": name, "desc": __DECLARE_FUNCS__[name][1]} for name in __DECLARE_FUNCS__]

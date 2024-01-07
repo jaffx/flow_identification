@@ -1,4 +1,5 @@
 from matplotlib import pyplot as plt
+import numpy as np
 import os
 
 
@@ -116,3 +117,45 @@ class Drawer:
                 return ranges
             i += step
         return ranges
+
+    @staticmethod
+    def drawConfusionMatrix(cMatrix: np.array, normalized: object = True):
+        """
+        绘制混淆矩阵，横轴为预测值，竖轴为真实值
+        @param cMatrix: 矩阵值，需要用np.array传入
+        @param normalized: 是否进行正则化处理
+        """
+        cMatrix = cMatrix.astype(float)
+        if normalized:
+            for i in range(len(cMatrix)):
+                total = np.sum(cMatrix[i])
+                for j in range(len(cMatrix[0])):
+                    cMatrix[i, j] = cMatrix[i, j] * 1.0 / total
+
+        # 创建一个新的图形
+        plt.figure(figsize=(8, 6))
+
+        # 绘制混淆矩阵，使用自定义颜色映射
+        plt.imshow(cMatrix, cmap='gray_r', vmin=0, vmax=1, interpolation='nearest')
+
+        # 添加颜色条
+        plt.colorbar()
+        plt.rcParams['font.sans-serif'] = ['Songti SC']
+        plt.rcParams['axes.unicode_minus'] = False
+
+        # 在每个单元格上显示值
+        for i in range(cMatrix.shape[0]):
+            total = sum(cMatrix[i])
+            for j in range(cMatrix.shape[1]):
+                plt.annotate(str(np.round(cMatrix[i, j] / total * 100, 2)) + "%", xy=(j, i), xytext=(5, -5),
+                             color='red',
+                             ha='center', va='center',
+                             fontsize=14,
+                             textcoords='offset points')
+
+            # 添加坐标轴标签
+        plt.xlabel('预测值', fontsize=14)
+        plt.ylabel('真实值', fontsize=14)
+
+        # 显示图形
+        plt.show()
