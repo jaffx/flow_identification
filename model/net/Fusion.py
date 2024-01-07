@@ -1,6 +1,7 @@
 from . import *
 from . import Module
 
+
 class FusionBlock(torch.nn.Module):
     """
     特征融合模块，将两个特征向量进行融合
@@ -25,7 +26,7 @@ class FusionBlock(torch.nn.Module):
         self.softMax = torch.nn.Softmax(dim=1)
         self.bn3 = torch.nn.BatchNorm1d(out_length)
 
-    def __call__(self, feature1, feature2):
+    def forward(self, feature1, feature2):
         # 特征1 resize
         feature1 = self.toVector(feature1)
         feature1 = self.resizer1(feature1)
@@ -68,7 +69,7 @@ class ResFusionBlock(torch.nn.Module):
         self.bn3 = torch.nn.BatchNorm1d(out_length)
         self.w1, self.w2 = torch.tensor(1), torch.tensor(1)
 
-    def __call__(self, feature1, feature2):
+    def forward(self, feature1, feature2):
         # 特征1 resize
         feature1 = self.toVector(feature1)
         feature1 = feature1.view(-1, self.in_length1)
@@ -84,4 +85,25 @@ class ResFusionBlock(torch.nn.Module):
         # 特征融合
         feature = self.fusion(feature) + self.w1 * feature1 + self.w2 * feature2
         feature = self.bn3(feature)
+        return feature
+
+
+class ConvFusion(torch.nn.Module):
+    """
+    通过卷积操作将两个数据进行融合
+    """
+    def __init__(self, in_channels1=512, in_channels2=512, out_length=512):
+        super().__init__()
+        self.in_length1 = in_channels1
+        self.in_length2 = in_channels2
+        self.out_length = out_length
+        self.conv = torch.nn.Conv1d(in_channels=in_channels1 + in_channels2, out_channels=out_length, kernel_size=3)
+        self.bn = torch.nn.BatchNorm1d(out_length)
+        self.toVector = Module.ToVector()
+
+    def forward(self, feature1, feature2):
+        feature = torch.cat((feature1, feature2), dim=1)
+        feature = self.conv(feature)
+        feature = self.toVector(feature)
+        feature = self.bn(feature)
         return feature
