@@ -8,14 +8,19 @@ if [ $? -ne 0 ]; then
 fi
 
 # 实验备注，详细填写
-comment=""
+comment="探究数据融合方式和"
 # 训练集transform
 tt="ms-normalization"
 # 测试集transform
 vt="ms-normalization"
+# 迭代论数
 epoch="80"
+# 数据集名称
 dataset="mv1"
-python script/train/mhnet_train.py --dataset "$dataset" --tt="$tt" --vt="$vt" --epochs "$epoch" --comment "$comment" >>out.txt
+# 神经网络结构
+net="MSFINet-ConvFusion"
+python script/train/mhnet_train.py --net "$net" --dataset "$dataset" --tt="$tt" --vt="$vt" --epochs "$epoch" --comment "$comment" >>out.txt
+
 
 sh xcmd.sh move_result
 shutdown

@@ -13,3 +13,11 @@ def MSNetWithResFusion(num_classes=7):
 
 def MSNetWithConvFusion(num_classes=7):
     return MHNet.MSFINet(fusion=Fusion.ConvFusion(), num_classes=num_classes)
+
+
+def MSNetWithHalfBranch(num_classes=7):
+    return MHNet.MSFINet_HalfBranch(num_classes=num_classes)
+
+
+def MSNetWithFullTrunk(num_classes=7):
+    return MHNet.MSFINet_FullTrunk(num_classes=num_classes)

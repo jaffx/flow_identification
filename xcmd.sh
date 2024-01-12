@@ -44,6 +44,11 @@ elif [ "$process_command" = "make_train.sh" ]; then
   echo "创建训练脚本"
   cp -f script/bash/train.template.sh ./train.sh
 
+#@xcmd show_declare 展示预定义内容
+elif [ "$process_command" = "show_declare" ]; then
+  echo "展示预定义内容"
+  python script/bash/getDeclare.py
+
 #@xcmd show_xcmd 展示支持的二级命令
 elif [ "$process_command" = "show_xcmd" ]; then
   echo "xcmd命令列表"
