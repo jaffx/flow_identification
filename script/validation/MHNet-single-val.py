@@ -19,11 +19,6 @@ from model.DataLoader import DataLoader
 from model.analyzer import Analyzer as aly
 from lib import xyq
 
-# 权重文件路径
-resPath = "/Users/lyn/codes/python/Flow_Identification/Flow_Identification/ex_result/数据源随机失活比例效果实验/20231216.171728_MHNet"
-weightPath = os.path.join(resPath, "weight.pth")
-valPath = os.path.join(resPath, "val.record")
-
 # 数据集名称
 datasetName = "mv1"
 # 环境名称
@@ -36,106 +31,130 @@ batchSize = 64
 
 datasetPath, clsNum = xyq.function.getMSDatasetInfo(datasetName, deviceName)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-net = MHNet.MHNet()
-net.load_state_dict(torch.load(weightPath, map_location=device))
 
 
-def writeValRecord(info):
-    with open(valPath, "a") as fp:
-        s = json.dumps(info)
-        fp.write(s + "\n")
-        fp.close()
+class validator:
+    def __init__(self, path):
+        self.infos = None
+        self.path = path
+        netName = self.getBasicInfo("Net")
+        self.net = xyq.function.getNet(netName, num_classes=7)
+        weightPath = os.path.join(self.path, "weight.pth")
+        self.net.load_state_dict(
+            torch.load(weightPath, map_location=device))
+
+    def writeValRecord(self, info):
+        valPath = os.path.join(self.path, "val.record")
+        with open(valPath, "a") as fp:
+            s = json.dumps(info)
+            fp.write(s + "\n")
+            fp.close()
+
+    def getBasicInfo(self, key):
+        if self.infos is None:
+            infoPath = os.path.join(self.path, "info.yaml")
+            with open(infoPath) as fp:
+                self.infos = yaml.safe_load(fp)
+        return self.infos[key]
+
+    def valWMS(self):
+        transformName = "normalization"
+        valPath = os.path.join(datasetPath, "val", "wms")
+        valDataset = Dataset.flowDataset(path=valPath, length=dataLength, step=step, name="validation")
+        tsfm = transform.function.getTransform(transformName)
+        valLoader = DataLoader.flowDataLoader(dataset=valDataset, transform=tsfm,
+                                              batch_size=batchSize, showInfo=True)
+        acc, count = 0, 0
+        with torch.no_grad():
+            while valLoader.isReadable():
+                data, label, path = valLoader.getData()
+                if isinstance(data, torch.Tensor):
+                    data = data.to(device)
+                else:
+                    for i in range(len(data)):
+                        data[i] = data[i].to(device)
+                label = torch.Tensor(label).to(device)
+                predict_y = self.net.callNet1(data)
+                predict_label = torch.argmax(predict_y, dim=1)
+                for i in range(len(predict_label)):
+                    prl, tl = int(predict_label[i]), int(label[i])
+                    if prl == tl:
+                        acc += 1
+                    count += 1
+        return acc / count
+
+    def valPressure(self, ):
+        transformName = "normalization"
+        valPath = os.path.join(datasetPath, "val", "pressure")
+        valDataset = Dataset.flowDataset(path=valPath, length=dataLength, step=step, name="validation")
+        tsfm = transform.function.getTransform(transformName)
+        valLoader = DataLoader.flowDataLoader(dataset=valDataset, transform=tsfm,
+                                              batch_size=batchSize, showInfo=True)
+        acc, count = 0, 0
+        with torch.no_grad():
+            while valLoader.isReadable():
+                data, label, path = valLoader.getData()
+                if isinstance(data, torch.Tensor):
+                    data = data.to(device)
+                else:
+                    for i in range(len(data)):
+                        data[i] = data[i].to(device)
+                label = torch.Tensor(label).to(device)
+                predict_y = self.net.callNet2(data)
+                predict_label = torch.argmax(predict_y, dim=1)
+                for i in range(len(predict_label)):
+                    prl, tl = int(predict_label[i]), int(label[i])
+                    if prl == tl:
+                        acc += 1
+                    count += 1
+        return acc / count
+
+    def valFusion(self, ):
+        transformName = "ms-normalization"
+        valPath = os.path.join(datasetPath, "val")
+        valDataset = MSDataset.MSDataset(path=valPath, length=dataLength, step=step, name="ms-validation")
+        tsfm = transform.function.getTransform(transformName)
+        valLoader = DataLoader.flowDataLoader(dataset=valDataset, transform=tsfm,
+                                              batch_size=batchSize, showInfo=True)
+        acc, count = 0, 0
+        with torch.no_grad():
+            while valLoader.isReadable():
+                data, label, path = valLoader.getData()
+                if isinstance(data, torch.Tensor):
+                    data = data.to(device)
+                else:
+                    for i in range(len(data)):
+                        data[i] = data[i].to(device)
+                label = torch.Tensor(label).to(device)
+                predict_y = self.net.callFusion(data)
+                predict_label = torch.argmax(predict_y, dim=1)
+                for i in range(len(predict_label)):
+                    prl, tl = int(predict_label[i]), int(label[i])
+                    if prl == tl:
+                        acc += 1
+                    count += 1
+        return acc / count
+
+    def val(self, ):
+        accWMS = self.valWMS()
+        print(f"WMS:{accWMS:.4f}")
+        self.writeValRecord({"accWMS": accWMS})
+
+        accPressure = self.valPressure()
+        print(f"Pressure:{accPressure:.4f}")
+        self.writeValRecord({"accPressure": accPressure})
+
+        accFusion = self.valFusion()
+        print(f"Fusion:{accFusion:.4f}")
+        self.writeValRecord({"accFusion": accFusion})
 
 
-def valWMS():
-    transformName = "normalization"
-    valPath = os.path.join(datasetPath, "val", "wms")
-    valDataset = Dataset.flowDataset(path=valPath, length=dataLength, step=step, name="validation")
-    tsfm = transform.function.getTransform(transformName)
-    valLoader = DataLoader.flowDataLoader(dataset=valDataset, transform=tsfm,
-                                          batch_size=batchSize, showInfo=True)
-    acc, count = 0, 0
-    with torch.no_grad():
-        while valLoader.isReadable():
-            data, label, path = valLoader.getData()
-            if isinstance(data, torch.Tensor):
-                data = data.to(device)
-            else:
-                for i in range(len(data)):
-                    data[i] = data[i].to(device)
-            label = torch.Tensor(label).to(device)
-            predict_y = net.callNet1(data)
-            predict_label = torch.argmax(predict_y, dim=1)
-            for i in range(len(predict_label)):
-                prl, tl = int(predict_label[i]), int(label[i])
-                if prl == tl:
-                    acc += 1
-                count += 1
-    return acc / count
+def val(path):
+    validator(path).val()
 
 
-def valPressure():
-    transformName = "normalization"
-    valPath = os.path.join(datasetPath, "val", "pressure")
-    valDataset = Dataset.flowDataset(path=valPath, length=dataLength, step=step, name="validation")
-    tsfm = transform.function.getTransform(transformName)
-    valLoader = DataLoader.flowDataLoader(dataset=valDataset, transform=tsfm,
-                                          batch_size=batchSize, showInfo=True)
-    acc, count = 0, 0
-    with torch.no_grad():
-        while valLoader.isReadable():
-            data, label, path = valLoader.getData()
-            if isinstance(data, torch.Tensor):
-                data = data.to(device)
-            else:
-                for i in range(len(data)):
-                    data[i] = data[i].to(device)
-            label = torch.Tensor(label).to(device)
-            predict_y = net.callNet2(data)
-            predict_label = torch.argmax(predict_y, dim=1)
-            for i in range(len(predict_label)):
-                prl, tl = int(predict_label[i]), int(label[i])
-                if prl == tl:
-                    acc += 1
-                count += 1
-    return acc / count
-
-
-def valFusion():
-    transformName = "ms-normalization"
-    valPath = os.path.join(datasetPath, "val")
-    valDataset = MSDataset.MSDataset(path=valPath, length=dataLength, step=step, name="ms-validation")
-    tsfm = transform.function.getTransform(transformName)
-    valLoader = DataLoader.flowDataLoader(dataset=valDataset, transform=tsfm,
-                                          batch_size=batchSize, showInfo=True)
-    acc, count = 0, 0
-    with torch.no_grad():
-        while valLoader.isReadable():
-            data, label, path = valLoader.getData()
-            if isinstance(data, torch.Tensor):
-                data = data.to(device)
-            else:
-                for i in range(len(data)):
-                    data[i] = data[i].to(device)
-            label = torch.Tensor(label).to(device)
-            predict_y = net.callFusion(data)
-            predict_label = torch.argmax(predict_y, dim=1)
-            for i in range(len(predict_label)):
-                prl, tl = int(predict_label[i]), int(label[i])
-                if prl == tl:
-                    acc += 1
-                count += 1
-    return acc / count
-
-
-accWMS = valWMS()
-print(f"WMS:{accWMS:.4f}")
-writeValRecord({"accWMS": accWMS})
-
-accPressure = valPressure()
-print(f"Pressure:{accPressure:.4f}")
-writeValRecord({"accPressure": accPressure})
-
-accFusion = valFusion()
-print(f"Fusion:{accFusion:.4f}")
-writeValRecord({"accFusion": accFusion})
+resultDir = "/Users/lyn/codes/python/Flow_Identification/Flow_Identification/ex_result/复用方式和数据源失活比例实验"
+results = os.listdir(resultDir)
+for r in results:
+    resultPath = os.path.join(resultDir, r)
+    val(resultPath)

@@ -8,7 +8,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # 实验备注，详细填写
-comment="探究特征服用方式和失活比例效果实验"
+comment="探究特征复用方式和失活比例效果实验"
 # 训练集transform
 vt="ms-normalization"
 # 迭代论数

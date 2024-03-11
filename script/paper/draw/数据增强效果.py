@@ -21,7 +21,7 @@ class ppAly(Drawer.Drawer):
         super(ppAly, self).__init__()
         self.samples = None
         self.xRange = self.getRange(0, (self.dataLength + 10) * self.timeInterval, self.timeInterval)[:self.dataLength]
-        self.fig = self.getFig(width=30, height=20)
+        self.fig = self.getFig(width=30, height=50)
 
     def readSample(self, path):
         with open(path) as fp:
@@ -38,15 +38,15 @@ class ppAly(Drawer.Drawer):
             self.samples = [np.array(self.readSample(p)) for p in self.dataPaths]
         return self.samples
 
-    def plotOrigin(self):
-        ax = self.getAx(2, 1)
-        data = self.getSamples()
-        ax.plot(self.xRange, data[0], label=f"样本1", color="black", linewidth=2)
-        ax.plot(self.xRange, data[1], label=f"样本2", color="red", linewidth=2)
-        self.pltFormat(title="原始数据样本", xLabel="时间", yLabel="持液率")
+    # def plotOrigin(self):
+    #     ax = self.getAx(5, 1)
+    #     data = self.getSamples()
+    #     ax.plot(self.xRange, data[0], label=f"样本1", color="black", linewidth=2)
+    #     ax.plot(self.xRange, data[1], label=f"样本2", color="red", linewidth=2)
+    #     self.pltFormat(title="原始数据样本", xLabel="时间", yLabel="持液率")
 
     def plotNormal(self):
-        ax = self.getAx(2, 2)
+        ax = self.getAx(5, 1)
         data = self.getSamples()
         mean = np.mean(data[0])
         std = np.std(data[0])
@@ -57,12 +57,21 @@ class ppAly(Drawer.Drawer):
 
         self.pltFormat(title="正则化处理后的样本", xLabel="时间", yLabel="正则化持液率", )
 
-    def showNormalization(self):
-        self.plotOrigin()
+    def plotNormalNoise(self):
+        ax = self.getAx(5, 1)
+        data = self.getSamples()
+        ax.plot(self.xRange, data[0], label=f"样本1", color="black", linewidth=2)
+        mean = np.mean(data[1])
+        std = np.std(data[1])
+        ax.plot(self.xRange, (data[1] - mean) / std, label=f"样本2", color="red", linewidth=2)
+
+        self.pltFormat(title="正则化处理后的样本", xLabel="时间", yLabel="正则化持液率", )
+
+    def show(self):
         self.plotNormal()
         # plt.savefig("/Users/lyn/念书/大论文/画图/正则化作用示意图.png")
         plt.show()
 
 
 aly = ppAly()
-aly.showNormalization()
+aly.show()
